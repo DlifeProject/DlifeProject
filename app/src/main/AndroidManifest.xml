@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.yancy.gallerypickdemo">
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:name=".tb_page1.diary_edit.DiaryEdit$BaseApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
+        <!--<meta-data-->
+            <!--android:name="google.android.gms.version"-->
+            <!--android:value="@integer/google_play_services_version" />-->
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDGkE4FG31EUpY8-EA8lO5HH4SN8bDneuE" />
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.yancy.gallerypickdemo.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/filepaths" />
+
+        </provider>
+
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".TabActivity"></activity>
+        <activity android:name=".tb_page1.diary_edit.DiaryEdit"
+            android:windowSoftInputMode="adjustPan" />
+        <activity android:name=".tb_page4.PersonData" />
+        <activity android:name=".tb_page4.PersonLocated" />
+        <activity android:name=".tb_page4.Facebook" />
+        <activity android:name=".tb_page4.Google" />
+        <activity android:name=".tb_page4.GpsList" />
+        <activity android:name=".tb_page4.GpsUpload"/>
+        <activity android:name=".tb_page2.diary_view.DiaryView"></activity>
+
+
+    </application>
+
+</manifest>

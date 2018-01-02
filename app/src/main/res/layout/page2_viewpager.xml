@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/RelativeLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    >
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:orientation="horizontal"
+        android:padding="10dp"
+        >
+        <ImageView
+            android:id="@+id/iv_pic"
+            android:src="@drawable/shopping"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent" />
+    </LinearLayout>
+
+    <RelativeLayout
+       android:layout_below="@+id/linearLayout"
+        android:layout_centerInParent="true"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"        >
+        <RelativeLayout
+            android:id="@+id/ry_click"
+            android:layout_centerInParent="true"
+            android:layout_width="200dp"
+            android:layout_height="100dp">
+            <TextView
+                android:id="@+id/tv_click"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Shopping"
+                android:textSize="35sp"
+                android:layout_centerInParent="true"
+                android:fontFamily="PingFang TC"
+                android:textColor="@color/background_white"
+                />
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="330dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <TextView
+            android:id="@+id/tv_theme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="140dp"
+            android:text="我又敗家了，圍巾入手！"
+            android:textColor="@color/page2_viewpager"
+            android:textSize="30sp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_below="@+id/tv_theme">
+
+            <TextView
+                android:id="@+id/tv_year"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="20dp"
+                android:text="2017"
+                android:textColor="@color/page2_viewpager"
+                android:textSize="20dp" />
+
+            <TextView
+                android:id="@+id/tv_year_month"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_toRightOf="@+id/tv_year"
+                android:text="/"
+                android:textColor="@color/page2_viewpager"
+                android:textSize="20dp" />
+
+            <TextView
+                android:id="@+id/tv_month"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_toRightOf="@+id/tv_year_month"
+                android:text="11"
+                android:textColor="@color/page2_viewpager"
+                android:textSize="20dp" />
+
+            <TextView
+                android:id="@+id/tv_month_day"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_toRightOf="@+id/tv_month"
+                android:text="/"
+                android:textColor="@color/page2_viewpager"
+                android:textSize="20dp" />
+
+            <TextView
+                android:id="@+id/tv_day"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_toRightOf="@+id/tv_month_day"
+                android:text="30"
+                android:textColor="@color/page2_viewpager"
+                android:textSize="20dp" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/three_day"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginTop="215dp">
+
+            <TextView
+                android:id="@+id/three_day_title"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="20dp"
+                android:text="3 days :"
+                android:textColor="@color/page2_viewpager" />
+
+            <TextView
+                android:id="@+id/tv_threedays"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@+id/three_day_title"
+                android:text="3"
+                android:textColor="@color/page2_viewpager" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_below="@+id/three_day">
+
+            <TextView
+                android:id="@+id/seven_day_title"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="20dp"
+                android:text="7 days :"
+                android:textColor="@color/page2_viewpager" />
+
+            <TextView
+                android:id="@+id/tv_sevendays"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@+id/seven_day_title"
+                android:text="6"
+                android:textColor="@color/page2_viewpager" />
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+
+</RelativeLayout>

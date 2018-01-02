@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:background="@color/primary_green"
+    android:padding="30dp"
+    android:gravity="bottom"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tvTemp"
+        android:textColor="@color/page2_viewpager"
+        android:textSize="18sp"
+        android:text="hi!"
+        android:layout_width="match_parent"
+        android:layout_height="200dp" />
+
+    <EditText
+        android:id="@+id/etLoginAccount"
+        android:textSize="20dp"
+        android:padding="10dp"
+        android:textColor="@color/page2_viewpager"
+        android:hint="@string/AccountID"
+        android:inputType="text"
+        android:background="@color/background_white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <EditText
+        android:id="@+id/etLoginPassword"
+        android:textSize="20dp"
+        android:padding="10dp"
+        android:textColor="@color/page2_viewpager"
+        android:hint="@string/LoginPassword"
+        android:inputType="textPassword"
+        android:layout_marginTop="4dp"
+        android:background="@color/background_white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <Button
+        android:id="@+id/btLogin"
+        android:textSize="20dp"
+        android:text="@string/login"
+        android:textColor="@color/background_white"
+        android:background="@color/primary_green_Dark"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <Button
+        android:id="@+id/btReset"
+        android:textSize="20dp"
+        android:text="@string/Reset"
+        android:textColor="@color/background_white"
+        android:background="@color/primary_green_Dark"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/btLoginRegan"
+            android:textSize="20dp"
+            android:text="Ｒ"
+            android:textColor="@color/background_white"
+            android:background="@color/primary_green_Dark"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content" />
+        <Button
+            android:id="@+id/btLoginJessica"
+            android:textSize="20dp"
+            android:text="Ｊ"
+            android:textColor="@color/background_white"
+            android:background="@color/primary_green_Dark"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content" />
+        <Button
+            android:id="@+id/btLoginC"
+            android:textSize="20dp"
+            android:text="C"
+            android:textColor="@color/background_white"
+            android:background="@color/primary_green_Dark"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content" />
+        <Button
+            android:id="@+id/btLoginAllen"
+            android:textSize="20dp"
+            android:text="D"
+            android:textColor="@color/background_white"
+            android:background="@color/primary_green_Dark"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+
+</LinearLayout>
+

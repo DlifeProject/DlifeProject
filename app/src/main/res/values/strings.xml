@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">D.life</string>
+    <string name="text_Name">Spot diary</string>
+    <string name="text_Submit">Submit</string>
+    <string name="text_InvalidName">請輸入日記內容</string>
+    <string name="text_SpotNotFound">Spot not found</string>
+    <string name="AccountID">Account</string>
+    <string name="LoginPassword">Password</string>
+    <string name="login">Log in</string>
+    <string name="Reset">Reset</string>
+</resources>
