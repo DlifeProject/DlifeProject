@@ -1,27 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.yancy.gallerypickdemo">
+    package="com.kang.Dlife">
 
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!--可以使用網路連線-->
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <!--網路連線狀態-->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <!--使用 wifi網路來定位-->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <!--GPS 精準定位-->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+    <!--Service 不休眠-->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+
     <application
-        android:name=".tb_page1.diary_edit.DiaryEdit$BaseApplication"
+        android:label="@string/app_name"
+        android:name="com.kang.Dlife.tb_page1.diary_edit.DiaryEdit$BaseApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
-        <!--<meta-data-->
-            <!--android:name="google.android.gms.version"-->
-            <!--android:value="@integer/google_play_services_version" />-->
+
+        <!-- google 定位 務必加入 -->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDGkE4FG31EUpY8-EA8lO5HH4SN8bDneuE" />
+
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="com.yancy.gallerypickdemo.fileprovider"
+            android:authorities="com.kang.Dlife.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
@@ -30,25 +47,41 @@
 
         </provider>
 
-        <activity android:name=".MainActivity">
+        <activity
+            android:name="com.kang.Dlife.MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".TabActivity"></activity>
-        <activity android:name=".tb_page1.diary_edit.DiaryEdit"
-            android:windowSoftInputMode="adjustPan" />
-        <activity android:name=".tb_page4.PersonData" />
-        <activity android:name=".tb_page4.PersonLocated" />
-        <activity android:name=".tb_page4.Facebook" />
-        <activity android:name=".tb_page4.Google" />
-        <activity android:name=".tb_page4.GpsList" />
-        <activity android:name=".tb_page4.GpsUpload"/>
-        <activity android:name=".tb_page2.diary_view.DiaryView"></activity>
+        <activity android:name="com.kang.Dlife.TabActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name="com.kang.Dlife.tb_page1.diary_edit.DiaryEdit"
+            android:windowSoftInputMode="adjustPan"
+            android:screenOrientation="portrait"/>
+        <activity android:name="com.kang.Dlife.tb_page4.PersonData"
+            android:screenOrientation="portrait"/>
+        <activity android:name="com.kang.Dlife.tb_page4.PersonLocated"
+            android:screenOrientation="portrait"/>
+        <activity android:name="com.kang.Dlife.tb_page4.Facebook"
+            android:screenOrientation="portrait"/>
+        <activity android:name="com.kang.Dlife.tb_page4.Google"
+            android:screenOrientation="portrait"/>
+        <activity android:name="com.kang.Dlife.tb_page4.GpsList"
+            android:screenOrientation="portrait"/>
+        <activity android:name="com.kang.Dlife.tb_page4.GpsUpload"
+            android:screenOrientation="portrait"/>
+        <activity android:name="com.kang.Dlife.tb_page2.diary_view.DiaryView"
+            android:screenOrientation="portrait"/>
+        <activity android:name="com.kang.Dlife.tb_page1.diary_edit.GoogleMap"
+            android:screenOrientation="portrait"/>
+        <activity android:name="com.kang.Dlife.tb_page2.diary_view.GoogleMap"
+            android:screenOrientation="portrait"/>
 
-
+        <!--enabled : 系統可否產生Service物件-->
+        <service android:name="com.kang.Dlife.sever.GPSService" android:enabled="true" />
     </application>
 
 </manifest>

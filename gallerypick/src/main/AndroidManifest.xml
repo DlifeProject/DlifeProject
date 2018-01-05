@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.yancy.gallerypick">
+    package="com.kang.GalleryPick">
 
     <!--读取文件权限-->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -9,18 +9,9 @@
     <application
         android:allowBackup="true"
         android:supportsRtl="true">
-        <!--<provider-->
-            <!--android:name="android.support.v4.content.FileProvider"-->
-            <!--android:authorities="com.yancy.gallerypick.fileprovider"-->
-            <!--android:exported="false"-->
-            <!--android:grantUriPermissions="true">-->
-            <!--<meta-data-->
-                <!--android:name="android.support.FILE_PROVIDER_PATHS"-->
-                <!--android:resource="@xml/filepaths" />-->
-        <!--</provider>-->
 
         <activity
-            android:name="com.yancy.gallerypick.activity.GalleryPickActivity"
+            android:name="com.kang.GalleryPick.activity.GalleryPickActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
             android:theme="@style/GalleryTheme" />

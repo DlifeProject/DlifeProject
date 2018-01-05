@@ -1,16 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@color/background_white"
+    android:orientation="vertical"
+    android:gravity="center"
     >
-
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="@color/background_white"
+        android:orientation="horizontal"
+        android:gravity="center">
     <LinearLayout
         android:id="@+id/person_data"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="35dp"
-        android:layout_marginLeft="35dp">
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
 
         <ImageView
             android:id="@+id/iv1"
@@ -22,10 +31,11 @@
 
     <LinearLayout
         android:id="@+id/person_located"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="35dp"
-        android:layout_marginLeft="225dp">
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
 
         <ImageView
             android:id="@+id/iv2"
@@ -37,13 +47,21 @@
             android:background="#00000000"
             android:src="@drawable/person_located" />
     </LinearLayout>
-
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="@color/background_white"
+        android:orientation="horizontal"
+        android:gravity="center">
     <LinearLayout
         android:id="@+id/facebook"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="220dp"
-        android:layout_marginLeft="35dp">
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
 
         <ImageView
             android:id="@+id/iv3"
@@ -55,10 +73,11 @@
 
     <LinearLayout
         android:id="@+id/google"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="220dp"
-        android:layout_marginLeft="225dp">
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
 
         <ImageView
             android:id="@+id/iv4"
@@ -67,13 +86,21 @@
             android:background="#00000000"
             android:src="@drawable/google" />
     </LinearLayout>
-
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="@color/background_white"
+        android:orientation="horizontal"
+        android:gravity="center">
     <LinearLayout
         android:id="@+id/gps_list"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="405dp"
-        android:layout_marginLeft="35dp">
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
 
         <ImageView
             android:id="@+id/iv5"
@@ -85,10 +112,11 @@
 
     <LinearLayout
         android:id="@+id/gps_upload"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="405dp"
-        android:layout_marginLeft="225dp">
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
 
         <ImageView
             android:id="@+id/iv6"
@@ -97,4 +125,5 @@
             android:background="#00000000"
             android:src="@drawable/gps_upload" />
     </LinearLayout>
-</RelativeLayout>
+    </LinearLayout>
+</LinearLayout>

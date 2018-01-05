@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:background="@color/gallery_white">
 
-    <com.yancy.gallerypick.widget.GalleryImageView
+    <com.kang.GalleryPick.widget.GalleryImageView
         android:id="@+id/ivGalleryFolderImage"
         android:layout_width="86dp"
         android:layout_height="86dp"

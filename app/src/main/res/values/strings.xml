@@ -8,4 +8,7 @@
     <string name="LoginPassword">Password</string>
     <string name="login">Log in</string>
     <string name="Reset">Reset</string>
+    <string name="hello_blank_fragment">Helloblankfragment</string>
+    <string name="msg_NoNewsFound">沒有日記</string>
+    <string name="msg_NoNetwork">NoNetwork</string>
 </resources>

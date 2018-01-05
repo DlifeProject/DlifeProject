@@ -5,6 +5,7 @@
     <color name="primary_green_Dark">#00755e</color>
     <color name="primary_green_light">#55d7bb</color>
     <color name="page2_viewpager">#4f4f4f</color>
+    <color name="text_black">#4f4f4f</color>
     <color name="background_gray">#E1E2E1</color>
     <color name="colorPrimary">#000000</color>
     <color name="colorPrimaryDark">#080808</color>

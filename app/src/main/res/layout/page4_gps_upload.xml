@@ -54,4 +54,31 @@
                 android:src="@drawable/ic_check_circle" />
         </LinearLayout>
     </RelativeLayout>
+    <ScrollView
+        android:id="@+id/gpsMsg"
+        android:layout_width="match_parent"
+        android:layout_height="310dp"
+        android:layout_centerVertical="true"
+        android:textColor="@color/text_black"
+        android:textSize="16sp"
+        android:textStyle="bold">
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="6dp"
+            android:orientation="vertical" />
+    </ScrollView>
+    <Button
+        android:id="@+id/btGPS"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/primary_green"
+        android:text="query all location" />
+    <Button
+        android:id="@+id/btDiary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/primary_green"
+        android:text="add diary" />
 </LinearLayout>

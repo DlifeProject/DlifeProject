@@ -60,7 +60,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="40dp"
                 android:text="Since"
-                android:textColor="@color/page2_viewpager"
+                android:textColor="@color/text_black"
                 android:textSize="35sp" />
 
             <TextView
@@ -69,7 +69,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="25dp"
                 android:layout_toRightOf="@+id/tv_start_time"
-                android:textColor="@color/page2_viewpager"
+                android:textColor="@color/text_black"
                 android:textSize="30dp" />
 
             <TextView
@@ -79,7 +79,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_toRightOf="@+id/tv_year"
                 android:text="/"
-                android:textColor="@color/page2_viewpager"
+                android:textColor="@color/text_black"
                 android:textSize="30dp" />
 
             <TextView
@@ -89,7 +89,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_toRightOf="@+id/tv_year_month"
 
-                android:textColor="@color/page2_viewpager"
+                android:textColor="@color/text_black"
                 android:textSize="30dp" />
 
             <TextView
@@ -99,7 +99,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_toRightOf="@+id/tv_month"
                 android:text="/"
-                android:textColor="@color/page2_viewpager"
+                android:textColor="@color/text_black"
                 android:textSize="30dp" />
 
             <TextView
@@ -109,7 +109,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_toRightOf="@+id/tv_month_day"
 
-                android:textColor="@color/page2_viewpager"
+                android:textColor="@color/text_black"
                 android:textSize="30dp" />
 
         </RelativeLayout>
@@ -127,7 +127,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="55dp"
                 android:text="End"
-                android:textColor="@color/page2_viewpager"
+                android:textColor="@color/text_black"
                 android:textSize="35sp" />
 
             <TextView
@@ -136,7 +136,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="35dp"
                 android:layout_toRightOf="@+id/tv_end_time"
-                android:textColor="@color/page2_viewpager"
+                android:textColor="@color/text_black"
                 android:textSize="30dp" />
 
             <TextView
@@ -146,7 +146,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_toRightOf="@+id/tv_year_end"
                 android:text="/"
-                android:textColor="@color/page2_viewpager"
+                android:textColor="@color/text_black"
                 android:textSize="30dp" />
 
             <TextView
@@ -155,7 +155,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="10dp"
                 android:layout_toRightOf="@+id/tv_year_month_end"
-                android:textColor="@color/page2_viewpager"
+                android:textColor="@color/text_black"
                 android:textSize="30dp" />
 
             <TextView
@@ -165,7 +165,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_toRightOf="@+id/tv_month_end"
                 android:text="/"
-                android:textColor="@color/page2_viewpager"
+                android:textColor="@color/text_black"
                 android:textSize="30dp" />
 
             <TextView
@@ -174,7 +174,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="10dp"
                 android:layout_toRightOf="@+id/tv_month_day_end"
-                android:textColor="@color/page2_viewpager"
+                android:textColor="@color/text_black"
                 android:textSize="30dp" />
 
         </RelativeLayout>
@@ -187,7 +187,7 @@
             android:layout_marginTop="12dp"
             android:background="@drawable/shape_rectangle_dark"
             android:text="確認"
-            android:textColor="@color/page2_viewpager" />
+            android:textColor="@color/text_black" />
 
 
 
