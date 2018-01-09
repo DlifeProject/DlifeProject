@@ -40,7 +40,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.kang.Dlife.Common;
 import com.kang.Dlife.R;
-import com.kang.Dlife.tb_page1.DiaryDetail;
+import com.kang.Dlife.data_base.DiaryDetail;
+import com.kang.Dlife.sever.LocationToDiary;
 import com.kang.Dlife.sever.MyTask;
 import com.kang.GalleryPick.config.GalleryConfig;
 import com.kang.GalleryPick.config.GalleryPick;
@@ -71,13 +72,13 @@ public class DiaryEdit extends Activity {
     private final int PERMISSIONS_REQUEST_READ_CONTACTS = 8;
     private TextView tvDate,tvTimeStart,tvTimeEnd,tvLocation;
     private ImageButton ibMap;
-    public DiaryDetail bundleP;
-    public Hashtable<Integer,DiaryDetail> bundleHash = new Hashtable<Integer,DiaryDetail>();
+    public LocationToDiary bundleP;
+    public Hashtable<Integer,LocationToDiary> bundleHash = new Hashtable<Integer,LocationToDiary>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle bundle = getIntent().getExtras();
-        bundleP = (DiaryDetail) bundle.getSerializable("Page1Spot");
+        bundleP = (LocationToDiary) bundle.getSerializable("Page1Spot");
 
         setContentView(R.layout.page1_diary_edit);
         // Spinner選單
@@ -110,12 +111,17 @@ public class DiaryEdit extends Activity {
         Geocoder geocoder = new Geocoder(DiaryEdit.this);
         try{
             List<Address> addressList =
-                    geocoder.getFromLocation(bundleP.latitude, bundleP.longitude, 1);
-            Address address = addressList.get(0);
-            String addrStr = "";
-            for (int i = 0; i <= address.getMaxAddressLineIndex(); i++){
-                addrStr = address.getLocality();
+                    geocoder.getFromLocation(bundleP.getLatitude(), bundleP.getLongitude(), 1);
 
+            String addrStr = "";
+            if(addressList.size() > 0){
+                Address address = addressList.get(0);
+                for (int i = 0; i <= address.getMaxAddressLineIndex(); i++){
+                    addrStr = address.getLocality();
+
+                }
+            }else{
+                addrStr = "unknown";
             }
             tvLocation.setText(addrStr);
         } catch (IOException e) {
@@ -224,18 +230,18 @@ public class DiaryEdit extends Activity {
     }
 
     // 找按鈕
-    private void initView(DiaryDetail page1Spot) {
+    private void initView(LocationToDiary page1Spot) {
         btn = (ImageButton) super.findViewById(R.id.btn);
         rvResultPhoto = (RecyclerView) super.findViewById(R.id.rvResultPhoto);
         etDiary = (EditText) super.findViewById(R.id.etDiary);
         ibOk = (ImageButton) super.findViewById(R.id.ibOk);
         tvDate = (TextView) super.findViewById(R.id.tvDate);
-        tvDate.setText(Common.dateStringToDay(page1Spot.getStart_date()));
+        tvDate.setText(Common.dateStringToDay(page1Spot.getStartDate()));
         tvLocation = (TextView) super.findViewById(R.id.tvLocation);
         tvTimeStart = (TextView) super.findViewById(R.id.tvTimeStart);
-        tvTimeStart.setText(Common.dateStringToHM(page1Spot.getStart_date()));
+        tvTimeStart.setText(Common.dateStringToHM(page1Spot.getStartDate()));
         tvTimeEnd = (TextView) super.findViewById(R.id.tvTimeEnd);
-        tvTimeEnd.setText(Common.dateStringToHM(page1Spot.getEnd_date()));
+        tvTimeEnd.setText(Common.dateStringToHM(page1Spot.getEndDate()));
         ibMap = (ImageButton) super.findViewById(R.id.ibMap);
     }
 

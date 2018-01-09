@@ -1,11 +1,9 @@
-package com.kang.Dlife.tb_page1;
+package com.kang.Dlife.data_base;
 
-
-import com.kang.Dlife.Common;
 
 import java.io.Serializable;
 
-public class DiaryDetail implements Serializable {
+public class DiaryDetailWeb implements Serializable {
 
     private int sk;
     private int member_sk;
@@ -18,42 +16,29 @@ public class DiaryDetail implements Serializable {
     private String end_date;
     private String post_day;
     private String post_date;
+    private double longitude;
+    private double latitude;
+    private double altitude;
 
-    public int imageId;
-    public int icWeatherId;
-    public int icNewId;
-    public String place = "中央大學";
-    public double longitude;
-    public double latitude;
-    public double altitude;
-    public int startLocationSK;
-    public int endLocationSK;
-
-    public DiaryDetail() {
+    public void describe() {
+        System.out.println("--------------------");
+        System.out.println("member_sk : " + member_sk);
+        System.out.println("longitude : " + longitude);
+        System.out.println("latitude : " + latitude);
+        System.out.println("altitude : " + altitude);
+        System.out.println("start_stamp : " + start_stamp);
+        System.out.println("end_stamp : " + end_stamp);
+        System.out.println("start_date : " + start_date);
+        System.out.println("end_date : " + end_date);
+        System.out.println("post_day : " + post_day);
+        System.out.println("post_date : " + post_date);
+        System.out.println("--------------------");
+    }
+    public DiaryDetailWeb() {
         super();
     }
 
-    public DiaryDetail(DiaryDetail d){
-        super();
-        this.sk = d.getSk();
-        this.member_sk = d.getMember_sk();
-        this.top_category_sk = d.getTop_category_sk();
-        this.member_location_sk = d.getMember_location_sk();
-        this.note = d.getNote();
-        this.start_stamp = d.getStart_stamp();
-        this.end_stamp = d.getEnd_stamp();
-        this.start_date = d.getStart_date();
-        this.end_date = d.getEnd_date();
-        this.post_day = d.getPost_day();
-        this.post_date = d.getPost_date();
-        longitude = d.longitude;
-        latitude = d.latitude;
-        altitude = d.altitude;
-        startLocationSK = d.startLocationSK;
-        endLocationSK = d.endLocationSK;
-    }
-
-    public DiaryDetail(int member_sk, String note,
+    public DiaryDetailWeb(int member_sk, String note,
                        String start_stamp, String end_stamp) {
         super();
         this.member_sk = member_sk;
@@ -62,7 +47,7 @@ public class DiaryDetail implements Serializable {
         this.end_stamp = end_stamp;
     }
 
-    public DiaryDetail(int member_sk, int top_category_sk, int member_location_sk, String note,
+    public DiaryDetailWeb(int member_sk, int top_category_sk, int member_location_sk, String note,
                        String start_stamp, String end_stamp, String post_day, String post_date) {
         super();
         this.member_sk = member_sk;
@@ -75,7 +60,7 @@ public class DiaryDetail implements Serializable {
         this.post_date = post_date;
     }
 
-    public DiaryDetail(int sk, int member_sk, int top_category_sk, int member_location_sk, String note,
+    public DiaryDetailWeb(int sk, int member_sk, int top_category_sk, int member_location_sk, String note,
                        String start_stamp, String end_stamp, String start_date, String end_date, String post_day,
                        String post_date) {
         super();
@@ -164,23 +149,27 @@ public class DiaryDetail implements Serializable {
         this.end_date = end_date;
     }
 
-    public String describe() {
-        String msg = "";
-        msg += "--------------------" + "\n";
-        msg += "sk : " + getSk() + "\n";
-        msg += "longitude : " + longitude + "\n";
-        msg += "latitude : " + latitude + "\n";
-        msg += "altitude : " + altitude + "\n";
-        msg += "start_stamp : " + getStart_stamp() + "\n";
-        msg += "end_stamp : " + getEnd_stamp() + "\n";
-        msg += "start_date : " + getStart_date() + "\n";
-        msg += "end_date : " + getEnd_date() + "\n";
-        msg += "post_day : " + getPost_day() + "\n";
-        msg += "post_date : " + getPost_date() + "\n";
-        msg += "---to spot time--" + "\n";
-        msg += Common.dateStringToDay(getStart_date()) + "\n";
-        msg += Common.dateStringToHM(getStart_date()) + "\n";
-        msg += "--------------------" + "\n";
-        return msg;
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getAltitude() {
+        return altitude;
+    }
+
+    public void setAltitude(double altitude) {
+        this.altitude = altitude;
     }
 }

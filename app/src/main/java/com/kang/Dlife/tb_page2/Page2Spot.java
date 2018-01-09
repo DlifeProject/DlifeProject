@@ -2,11 +2,17 @@ package com.kang.Dlife.tb_page2;
 
 import java.io.Serializable;
 
-/**
- * Created by allen on 2017/12/4.
- */
-
 public class Page2Spot implements Serializable{
+
+    private int image;
+    private int year;
+    private int month;
+    private int day;
+    private int three_day;
+    private int seven_day;
+    private String conent;
+    private String bt_name;
+
 
 
     public Page2Spot(int image, int year, int month, int day, int three_day, int seven_day, String conent, String bt_name) {
@@ -20,8 +26,6 @@ public class Page2Spot implements Serializable{
         this.bt_name = bt_name;
     }
 
-    private int image, year, month, day, three_day , seven_day;
-    private String conent;
 
     public int getImage() {
         return image;
@@ -87,5 +91,4 @@ public class Page2Spot implements Serializable{
         this.bt_name = bt_name;
     }
 
-    private String bt_name;
 }

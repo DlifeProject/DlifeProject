@@ -16,19 +16,16 @@ import android.widget.TextView;
 import com.kang.Dlife.R;
 import com.kang.Dlife.tb_page2.diary_view.DiaryView;
 
-/**
- * Created by allen on 2017/12/7.
- */
 
 public class CoverButton extends Fragment {
-    private Page2Spot item;
+    private CategorySum item;
     RelativeLayout ry_click;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            item = (Page2Spot) getArguments().getSerializable("item");
+            item = (CategorySum) getArguments().getSerializable("item");
         }
     }
 
@@ -38,10 +35,10 @@ public class CoverButton extends Fragment {
         View view = inflater.inflate(R.layout.page2_viewpager, container, false);
 
         ImageView iv_pic = view.findViewById(R.id.iv_pic);
-        iv_pic.setImageResource(item.getImage());
+        iv_pic.setImageResource(item.getDiaryPhotoSK());
 
         final TextView tv_click = view.findViewById(R.id.tv_click);
-        tv_click.setText(item.getBt_name());
+        tv_click.setText(item.getCategoryType());
 
         ry_click = view.findViewById(R.id.ry_click);
         ry_click.setOnTouchListener(new View.OnTouchListener() {
@@ -60,12 +57,19 @@ public class CoverButton extends Fragment {
         ry_click.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getActivity(), DiaryView.class));
+
+                Intent intent = new Intent();
+                intent.setClass(getActivity(),DiaryView.class);
+                Bundle bundle = new Bundle();
+
+                bundle.putSerializable("CategorySum",item);
+                intent.putExtras(bundle);
+                startActivity(intent);
             }
         });
 
         TextView tv_theme = view.findViewById(R.id.tv_theme);
-        tv_theme.setText(item.getConent());
+        tv_theme.setText(item.getNote());
 
         TextView tv_year = view.findViewById(R.id.tv_year);
         tv_year.setText(String.valueOf(item.getYear()));

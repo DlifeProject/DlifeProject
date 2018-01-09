@@ -9,9 +9,10 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.kang.Dlife.R;
-import com.kang.Dlife.tb_page1.DiaryDetail;
-import com.kang.Dlife.data_base.LocationDao;
+import com.kang.Dlife.data_base.DiaryDetail;
+import com.kang.Dlife.sever.LocationDao;
 import com.kang.Dlife.data_base.LocationTrace;
+import com.kang.Dlife.sever.LocationToDiary;
 
 import java.util.List;
 
@@ -46,10 +47,10 @@ public class GpsUpload extends AppCompatActivity {
             public void onClick(View v) {
 
                 LocationDao locationDao = new LocationDao(getApplicationContext());
-                List<DiaryDetail> ltDiary = locationDao.autoDiary(getApplicationContext());
+                List<LocationToDiary> ltDiary = locationDao.autoDiary(getApplicationContext());
                 String msg = "";
-                for(DiaryDetail d:ltDiary) {
-                    msg += d.describe();
+                for(LocationToDiary d:ltDiary) {
+                    //msg += d.describe();
                 }
 
                 updateLastLocationInfo(msg);

@@ -22,13 +22,13 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-import com.kang.Dlife.data_base.LocationDao;
+import com.kang.Dlife.data_base.LocationTrace;
 
 public class GPSService extends Service {
 
-    public final static int DB_DELAY_TIME = 6000;              //毫秒
-    public final static int GPS_INTERVAL = 3000;               //毫秒
-    public final static int GPS_SET_SMALLEST_DISPLACEMENT = 10;  //公尺
+    public final static int DB_DELAY_TIME = 180000;              //毫秒  180 秒
+    public final static int GPS_INTERVAL = 360000;               //毫秒 360
+    public final static int GPS_SET_SMALLEST_DISPLACEMENT = 50;  //公尺
 
     private static GPSThread gpsThread;
     private Boolean isRun = true;
@@ -42,6 +42,17 @@ public class GPSService extends Service {
         gpsThread.start();
 
         return flags;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        LocationTrace locationTrace = new LocationTrace();
+        locationTrace.setForward_sk(-1);
+        LocationDao locationDao = new LocationDao(this);
+        locationDao.insert(locationTrace);
+
     }
 
     @Nullable
@@ -77,9 +88,7 @@ public class GPSService extends Service {
             }
             googleApiClient.connect();      //呼叫connect()連結google開始API功能
 
-
             while (isRun) {
-
                 try {
                     //先每分鐘抓一次
                     Thread.sleep(DB_DELAY_TIME);
@@ -87,7 +96,6 @@ public class GPSService extends Service {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
-
             }
         }
 

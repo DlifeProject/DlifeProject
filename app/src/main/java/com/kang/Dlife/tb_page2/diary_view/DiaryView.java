@@ -1,7 +1,6 @@
 package com.kang.Dlife.tb_page2.diary_view;
 
 import android.content.Context;
-import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.ConnectivityManager;
@@ -25,36 +24,50 @@ import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.kang.Dlife.Common;
 import com.kang.Dlife.R;
+import com.kang.Dlife.data_base.DiaryDetail;
+import com.kang.Dlife.data_base.DiaryDetailWeb;
 import com.kang.Dlife.sever.MyTask;
+import com.kang.Dlife.tb_page2.CategorySum;
+import com.kang.Dlife.tb_page2.PieChartItem;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
+
+import com.kang.Dlife.data_base.DiaryDetail;
 
 
 public class DiaryView extends AppCompatActivity {
+
     private ImageButton btBack;
-
-
     private final static String TAG = "IgTestRecycler2Activity";
     private RecyclerView recyclerView;
+
     private MyTask newsGetAllTask;
+
     private ImageButton ibMap;
     private double longitude;
     private double latitude;
+
+    public CategorySum categorySum;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.page2_diary_view);
 
+        Bundle bundle = getIntent().getExtras();
+        categorySum = (CategorySum) bundle.getSerializable("CategorySum");
+
+        Common.showToast(this,categorySum.getCategoryType());
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL));
 
 //        List<IgDiary> igList = getIglist();
-
 //        recyclerView.setAdapter(new IgAdapter(this, igList));
+
         initView();
         ibMap = (ImageButton) super.findViewById(R.id.ibMap);
         btBack.setOnClickListener(new View.OnClickListener() {
@@ -71,44 +84,41 @@ public class DiaryView extends AppCompatActivity {
         btBack = (ImageButton) super.findViewById(R.id.btBack);
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        showAllNews();
-    }
 
     private void showAllNews() {
 
         if (networkConnected()) {
-            String url = Common.URL + "IgDiaryServlet";
-            List<DiaryViewSpot> igList = null;
+            String url = "";
+            List<DiaryDetailWeb> ltJson = null;
             try {
+
                 JsonObject jsonObject = new JsonObject();
-                jsonObject.addProperty("action", "getAll");
-// 到時候這邊設帳密 讓server端設if else取得帳密               jsonObject.addProperty("accout", Common.getAccount());
-
+                jsonObject.addProperty("action", "getDiary");
+                jsonObject.addProperty("account", Common.getAccount(this));
+                jsonObject.addProperty("password", Common.getPWD(this));
+                jsonObject.addProperty("categoryType", categorySum.getCategoryType());
                 String jsonOut = jsonObject.toString();
-                newsGetAllTask = new MyTask(url, jsonOut);
-//------------------------------------------
 
-                String jsonIn = newsGetAllTask.execute().get();
+                url = Common.URL + Common.WEBDIARY;
+                MyTask getDiaryTask = new MyTask(url, jsonOut);
+                String getDiaryJsonIn = getDiaryTask.execute().get().trim();
 
-
-                Log.d(TAG, jsonIn);
                 Gson gson = new Gson();
-                Type listType = new TypeToken<List<DiaryViewSpot>>() {
-                }.getType();
+                JsonObject diaryInJsonObject = gson.fromJson(getDiaryJsonIn,JsonObject.class);
+                String ltDiaryDetailString = diaryInJsonObject.get("getDiary").getAsString().trim();
 
-                if (jsonIn != null) {
-                    igList = gson.fromJson(jsonIn, listType);
-                }
+                Type tySum = new TypeToken<List<DiaryDetailWeb>>(){}.getType();
+                ltJson = new Gson().fromJson(ltDiaryDetailString, tySum);
+
             } catch (Exception e) {
                 Log.e(TAG, e.toString());
             }
-            if (igList == null || igList.isEmpty()) {
+
+
+            if (ltJson.size() == 0) {
                 Common.showToast(this, R.string.msg_NoNewsFound);
             } else {
-                recyclerView.setAdapter(new IgAdapter(this, igList));
+                recyclerView.setAdapter(new IgAdapter(this, ltJson));
             }
         } else {
             Common.showToast(this, R.string.msg_NoNetwork);
@@ -131,11 +141,12 @@ public class DiaryView extends AppCompatActivity {
     //  供內部使用 所以可以包來包去 因為已經是private 了所以裡面的不用寫
     private class IgAdapter extends
             RecyclerView.Adapter<IgAdapter.MyViewHolder> {
+
         private Context context;
-        private List<DiaryViewSpot> igList;
+        private List<DiaryDetailWeb> igList;
 
         //顯示什麼東西
-        IgAdapter(Context context, List<DiaryViewSpot> igList) {
+        IgAdapter(Context context, List<DiaryDetailWeb> igList) {
             this.context = context;
             this.igList = igList;
         }
@@ -177,35 +188,41 @@ public class DiaryView extends AppCompatActivity {
 
             viewHolder.mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.HORIZONTAL));
 
-            viewHolder.mRecyclerView.setOnFlingListener(null);//先放這就不會滑到底
+            //先放這就不會滑到底
+            viewHolder.mRecyclerView.setOnFlingListener(null);
             PagerSnapHelper pagerSnapHelper = new PagerSnapHelper();
             pagerSnapHelper.attachToRecyclerView(viewHolder.mRecyclerView);
 
             List<PhotoSpot> photoSpotList = null;
 
+            int thissk = igList.get(position).getSk();
+
             if (networkConnected()) {
-                String url = Common.URL + "IgPictureServlet";
+                String url = Common.URL + Common.WEBPHOTO;
 
                 try {
+
                     JsonObject jsonObject = new JsonObject();
-                    jsonObject.addProperty("action", "getAll");
-// 到時候這邊設帳密 讓server端設if else取得帳密               jsonObject.addProperty("accout", Common.getAccount());
-
+                    jsonObject.addProperty("action", "getDiaryPhotoSKList");
+                    jsonObject.addProperty("account", Common.getAccount(DiaryView.this));
+                    jsonObject.addProperty("password", Common.getPWD(DiaryView.this));
+                    jsonObject.addProperty("diarySK", igList.get(position).getSk());
                     String jsonOut = jsonObject.toString();
-                    newsGetAllTask = new MyTask(url, jsonOut);
-//------------------------------------------
 
-                    String jsonIn = newsGetAllTask.execute().get();
+                    Common.showToast(DiaryView.this,igList.get(position).getSk());
 
+                    MyTask getDiaryPhotoSKTask =new MyTask(url, jsonOut);
+                    String getDiaryPhotoSKjsonIn = getDiaryPhotoSKTask.execute().get();
 
-                    Log.d(TAG, jsonIn);
+                    //等等再寫
                     Gson gson = new Gson();
-                    Type listType = new TypeToken<List<PhotoSpot>>() {
-                    }.getType();
+                    JsonObject diaryInJsonObject = gson.fromJson(getDiaryPhotoSKjsonIn,JsonObject.class);
+                    String ltDiaryDetailString = diaryInJsonObject.get("getDiaryPhotoSKList").getAsString().trim();
 
-                    if (jsonIn != null) {
-                        photoSpotList = gson.fromJson(jsonIn, listType);
-                    }
+                    Type ltWeb = new TypeToken<List<Integer>>(){}.getType();
+                    List<Integer>  ltJson = new Gson().fromJson(ltDiaryDetailString, ltWeb);
+
+
                 } catch (Exception e) {
                     Log.e(TAG, e.toString());
                 }
@@ -216,11 +233,11 @@ public class DiaryView extends AppCompatActivity {
             viewHolder.mRecyclerView.setAdapter(new IgPictureAdapter(context, photoSpotList));
 
 
-            final DiaryViewSpot diaryViewSpot = igList.get(position);
-            String time = diaryViewSpot.getStartTime() + "-" + diaryViewSpot.getEndTime();
-            viewHolder.tvDate.setText(diaryViewSpot.getDate());
-            longitude = diaryViewSpot.getLongitude();
-            latitude = diaryViewSpot.getLatitude();
+            final DiaryDetailWeb diaryDetail = igList.get(position);
+            String time = diaryDetail.getStart_stamp() + "-" + diaryDetail.getEnd_stamp();
+            viewHolder.tvDate.setText(diaryDetail.getStart_date());
+            longitude = diaryDetail.getLongitude();
+            latitude = diaryDetail.getLatitude();
             Geocoder geocoder = new Geocoder(DiaryView.this);
             try {
                 List<Address> addressList =
@@ -236,23 +253,20 @@ public class DiaryView extends AppCompatActivity {
                 e.printStackTrace();
             }
 
-
             viewHolder.tvTime.setText(time);
-            viewHolder.tvNote.setText(diaryViewSpot.getNote());
+            viewHolder.tvNote.setText(diaryDetail.getNote());
             viewHolder.tvContinue.setVisibility(View.GONE);
 
             if (viewHolder.tvNote.length() > 11) {
-                viewHolder.tvNote.setText(diaryViewSpot.getNote().substring(0, 11));
+                viewHolder.tvNote.setText(diaryDetail.getNote().substring(0, 11));
 
                 viewHolder.tvContinue.setVisibility(View.VISIBLE);
-
-
                 viewHolder.tvContinue.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
 
                         viewHolder.tvContinue.setVisibility(View.GONE);
-                        viewHolder.tvNote.setText(diaryViewSpot.getNote().substring(0));
+                        viewHolder.tvNote.setText(diaryDetail.getNote().substring(0));
                     }
                 });
             }
@@ -279,7 +293,7 @@ public class DiaryView extends AppCompatActivity {
             imageSize = getResources().getDisplayMetrics().widthPixels;
         }
 
-        //相當於一個資料夾ＨＯＬＤ住這三個的捷徑
+        //相當於一個資料夾hold住這三個的捷徑
         class MyViewHolder extends RecyclerView.ViewHolder {
             ImageView ivRecyclerImage;
 
@@ -354,8 +368,3 @@ public class DiaryView extends AppCompatActivity {
 
     }
 }
-
-
-
-
-

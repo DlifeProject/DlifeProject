@@ -17,7 +17,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -25,7 +24,9 @@ import android.widget.Toast;
 
 import com.kang.Dlife.Common;
 import com.kang.Dlife.R;
-import com.kang.Dlife.data_base.LocationDao;
+import com.kang.Dlife.data_base.DiaryDetail;
+import com.kang.Dlife.sever.LocationDao;
+import com.kang.Dlife.sever.LocationToDiary;
 import com.kang.Dlife.tb_page1.diary_edit.DiaryEdit;
 
 import java.io.IOException;
@@ -36,7 +37,7 @@ import java.util.List;
 //不是Activity就一定要宣告View
 public class Page1 extends Fragment {
     private ListView lvSpots;
-    public Hashtable<Integer,DiaryDetail> bundleHash = new Hashtable<Integer,DiaryDetail>();
+    public Hashtable<Integer,LocationToDiary> bundleHash = new Hashtable<Integer,LocationToDiary>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable final Bundle savedInstanceState) {
@@ -44,17 +45,16 @@ public class Page1 extends Fragment {
         View view = inflater.inflate(R.layout.page1, container, false);
         //因為已經宣告過Fragment, 所以可直接在下面寫
         findViews(view);
-        final List<DiaryDetail> Page1Spots = getSpots();
+        final List<LocationToDiary> Page1Spots = getSpots();
         //因為是Fragment所以要把this改成getActivity
         lvSpots.setAdapter(new SpotAdapter(Page1Spots, getActivity()));
         lvSpots.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int index, long l) {
 
-
                 Intent intent = new Intent();
                 intent.setClass(getActivity(), DiaryEdit.class);
-                DiaryDetail bundleP = new DiaryDetail(bundleHash.get(index));
+                LocationToDiary bundleP = new LocationToDiary(bundleHash.get(index));
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("Page1Spot",bundleP);
                 intent.putExtras(bundle);
@@ -74,11 +74,11 @@ public class Page1 extends Fragment {
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
-                        DiaryDetail spot = Page1Spots.get(index);
+                        LocationToDiary spot = Page1Spots.get(index);
 
-                        Toast.makeText(getActivity(), Common.dateStringToDay(spot.getStart_date())
-                                        + " " + Common.dateStringToHM(spot.getStart_date())
-                                        + "-" + Common.dateStringToHM(spot.getEnd_date())
+                        Toast.makeText(getActivity(), Common.dateStringToDay(spot.getStartDate())
+                                        + " " + Common.dateStringToHM(spot.getStartDate())
+                                        + "-" + Common.dateStringToHM(spot.getEndDate())
                                         + "被删除了",
                                 Toast.LENGTH_SHORT).show();
 
@@ -97,10 +97,10 @@ public class Page1 extends Fragment {
     }
 
     private class SpotAdapter extends BaseAdapter {
-        List<DiaryDetail> page1Spots;
+        List<LocationToDiary> page1Spots;
         Context context;
 
-        public SpotAdapter(List<DiaryDetail> Page1Spots, Context context) {
+        public SpotAdapter(List<LocationToDiary> Page1Spots, Context context) {
             this.page1Spots = Page1Spots;
             this.context = context;
         }
@@ -112,7 +112,8 @@ public class Page1 extends Fragment {
 
         @Override
         public View getView(int index, View itemView, ViewGroup viewGroup) {
-            DiaryDetail page1Spot = page1Spots.get(index);
+
+            LocationToDiary page1Spot = page1Spots.get(index);
             LayoutInflater layoutInflater = LayoutInflater.from(context);
             itemView = layoutInflater.inflate(R.layout.page1_listview, viewGroup, false);
             ImageView imageView = itemView.findViewById(R.id.imageView);
@@ -124,29 +125,35 @@ public class Page1 extends Fragment {
             TextView tvPlace = itemView.findViewById(R.id.tvPlace);
             TextView tvDiary = itemView.findViewById(R.id.tvDiary);
 
-            imageView.setImageResource(page1Spot.imageId);
-            icWeather.setImageResource(page1Spot.icWeatherId);
-            icNew.setImageResource(page1Spot.icNewId);
-            tvDate.setText(Common.dateStringToDay(page1Spot.getStart_date()));
-            tvTimeStart.setText(Common.dateStringToHM(page1Spot.getStart_date()));
-            tvTimeEnd.setText(Common.dateStringToHM(page1Spot.getEnd_date()));
+            imageView.setImageResource(page1Spot.getImageId());
+            icWeather.setImageResource(page1Spot.getIcNewId());
+            icNew.setImageResource(page1Spot.getIcNewId());
+            tvDate.setText(Common.dateStringToDay(page1Spot.getStartDate()));
+            tvTimeStart.setText(Common.dateStringToHM(page1Spot.getStartDate()));
+            tvTimeEnd.setText(Common.dateStringToHM(page1Spot.getEndDate()));
             Geocoder geocoder = new Geocoder(getActivity());
-            try{
-                List<Address> addressList =
-                        geocoder.getFromLocation(page1Spot.latitude, page1Spot.longitude, 1);
-                Address address = addressList.get(0);
-                String addrStr = "";
-                for (int i = 0; i <= address.getMaxAddressLineIndex(); i++){
-                    addrStr = address.getLocality();
 
+            //測試時初始化防呆
+            if(page1Spot.getLatitude() != 0.0){
+                try{
+                    List<Address> addressList =
+                            geocoder.getFromLocation(page1Spot.getLatitude(), page1Spot.getLongitude(), 1);
+                    if(addressList.size() > 0){
+                        Address address = addressList.get(0);
+                        String addrStr = "";
+                        for (int i = 0; i <= address.getMaxAddressLineIndex(); i++){
+                            addrStr = address.getLocality();
+                        }
+                        tvPlace.setText(addrStr);
+                    }else{
+                        tvPlace.setText("Place");
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-                tvPlace.setText(addrStr);
-            } catch (IOException e) {
-                e.printStackTrace();
             }
+
             tvDiary.setText(page1Spot.getNote());
-
-
 
             bundleHash.put(index,page1Spot);
 
@@ -171,18 +178,16 @@ public class Page1 extends Fragment {
         lvSpots = view.findViewById(R.id.listView);
     }
 
-    private List<DiaryDetail> getSpots() {
+    private List<LocationToDiary> getSpots() {
         LocationDao locationDao = new LocationDao(getContext());
-        List<DiaryDetail> ltDiary = locationDao.autoDiary(getContext());
-        List<DiaryDetail> page1Spots = new ArrayList<>();
-        for(DiaryDetail d:ltDiary) {
-            DiaryDetail addDiary = new DiaryDetail(d);
-            addDiary.imageId = R.drawable.ex_photo;
-            addDiary.icWeatherId = R.drawable.ic_sun;
-            addDiary.icNewId = R.drawable.ic_new;
+        List<LocationToDiary> ltDiary = locationDao.autoDiary(getContext());
+        List<LocationToDiary> page1Spots = new ArrayList<>();
+        for(LocationToDiary d:ltDiary) {
+            LocationToDiary addDiary = new LocationToDiary(d);
+            addDiary.setImageId(R.drawable.ex_photo);
+            addDiary.setIcWeatherId(R.drawable.ic_sun);
+            addDiary.setIcNewId(R.drawable.ic_new);
             page1Spots.add(addDiary);
-
-
         }
 
 //        Page1Spots.add(new Page1Spot(
@@ -203,4 +208,3 @@ public class Page1 extends Fragment {
         return page1Spots;
     }
 }
-
