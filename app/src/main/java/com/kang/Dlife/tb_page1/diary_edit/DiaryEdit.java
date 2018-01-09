@@ -159,7 +159,7 @@ public class DiaryEdit extends Activity {
                 jsonObject.addProperty("password", Common.getPWD(DiaryEdit.this));
                 jsonObject.addProperty("categoryType",category_select);
                 bundleP.setNote(diary);
-                jsonObject.addProperty("diaryDetail",new Gson().toJson(bundleP));
+                jsonObject.addProperty("diaryDetail",new Gson().toJson(bundleP.toDiaryDetail()));
 
                 int insterCount = 0;
                 if (networkConnected()) {

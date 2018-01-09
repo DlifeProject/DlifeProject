@@ -31,6 +31,7 @@ import com.kang.Dlife.tb_page1.diary_edit.DiaryEdit;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -126,7 +127,7 @@ public class Page1 extends Fragment {
             TextView tvDiary = itemView.findViewById(R.id.tvDiary);
 
             imageView.setImageResource(page1Spot.getImageId());
-            icWeather.setImageResource(page1Spot.getIcNewId());
+            icWeather.setImageResource(page1Spot.getIcWeatherId());
             icNew.setImageResource(page1Spot.getIcNewId());
             tvDate.setText(Common.dateStringToDay(page1Spot.getStartDate()));
             tvTimeStart.setText(Common.dateStringToHM(page1Spot.getStartDate()));
@@ -189,22 +190,9 @@ public class Page1 extends Fragment {
             addDiary.setIcNewId(R.drawable.ic_new);
             page1Spots.add(addDiary);
         }
+        // listView倒序
+        Collections.reverse(page1Spots);
 
-//        Page1Spots.add(new Page1Spot(
-//                R.drawable.picture1,
-//                R.drawable.ic_sun,
-//                R.drawable.ic_new,
-//                "2017/11/10",
-//                "09:00",
-//                "12:00",
-//                "國立中央大學",
-//                "最近每天都在..."));
-//        Page1Spots.add(new Page1Spot(R.drawable.picture2, R.drawable.ic_cloudy,
-//                0, "2017/11/9", "08:00", "10:00",
-//                "拉亞漢堡", "吃早餐"));
-//        Page1Spots.add(new Page1Spot(R.drawable.picture3, R.drawable.ic_raining,
-//                0, "2017/11/8", "14:00", "16:00",
-//                "文化國小", "沒事不知道做啥"));
         return page1Spots;
     }
 }
