@@ -45,6 +45,7 @@ public class Page2 extends Fragment implements View.OnClickListener {
         ry_Previous.setOnClickListener(this);
         RelativeLayout ry_Next = view.findViewById(R.id.ry_Next);
         ry_Next.setOnClickListener(this);
+
         ItemAdapter itemAdapter = new ItemAdapter(getFragmentManager(), itemList);
         vpItem = view.findViewById(R.id.vpItem);
         vpItem.setAdapter(itemAdapter);
@@ -72,13 +73,9 @@ public class Page2 extends Fragment implements View.OnClickListener {
             }
         }
 
-
-
         Gson gson = new Gson();
         JsonObject outJsonObject = gson.fromJson(msg,JsonObject.class);
         String ltString = outJsonObject.get("CategorySum").getAsString();
-
-
 
         Type tySum = new TypeToken<List<CategorySum>>(){}.getType();
         List<CategorySum> ltJson = new Gson().fromJson(ltString, tySum);
@@ -88,37 +85,10 @@ public class Page2 extends Fragment implements View.OnClickListener {
         itemList.add(new PieChartItem("Daily", 2017,
                 10, 17, 2017, 10, 31));
         for(CategorySum s:ltJson){
-
-            int year = Integer.valueOf(s.getYear());
-            int month= Integer.valueOf(s.getMonth());
-            int day= Integer.valueOf(s.getDay());
-            int three_day= Integer.valueOf(s.getThree_day());
-            int seven_day= Integer.valueOf(s.getSeven_day());
-            String note = s.getNote();
-            String categoryType = s.getCategoryType();
-
-
-            itemList.add(new Page2Spot(R.drawable.shopping, year, month, day
-                    , three_day, seven_day, note, categoryType));
-
+            itemList.add(new CategorySum(s));
         }
 
-//        itemList = new ArrayList<>();
-//        itemList.add(new Page2Spot(R.drawable.shopping, 2017, 11, 31
-//                , 4, 7, "我又敗家了，圍巾入手！", "Shopping"));
-//        itemList.add(new Page2Spot(R.drawable.shopping, 2017, 11, 20
-//                , 3, 5, "美女教練一對一教學！", "Hobby"));
-//        itemList.add(new Page2Spot(R.drawable.shopping, 2017, 10, 20
-//                , 1, 3, "寶寶假用功，寶寶不說！", "Learning"));
-//        itemList.add(new Page2Spot(R.drawable.shopping, 2017, 12, 5
-//                , 5, 8, "美女伴遊，hen開心！", "Travel"));
-//        itemList.add(new Page2Spot(R.drawable.shopping, 2017, 10, 16
-//                , 1, 1, "客訪初體驗，成就滿滿！", "Work"));
-
         return itemList;
-
-        //I am so handsome123
-        //呵呵
 
     }
 
@@ -154,7 +124,6 @@ public class Page2 extends Fragment implements View.OnClickListener {
             this.itemList = itemList;
         }
 
-
         @Override
         public Fragment getItem(int position) {
             Fragment fragment;
@@ -167,9 +136,8 @@ public class Page2 extends Fragment implements View.OnClickListener {
                 args.putSerializable("specialitem", item);
                 fragment.setArguments(args);
 
-
             } else {
-                Page2Spot item = (Page2Spot) itemList.get(position);
+                CategorySum item = (CategorySum) itemList.get(position);
                 CoverButton coverButton = new CoverButton();
                 fragment = coverButton;
                 Bundle args = new Bundle();
@@ -189,4 +157,3 @@ public class Page2 extends Fragment implements View.OnClickListener {
 
 
 }
-

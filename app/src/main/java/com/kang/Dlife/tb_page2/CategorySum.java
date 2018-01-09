@@ -1,12 +1,16 @@
 package com.kang.Dlife.tb_page2;
 
 
-public class CategorySum {
+import java.io.Serializable;
+
+public class CategorySum implements Serializable {
+
     private int diaryPhotoSK;
     private String categoryType;
     private String year;
     private String month;
     private String day;
+
     private int three_day;
     private int seven_day;
     private String note;
@@ -26,6 +30,18 @@ public class CategorySum {
         this.three_day = three_day;
         this.seven_day = seven_day;
         this.note = conent;
+    }
+
+    public CategorySum(CategorySum s) {
+        super();
+        this.diaryPhotoSK = s.getDiaryPhotoSK();
+        this.categoryType = s.getCategoryType();
+        this.year = s.getYear();
+        this.month = s.getMonth();
+        this.day = s.getDay();
+        this.three_day = s.getThree_day();
+        this.seven_day = s.getSeven_day();
+        this.note = s.getNote();
     }
 
     public int getDiaryPhotoSK() {
@@ -91,4 +107,5 @@ public class CategorySum {
     public void setNote(String conent) {
         this.note = conent;
     }
+
 }

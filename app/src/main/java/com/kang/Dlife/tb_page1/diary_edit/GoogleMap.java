@@ -15,7 +15,7 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.kang.Dlife.R;
-import com.kang.Dlife.tb_page1.DiaryDetail;
+import com.kang.Dlife.data_base.DiaryDetail;
 
 public class GoogleMap extends AppCompatActivity
         implements OnMapReadyCallback {
@@ -44,7 +44,7 @@ public class GoogleMap extends AppCompatActivity
 
     //宣告地點的經緯度(緯度, 經度)
     private void initPoints() {
-        MarkPlace = new LatLng(bundleP.latitude, bundleP.longitude);
+        MarkPlace = new LatLng(bundleP.getLatitude(), bundleP.getLongitude());
     }
 
     private void setUpMap() {

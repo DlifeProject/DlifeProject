@@ -1,8 +1,6 @@
 package com.kang.Dlife.data_base;
 
 
-import android.location.Location;
-
 public class LocationTrace {
 
     private int sk;
@@ -53,23 +51,6 @@ public class LocationTrace {
         this.post_date = l.getPost_date();
     }
 
-
-//    public LocationTrace(Location location){
-//        this.sk = 0;
-//        this.member_sk = 0;
-//        this.longitude = location.getLongitude();
-//        this.latitude = location.getLatitude();
-//        this.altitude = location.getAltitude();
-//        this.speed = location.getSpeed();
-//        this.accuracy = location.getAccuracy();
-//        this.forward_sk = 0;
-//        this.distance = 0.0;
-//        this.is_update = 0;
-//        this.update_date = "0000-00-00 00:00:00";
-//        this.post_stamp = "0";
-//        this.post_date = "0000-00-00 00:00:00";
-//    }
-
     public LocationTrace(int sk, int member_sk, double longitude, double latitude, double altitude, double speed, double accuracy, int forward_sk, double distance, int is_update, String update_date, String post_stamp, String post_date) {
         this.sk = sk;
         this.member_sk = member_sk;
@@ -85,8 +66,6 @@ public class LocationTrace {
         this.post_stamp = post_stamp;
         this.post_date = post_date;
     }
-
-
 
     public int getSk() {
         return sk;

@@ -16,7 +16,6 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.kang.Dlife.R;
-import com.kang.Dlife.tb_page1.DiaryDetail;
 
 public class GoogleMap extends AppCompatActivity
         implements OnMapReadyCallback {

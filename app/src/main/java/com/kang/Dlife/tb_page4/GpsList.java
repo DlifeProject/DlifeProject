@@ -23,9 +23,8 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-import com.kang.Dlife.Common;
 import com.kang.Dlife.R;
-import com.kang.Dlife.data_base.LocationDao;
+import com.kang.Dlife.sever.LocationDao;
 import com.kang.Dlife.data_base.LocationTrace;
 
 import java.text.DateFormat;

@@ -1,4 +1,4 @@
-package com.kang.Dlife.data_base;
+package com.kang.Dlife.sever;
 
 
 import android.content.ContentValues;
@@ -9,12 +9,13 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.location.Location;
 
 import com.kang.Dlife.Common;
-import com.kang.Dlife.tb_page1.DiaryDetail;
+import com.kang.Dlife.data_base.LocationTrace;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class LocationDao extends SQLiteOpenHelper {
+
     private static final int DB_VERSION = 1;
     private static final String TABLE_NAME = "location_trace";
 
@@ -229,9 +230,9 @@ public class LocationDao extends SQLiteOpenHelper {
 
         return tList;
     }
-    public List<DiaryDetail>autoDiary(Context context) {
+    public List<LocationToDiary>autoDiary(Context context) {
 
-        List<DiaryDetail> ltDiary = new ArrayList<DiaryDetail>();
+        List<LocationToDiary> ltDiary = new ArrayList<LocationToDiary>();
 
         int timesCount = 0;
         double sumLongitude = 0.0;
@@ -272,29 +273,26 @@ public class LocationDao extends SQLiteOpenHelper {
                 sumLongitude = 0.0;
                 sumLatitude = 0.0;
                 sumAltitude = 0.0;
-
             }
         }
 
         return ltDiary;
     }
 
-    private DiaryDetail autoDiary(LocationTrace ltLast, LocationTrace ltForward, int timesCount, double sumLongitude,
+    private LocationToDiary autoDiary(LocationTrace ltLast, LocationTrace ltForward, int timesCount, double sumLongitude,
                                   double sumLatitude, double sumAltitude) {
 
-        DiaryDetail newDiary = new DiaryDetail();
-
-        newDiary.setStart_stamp(ltForward.getPost_stamp());
-        newDiary.setStart_date(ltForward.getPost_date());
-        newDiary.setEnd_stamp(ltLast.getPost_stamp());
-        newDiary.setEnd_date(ltLast.getPost_date());
-        newDiary.setPost_date(Common.getNowDateString());
-        newDiary.setPost_day(Common.getNowDayString());
-        newDiary.longitude = sumLongitude/timesCount;
-        newDiary.latitude = sumLatitude/timesCount;
-        newDiary.altitude = sumAltitude/timesCount;
-        newDiary.startLocationSK = ltForward.getSk();
-        newDiary.endLocationSK = ltLast.getSk();
+        LocationToDiary newDiary = new LocationToDiary();
+        newDiary.setStartStamp(ltForward.getPost_stamp());
+        newDiary.setStartDate(ltForward.getPost_date());
+        newDiary.setEndStamp(ltLast.getPost_stamp());
+        newDiary.setEndDate(ltLast.getPost_date());
+        newDiary.setPostDay(Common.getNowDayString());
+        newDiary.setPostDate(Common.getNowDateString());
+        newDiary.setLongitude(sumLongitude/timesCount);
+        newDiary.setLatitude(sumLatitude/timesCount);
+        newDiary.setAltitude(sumAltitude/timesCount);
+        newDiary.setEndLocationSK(ltLast.getSk());
 
         return newDiary;
     }
