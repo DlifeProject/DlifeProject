@@ -1,9 +1,12 @@
-package com.kang.Dlife.tb_page1;
+package com.kang.Dlife.data_base;
 
 
 import com.kang.Dlife.Common;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class DiaryDetail implements Serializable {
 
@@ -182,5 +185,18 @@ public class DiaryDetail implements Serializable {
         msg += Common.dateStringToHM(getStart_date()) + "\n";
         msg += "--------------------" + "\n";
         return msg;
+    }
+    public String getFormatedDate() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+        return dateFormat.format(new Date(start_date));
+    }
+    public String getFormatedStartTime() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(" HH:mm:ss", Locale.US);
+        return dateFormat.format(new Date(start_stamp));
+    }
+
+    public String getFormatedEndTime() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(" HH:mm:ss", Locale.US);
+        return dateFormat.format(new Date(end_stamp));
     }
 }
