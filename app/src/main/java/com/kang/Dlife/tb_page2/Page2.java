@@ -32,23 +32,18 @@ public class Page2 extends Fragment implements View.OnClickListener {
     private ViewPager vpItem;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.page2, container, false);
         List<Object> itemList = getItemList();
-        RelativeLayout ry_Previous = view.findViewById(R.id.ry_Previous);
+        ItemAdapter itemAdapter = new ItemAdapter(getFragmentManager(), itemList);
+        vpItem = view.findViewById(R.id.vpItem);
+        vpItem.setAdapter(itemAdapter);RelativeLayout ry_Previous = view.findViewById(R.id.ry_Previous);
         ry_Previous.setOnClickListener(this);
         RelativeLayout ry_Next = view.findViewById(R.id.ry_Next);
         ry_Next.setOnClickListener(this);
 
-        ItemAdapter itemAdapter = new ItemAdapter(getFragmentManager(), itemList);
-        vpItem = view.findViewById(R.id.vpItem);
-        vpItem.setAdapter(itemAdapter);
+
 
         return view;
 
@@ -154,6 +149,5 @@ public class Page2 extends Fragment implements View.OnClickListener {
         }
 
     }
-
 
 }
