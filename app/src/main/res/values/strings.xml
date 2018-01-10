@@ -11,4 +11,9 @@
     <string name="hello_blank_fragment">Helloblankfragment</string>
     <string name="msg_NoNewsFound">沒有日記</string>
     <string name="msg_NoNetwork">NoNetwork</string>
+    <string name="PersonalFile">My profile</string>
+    <string name="myNickName">Nickname</string>
+    <string name="birthday">Birthday</string>
+    <string name="gender">Gender</string>
+    <string name="lastLoginDate">Login</string>
 </resources>

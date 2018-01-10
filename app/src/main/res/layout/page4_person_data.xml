@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     android:background="@color/background_gray"
     android:orientation="vertical">
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
@@ -13,17 +12,13 @@
         android:orientation="horizontal"
         android:gravity="center">
 
-
-
         <LinearLayout
-            android:id="@+id/btBack"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
             android:orientation="vertical"
-            android:onClick="onBackClick"
-            >
+            android:onClick="onBackClick">
 
             <ImageButton
                 android:layout_width="wrap_content"
@@ -39,8 +34,7 @@
             android:layout_weight="5"
             android:gravity="center"
             android:orientation="vertical"
-            android:text="個人資料"
-
+            android:text="@string/PersonalFile"
             android:textColor="@color/background_white"
             android:textSize="20sp"
             android:textStyle="bold" />
@@ -50,17 +44,232 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:orientation="vertical"
-            android:onClick="onBackClick"
-            >
-
-            <ImageButton
-                android:id="@+id/ibOk"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="#00000000"
-                android:onClick="onBackClick"
-                android:src="@drawable/ic_check_circle" />
+            android:orientation="vertical">
         </LinearLayout>
     </LinearLayout>
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
+            <TextView
+                android:id="@+id/tvAccount"
+                android:paddingLeft="16dp"
+                android:textSize="24sp"
+                android:text=""
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
+        </RelativeLayout>
+        <RelativeLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="60dp">
+            <TextView
+                android:paddingLeft="16dp"
+                android:textSize="20sp"
+                android:text="Change Password"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
+            <LinearLayout
+                android:id="@+id/llChangePassword"
+                android:layout_alignParentRight="true"
+                android:layout_width="60dp"
+                android:layout_height="match_parent">
+                <ImageButton
+                    android:id="@+id/ibChangePassword"
+                    android:rotation="180"
+                    android:src="@drawable/ic_back"
+                    android:background="@drawable/image_button_background"
+                    android:layout_margin="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </LinearLayout>
+        </RelativeLayout>
+        <ImageView
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@color/primary_green"
+            android:layout_width="match_parent"
+            android:layout_height="1dp" />
+
+        <RelativeLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="60dp">
+            <TextView
+                android:paddingLeft="16dp"
+                android:textSize="20sp"
+                android:text="@string/myNickName"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
+            <TextView
+                android:id="@+id/tvNickname"
+                android:text="--------"
+                android:layout_toLeftOf="@id/llNickNameButton"
+                android:textSize="20dp"
+                android:textColor="@color/colorPrimaryDark"
+                android:gravity="center"
+                android:layout_width="160dp"
+                android:layout_height="match_parent" />
+            <LinearLayout
+                android:id="@+id/llNickNameButton"
+                android:layout_alignParentRight="true"
+                android:layout_width="60dp"
+                android:layout_height="match_parent">
+                <ImageButton
+                    android:id="@+id/ibNickname"
+                    android:src="@drawable/ic_back"
+                    android:rotation="180"
+                    android:background="@drawable/image_button_background"
+                    android:layout_margin="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </LinearLayout>
+
+        </RelativeLayout>
+        <ImageView
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@color/primary_green"
+            android:layout_width="match_parent"
+            android:layout_height="1dp" />
+        <RelativeLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="60dp">
+            <TextView
+                android:paddingLeft="16dp"
+                android:textSize="20sp"
+                android:text="@string/birthday"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
+            <TextView
+                android:id="@+id/tvBirthday"
+                android:text="0000-00-00"
+                android:layout_toLeftOf="@id/llBirthdayButton"
+                android:textSize="20dp"
+                android:textColor="@color/colorPrimaryDark"
+                android:gravity="center"
+                android:layout_width="160dp"
+                android:layout_height="match_parent" />
+            <LinearLayout
+                android:id="@+id/llBirthdayButton"
+                android:layout_alignParentRight="true"
+                android:layout_width="60dp"
+                android:layout_height="match_parent">
+                <ImageButton
+                    android:id="@+id/ibBirthday"
+                    android:src="@drawable/ic_back"
+                    android:rotation="180"
+                    android:background="@drawable/image_button_background"
+                    android:layout_margin="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </LinearLayout>
+
+        </RelativeLayout>
+        <ImageView
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@color/primary_green"
+            android:layout_width="match_parent"
+            android:layout_height="1dp" />
+
+        <RelativeLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="60dp">
+            <TextView
+                android:paddingLeft="16dp"
+                android:textSize="20sp"
+                android:text="@string/gender"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
+            <TextView
+                android:id="@+id/tvGender"
+                android:text="----"
+                android:layout_toLeftOf="@id/llGenderButton"
+                android:textSize="20dp"
+                android:textColor="@color/colorPrimaryDark"
+                android:gravity="center"
+                android:layout_width="160dp"
+                android:layout_height="match_parent" />
+            <LinearLayout
+                android:id="@+id/llGenderButton"
+                android:layout_alignParentRight="true"
+                android:layout_width="60dp"
+                android:layout_height="match_parent">
+                <ImageButton
+                    android:id="@+id/ibGender"
+                    android:src="@drawable/ic_back"
+                    android:rotation="180"
+                    android:background="@drawable/image_button_background"
+                    android:layout_margin="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <ImageView
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@color/primary_green"
+            android:layout_width="match_parent"
+            android:layout_height="1dp" />
+
+        <RelativeLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="60dp">
+            <TextView
+                android:paddingLeft="16dp"
+                android:textSize="20sp"
+                android:text="@string/lastLoginDate"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
+            <TextView
+                android:id="@+id/tvLogout"
+                android:text="0000-00-00 00:00:00"
+                android:layout_toLeftOf="@id/llLogoutButton"
+                android:textSize="18dp"
+                android:textColor="@color/colorPrimaryDark"
+                android:gravity="center"
+                android:layout_width="200dp"
+                android:layout_height="match_parent" />
+            <LinearLayout
+                android:id="@+id/llLogoutButton"
+                android:layout_alignParentRight="true"
+                android:layout_width="60dp"
+                android:layout_height="match_parent">
+                <ImageButton
+                    android:id="@+id/ibLogout"
+                    android:src="@drawable/ic_back"
+                    android:rotation="180"
+                    android:background="@drawable/image_button_background"
+                    android:layout_margin="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </LinearLayout>
+        </RelativeLayout>
+        <ImageView
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@color/primary_green"
+            android:layout_width="match_parent"
+            android:layout_height="1dp" />
+
+
+    </LinearLayout>
+
 </LinearLayout>
