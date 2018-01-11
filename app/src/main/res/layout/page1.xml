@@ -25,9 +25,8 @@
     <android.support.v7.widget.RecyclerView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:divider="@color/background_gray"
-        android:dividerHeight="10dp"
         android:id="@+id/diarylist"
+
 />
 
 </LinearLayout>

@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
@@ -26,6 +27,7 @@ import android.widget.Toast;
 
 import com.kang.Dlife.Common;
 import com.kang.Dlife.R;
+import com.kang.Dlife.data_base.DiaryDetail;
 import com.kang.Dlife.data_base.LocationTrace;
 import com.kang.Dlife.sever.LocationDao;
 import com.kang.Dlife.sever.LocationToDiary;
@@ -133,6 +135,7 @@ public class Page1 extends Fragment {
                     e.printStackTrace();
                 }
             }
+            // 長按監聽
             viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @RequiresApi(api = Build.VERSION_CODES.KITKAT)
                 @Override
@@ -144,11 +147,23 @@ public class Page1 extends Fragment {
                     popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                         @Override
                         public boolean onMenuItemClick(MenuItem item) {
-//                           int count = locationDao.deleteById(locationToDiary.getSk());
-//                            Toast.makeText(context, count + " " + "被刪除了",
-//                                    Toast.LENGTH_SHORT).show();
-//                            DiaryData = getSpots();
-//                            notifyDataSetChanged();
+
+                            LocationToDiary spot = DiaryData.get(position);
+                            Toast.makeText(getActivity(), Common.dateStringToDay(spot.getStartDate())
+                                            + " " + Common.dateStringToHM(spot.getStartDate())
+                                            + "-" + Common.dateStringToHM(spot.getEndDate())
+                                            + "被删除了",
+                                    Toast.LENGTH_SHORT).show();
+
+                            DiaryData.remove(position);
+                            // 刪除有動畫效果
+                            notifyItemRemoved(position);
+                            // 刪除SQL_lite的欄位
+                            locationDao.deleteById(locationToDiary.getEndLocationSK());
+                            // 重置DiaryData
+                            DiaryData = getSpots();
+                            // 重新執行recycleView
+                            notifyDataSetChanged();
                             return true;
 
                         }

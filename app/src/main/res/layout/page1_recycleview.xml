@@ -2,162 +2,178 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
     android:background="@color/background_white"
-    android:padding="10dp">
+    android:orientation="vertical">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/tvDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:text="20XX/XX/XX"
-            android:textAllCaps="false"
-            android:textColor="@color/text_black"
-            android:textSize="24sp"
-            android:textStyle="bold" />
-
-        <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_alignBottom="@+id/tvDate"
-            android:layout_marginLeft="11dp"
-            android:layout_marginStart="11dp"
-            android:layout_toEndOf="@+id/tvDate"
-            android:layout_toRightOf="@+id/tvDate"
-            android:src="@drawable/ic_sun"
-            android:id="@+id/weather" />
-
-        <ImageView
-            android:id="@+id/icnew"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:src="@drawable/ic_new" />
-    </RelativeLayout>
+        android:layout_height="5dp"
+        android:background="@color/background_gray" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:background="@color/background_white"
+        android:orientation="vertical"
+        android:padding="10dp">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="7"
-            android:background="@color/background_white"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:id="@+id/linearLayout2">
-
-            <TextView
-                android:id="@+id/tvTimeStart"
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:layout_weight="1"
-                android:text="XX:XX"
-                android:textColor="@color/text_black"
-                android:textSize="20sp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="25dp"
-                android:layout_weight="1"
-                android:layout_below="@+id/tvTimeStart"
-                android:text="|"
-                android:textColor="@color/text_black"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:gravity="center"
-                android:id="@+id/textView" />
-
-            <TextView
-                android:id="@+id/tvTimeEnd"
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:text="XX:XX"
-                android:textColor="@color/text_black"
-                android:textSize="20sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="4"
-            android:background="@color/background_white"
-            android:orientation="vertical"
-            android:gravity="center">
-
-            <ImageView
-                android:id="@+id/imageView3"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_weight="1"
-                android:src="@drawable/ic_place" />
-
-            <FrameLayout
-                android:layout_width="30dp"
-                android:layout_height="25dp"
-                android:layout_weight="1" />
-
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_weight="1"
-                android:src="@drawable/ic_diary" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="10"
-            android:background="@color/background_white"
-            android:layout_marginLeft="1dp"
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/tvPlace"
-                android:layout_width="130dp"
-                android:layout_height="30dp"
-                android:layout_weight="1"
-                android:text="Place"
+                android:id="@+id/tvDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:text="20XX/XX/XX"
+                android:textAllCaps="false"
                 android:textColor="@color/text_black"
-                android:gravity="center_vertical"
-                android:textSize="15sp" />
+                android:textSize="24sp"
+                android:textStyle="bold" />
 
-            <FrameLayout
+            <ImageView
+                android:id="@+id/weather"
                 android:layout_width="30dp"
-                android:layout_height="25dp"
-                android:layout_weight="1" />
-
-            <TextView
-                android:id="@+id/tvDiary"
-                android:layout_width="130dp"
                 android:layout_height="30dp"
-                android:layout_weight="1"
-                android:text="diary"
-                android:textColor="@color/text_black"
-                android:gravity="center_vertical"
-                android:textSize="15sp" />
-        </LinearLayout>
+                android:layout_alignBottom="@+id/tvDate"
+                android:layout_marginLeft="11dp"
+                android:layout_marginStart="11dp"
+                android:layout_toEndOf="@+id/tvDate"
+                android:layout_toRightOf="@+id/tvDate"
+                android:src="@drawable/ic_sun" />
 
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="100dp"
-            android:layout_height="match_parent"
-            android:layout_weight="2"
-            android:background="@color/background_white"
-            android:src="@drawable/picture1" />
+            <ImageView
+                android:id="@+id/icnew"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:src="@drawable/ic_new" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true">
+
+            <LinearLayout
+                android:id="@+id/linearLayout2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="7"
+                android:background="@color/background_white"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvTimeStart"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:layout_weight="1"
+                    android:text="XX:XX"
+                    android:textColor="@color/text_black"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="match_parent"
+                    android:layout_height="25dp"
+                    android:layout_below="@+id/tvTimeStart"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="|"
+                    android:textColor="@color/text_black"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvTimeEnd"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:text="XX:XX"
+                    android:textColor="@color/text_black"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="4"
+                android:background="@color/background_white"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/imageView3"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/ic_place" />
+
+                <FrameLayout
+                    android:layout_width="30dp"
+                    android:layout_height="25dp"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/ic_diary" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="1dp"
+                android:layout_weight="10"
+                android:background="@color/background_white"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvPlace"
+                    android:layout_width="130dp"
+                    android:layout_height="30dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="Place"
+                    android:textColor="@color/text_black"
+                    android:textSize="15sp" />
+
+                <FrameLayout
+                    android:layout_width="30dp"
+                    android:layout_height="25dp"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:id="@+id/tvDiary"
+                    android:layout_width="130dp"
+                    android:layout_height="30dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="diary"
+                    android:textColor="@color/text_black"
+                    android:textSize="15sp" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:background="@color/background_white"
+                android:src="@drawable/picture1" />
+        </LinearLayout>
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:background="@color/background_gray" />
 </LinearLayout>
