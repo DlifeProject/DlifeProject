@@ -5,7 +5,7 @@
     android:layout_height="fill_parent"
     android:background="@color/background_gray"
     >
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:background="@color/primary_green">
@@ -22,12 +22,12 @@
     </RelativeLayout>
     <!-- divider => 分隔線顏色 -->
     <!-- dividerHeight => 分隔線粗細 -->
-    <ListView
+    <android.support.v7.widget.RecyclerView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:divider="@color/background_gray"
         android:dividerHeight="10dp"
-        android:id="@+id/listView"
+        android:id="@+id/diarylist"
 />
 
 </LinearLayout>

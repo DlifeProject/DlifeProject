@@ -43,8 +43,6 @@ public class Page2 extends Fragment implements View.OnClickListener {
         RelativeLayout ry_Next = view.findViewById(R.id.ry_Next);
         ry_Next.setOnClickListener(this);
 
-
-
         return view;
 
     }

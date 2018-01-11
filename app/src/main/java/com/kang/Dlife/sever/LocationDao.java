@@ -310,4 +310,10 @@ public class LocationDao extends SQLiteOpenHelper {
         message += "post_date : " + queryLocationTrace.getPost_date() + "\n";
         return message;
     }
+    public int deleteById(int id) {
+        SQLiteDatabase db = getWritableDatabase();
+        String whereClause = COL_sk + " = ?;";
+        String[] whereArgs = {String.valueOf(id)};
+        return db.delete(TABLE_NAME, whereClause, whereArgs);
+    }
 }

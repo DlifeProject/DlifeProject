@@ -78,7 +78,7 @@ public class DiaryEdit extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle bundle = getIntent().getExtras();
-        bundleP = (LocationToDiary) bundle.getSerializable("Page1Spot");
+        bundleP = (LocationToDiary) bundle.getSerializable("Page1Adapter");
 
         setContentView(R.layout.page1_diary_edit);
         // Spinner選單
@@ -296,12 +296,13 @@ public class DiaryEdit extends Activity {
     }
 
     //RecyclerView 物件
-    public static class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> {
+    public static class PhotoAdapter extends
+            RecyclerView.Adapter<PhotoAdapter.ViewHolder> {
 
         private Context context;
         private LayoutInflater mLayoutInflater;
         private List<String> result;
-        private final static String TAG = "PhotoAdapter";
+        private final static String TAG = "Page1Adapter";
 
         public PhotoAdapter(Context context, List<String> result) {
             mLayoutInflater = LayoutInflater.from(context);
