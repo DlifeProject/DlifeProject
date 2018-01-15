@@ -1,9 +1,8 @@
-package com.kang.Dlife.tb_page1;
-
+package com.kang.Dlife.data_base;
 
 import com.kang.Dlife.Common;
-
 import java.io.Serializable;
+
 
 public class DiaryDetail implements Serializable {
 
@@ -18,16 +17,9 @@ public class DiaryDetail implements Serializable {
     private String end_date;
     private String post_day;
     private String post_date;
-
-    public int imageId;
-    public int icWeatherId;
-    public int icNewId;
-    public String place = "中央大學";
-    public double longitude;
-    public double latitude;
-    public double altitude;
-    public int startLocationSK;
-    public int endLocationSK;
+    private double longitude;
+    private double latitude;
+    private double altitude;
 
     public DiaryDetail() {
         super();
@@ -46,11 +38,9 @@ public class DiaryDetail implements Serializable {
         this.end_date = d.getEnd_date();
         this.post_day = d.getPost_day();
         this.post_date = d.getPost_date();
-        longitude = d.longitude;
-        latitude = d.latitude;
-        altitude = d.altitude;
-        startLocationSK = d.startLocationSK;
-        endLocationSK = d.endLocationSK;
+        this.longitude = d.longitude;
+        this.latitude = d.latitude;
+        this.altitude = d.altitude;
     }
 
     public DiaryDetail(int member_sk, String note,
@@ -164,6 +154,30 @@ public class DiaryDetail implements Serializable {
         this.end_date = end_date;
     }
 
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getAltitude() {
+        return altitude;
+    }
+
+    public void setAltitude(double altitude) {
+        this.altitude = altitude;
+    }
+
     public String describe() {
         String msg = "";
         msg += "--------------------" + "\n";
@@ -183,4 +197,5 @@ public class DiaryDetail implements Serializable {
         msg += "--------------------" + "\n";
         return msg;
     }
+
 }

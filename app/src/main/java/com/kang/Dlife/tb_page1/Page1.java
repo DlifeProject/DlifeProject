@@ -27,7 +27,6 @@ import android.widget.Toast;
 
 import com.kang.Dlife.Common;
 import com.kang.Dlife.R;
-import com.kang.Dlife.data_base.DiaryDetail;
 import com.kang.Dlife.data_base.LocationTrace;
 import com.kang.Dlife.sever.LocationDao;
 import com.kang.Dlife.sever.LocationToDiary;

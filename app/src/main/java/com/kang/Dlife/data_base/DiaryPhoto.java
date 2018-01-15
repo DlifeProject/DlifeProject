@@ -22,7 +22,10 @@ public class DiaryPhoto {
         this.post_day = post_day;
         this.post_date = post_date;
     }
-
+    public  DiaryPhoto(int sk){
+        super();
+        this.sk=sk;
+    }
     public int getSk() {
         return sk;
     }

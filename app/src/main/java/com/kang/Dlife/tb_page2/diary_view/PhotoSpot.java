@@ -17,6 +17,11 @@ public class PhotoSpot implements Serializable {
         this.photo_img = photo_img;
         this.post_date = post_date;
     }
+    public PhotoSpot(int sk){
+        this.sk = sk;
+
+    }
+
 
     public int getSk() {
         return sk;

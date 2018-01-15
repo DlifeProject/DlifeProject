@@ -1,10 +1,13 @@
 package com.kang.Dlife.tb_page2.diary_view;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PagerSnapHelper;
@@ -24,18 +27,24 @@ import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.kang.Dlife.Common;
 import com.kang.Dlife.R;
-import com.kang.Dlife.data_base.DiaryDetail;
 import com.kang.Dlife.data_base.DiaryDetailWeb;
 import com.kang.Dlife.sever.MyTask;
 import com.kang.Dlife.tb_page2.CategorySum;
 import com.kang.Dlife.tb_page2.PieChartItem;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.lang.ref.WeakReference;
 import java.lang.reflect.Type;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-
-import com.kang.Dlife.data_base.DiaryDetail;
+import com.kang.Dlife.data_base.DiaryDetailWeb;
 
 
 public class DiaryView extends AppCompatActivity {
@@ -45,6 +54,9 @@ public class DiaryView extends AppCompatActivity {
     private RecyclerView recyclerView;
 
     private MyTask newsGetAllTask;
+    private SpotGetImageTask spotGetImageTask;
+    List<DiaryDetailWeb>igList;
+
 
     private ImageButton ibMap;
     private double longitude;
@@ -65,8 +77,6 @@ public class DiaryView extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL));
 
-//        List<IgDiary> igList = getIglist();
-//        recyclerView.setAdapter(new IgAdapter(this, igList));
 
         initView();
         ibMap = (ImageButton) super.findViewById(R.id.ibMap);
@@ -101,24 +111,24 @@ public class DiaryView extends AppCompatActivity {
 
                 url = Common.URL + Common.WEBDIARY;
                 MyTask getDiaryTask = new MyTask(url, jsonOut);
-                String getDiaryJsonIn = getDiaryTask.execute().get().trim();
+                String getDiaryJsonIn = getDiaryTask.execute().get();
 
                 Gson gson = new Gson();
                 JsonObject diaryInJsonObject = gson.fromJson(getDiaryJsonIn,JsonObject.class);
-                String ltDiaryDetailString = diaryInJsonObject.get("getDiary").getAsString().trim();
+                String ltDiaryDetailString = diaryInJsonObject.get("getDiary").getAsString();
 
                 Type tySum = new TypeToken<List<DiaryDetailWeb>>(){}.getType();
-                ltJson = new Gson().fromJson(ltDiaryDetailString, tySum);
+                igList = new Gson().fromJson(ltDiaryDetailString, tySum);
 
             } catch (Exception e) {
                 Log.e(TAG, e.toString());
             }
 
 
-            if (ltJson.size() == 0) {
+            if (igList.size() == 0) {
                 Common.showToast(this, R.string.msg_NoNewsFound);
             } else {
-                recyclerView.setAdapter(new IgAdapter(this, ltJson));
+                recyclerView.setAdapter(new IgAdapter(this, igList));
             }
         } else {
             Common.showToast(this, R.string.msg_NoNetwork);
@@ -194,8 +204,6 @@ public class DiaryView extends AppCompatActivity {
 
             List<PhotoSpot> photoSpotList = null;
 
-            int thissk = igList.get(position).getSk();
-
             if (networkConnected()) {
                 String url = Common.URL + Common.WEBPHOTO;
 
@@ -208,18 +216,21 @@ public class DiaryView extends AppCompatActivity {
                     jsonObject.addProperty("diarySK", igList.get(position).getSk());
                     String jsonOut = jsonObject.toString();
 
-                    Common.showToast(DiaryView.this,igList.get(position).getSk());
+                    //Common.showToast(DiaryView.this,igList.get(position).getSk());
 
                     MyTask getDiaryPhotoSKTask =new MyTask(url, jsonOut);
+
                     String getDiaryPhotoSKjsonIn = getDiaryPhotoSKTask.execute().get();
 
                     //等等再寫
-                    Gson gson = new Gson();
-                    JsonObject diaryInJsonObject = gson.fromJson(getDiaryPhotoSKjsonIn,JsonObject.class);
-                    String ltDiaryDetailString = diaryInJsonObject.get("getDiaryPhotoSKList").getAsString().trim();
+//
+//                    Gson gson = new Gson();
+//                    JsonObject diaryInJsonObject = gson.fromJson(getDiaryPhotoSKjsonIn,JsonObject.class);
+//                    String ltDiaryDetailString = diaryInJsonObject.get("getDiaryPhotoSKList").getAsString().trim();
 
-                    Type ltWeb = new TypeToken<List<Integer>>(){}.getType();
-                    List<Integer>  ltJson = new Gson().fromJson(ltDiaryDetailString, ltWeb);
+                    Type ltWeb = new TypeToken<List<PhotoSpot>>(){}.getType();
+                    photoSpotList = new Gson().fromJson(getDiaryPhotoSKjsonIn, ltWeb);
+
 
 
                 } catch (Exception e) {
@@ -231,10 +242,23 @@ public class DiaryView extends AppCompatActivity {
 
             viewHolder.mRecyclerView.setAdapter(new IgPictureAdapter(context, photoSpotList));
 
-
+//
             final DiaryDetailWeb diaryDetail = igList.get(position);
-            String time = diaryDetail.getStart_stamp() + "-" + diaryDetail.getEnd_stamp();
-            viewHolder.tvDate.setText(diaryDetail.getStart_date());
+
+            //时间格式,HH是24小时制，hh是AM PM12小时制
+            SimpleDateFormat sdf=new SimpleDateFormat("HH:mm");
+//比如timestamp=1449210225945；
+            long longStart = Long.valueOf(diaryDetail.getStart_stamp());
+            long longEnd=Long.valueOf(diaryDetail.getEnd_stamp());
+            String startTime = sdf.format(new Date(longStart * 1000L));
+            String endTime =sdf.format(new Date(longEnd * 1000L));
+//至于取10位或取13位，date_temp*1000L就是这种截取作用。如果是和服务器传值的，就和后台商量好就可以了
+            String time=startTime+"-"+endTime;
+
+
+
+//          String time = Common.dateStringToHM(diaryDetail.getStart_stamp())  + "-" +Common.dateStringToHM(diaryDetail.getEnd_stamp()) ;
+            viewHolder.tvDate.setText(diaryDetail.getPost_day());
             longitude = diaryDetail.getLongitude();
             latitude = diaryDetail.getLatitude();
             Geocoder geocoder = new Geocoder(DiaryView.this);
@@ -252,6 +276,7 @@ public class DiaryView extends AppCompatActivity {
                 e.printStackTrace();
             }
 
+
             viewHolder.tvTime.setText(time);
             viewHolder.tvNote.setText(diaryDetail.getNote());
             viewHolder.tvContinue.setVisibility(View.GONE);
@@ -260,6 +285,8 @@ public class DiaryView extends AppCompatActivity {
                 viewHolder.tvNote.setText(diaryDetail.getNote().substring(0, 11));
 
                 viewHolder.tvContinue.setVisibility(View.VISIBLE);
+
+
                 viewHolder.tvContinue.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -323,39 +350,91 @@ public class DiaryView extends AppCompatActivity {
         public void onBindViewHolder(final MyViewHolder viewHolder, int position) {
 
             final PhotoSpot photoSpot = photoSpotList.get(position);
-//
-//            String url = Common.URL + "/IgPictureServlet";
-//            int id = photoSpot.getSk();
-//            spotGetImageTask = new SpotGetImageTask(url, id, imageSize, viewHolder.ivRecyclerImage);
-//            spotGetImageTask.execute();   //只要沒寫get 就是一直讓他抓 不等圖 不然會卡著等圖
 
+            String url = Common.URL + Common.WEBPHOTO;
 
-            Glide.with(context)
-                    .load(photoSpot.getPhoto_img())
-                    .centerCrop()
-                    .into(viewHolder.ivRecyclerImage);
-//            viewHolder.ivRecyclerImage.setImageResource(photoSpot.getPhoto_img().set);
-//
-
-//            viewHolder.ivRecyclerImage.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//
-//                    ImageView imageView = new ImageView(context);
-//                    imageView.setImageResource(photoSpot.getImage());
-//
-//                    //點擊跑出來的
-//                    Toast toast = new Toast(context);
-//                    toast.setView(imageView);
-//                    toast.setDuration(Toast.LENGTH_SHORT);
-//                    toast.show();
-//
-//
-//                }
-//            });
+            int id = photoSpot.getSk();
+            spotGetImageTask = new SpotGetImageTask(url, id, imageSize, viewHolder.ivRecyclerImage);
+            spotGetImageTask.execute();   //只要沒寫get 就是一直讓他抓 不等圖 不然會卡著等圖
         }
     }
 
+
+    class SpotGetImageTask extends AsyncTask<Object, Integer, Bitmap> {
+        private final static String TAG = "SpotGetImageTask";
+        private String url;
+        private int id, imageSize;
+        // WeakReference物件不會阻止參照到的實體被回收
+        private WeakReference<ImageView> imageViewWeakReference;
+
+        SpotGetImageTask(String url, int id, int imageSize) {
+            this(url, id, imageSize, null);
+        }
+
+        SpotGetImageTask(String url, int id, int imageSize, ImageView imageView) {
+            this.url = url;
+            this.id = id;
+            this.imageSize = imageSize;
+            this.imageViewWeakReference = new WeakReference<>(imageView);
+        }
+
+        @Override
+        protected Bitmap doInBackground(Object... params) {
+
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("action", "getImage");
+            jsonObject.addProperty("account", Common.getAccount(DiaryView.this));
+            jsonObject.addProperty("password", Common.getPWD(DiaryView.this));
+            jsonObject.addProperty("id", id);
+            jsonObject.addProperty("imageSize", imageSize);
+            return getRemoteImage(url, jsonObject.toString());
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            ImageView imageView = imageViewWeakReference.get();
+            if (isCancelled() || imageView == null) {
+                return;
+            }
+            if (bitmap != null) {
+                imageView.setImageBitmap(bitmap);
+            } else {
+//            imageView.setImageResource(R.drawable.default_image);
+            }
+        }
+
+        private Bitmap getRemoteImage(String url, String jsonOut) {
+            HttpURLConnection connection = null;
+            Bitmap bitmap = null;
+            try {
+                connection = (HttpURLConnection) new URL(url).openConnection();
+                connection.setDoInput(true); // allow inputs
+                connection.setDoOutput(true); // allow outputs
+                connection.setUseCaches(false); // do not use a cached copy
+                connection.setRequestMethod("POST");
+                BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(connection.getOutputStream()));
+                bw.write(jsonOut);
+                Log.d(TAG, "output: " + jsonOut);
+                bw.close();
+
+                int responseCode = connection.getResponseCode();
+
+                if (responseCode == 200) {
+                    bitmap = BitmapFactory.decodeStream(
+                            new BufferedInputStream(connection.getInputStream()));
+                } else {
+                    Log.d(TAG, "response code: " + responseCode);
+                }
+            } catch (IOException e) {
+                Log.e(TAG, e.toString());
+            } finally {
+                if (connection != null) {
+                    connection.disconnect();
+                }
+            }
+            return bitmap;
+        }
+    }
 
     @Override
     public void onStop() {
