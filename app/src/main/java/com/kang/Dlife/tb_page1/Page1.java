@@ -200,6 +200,10 @@ public class Page1 extends Fragment {
             addDiary.setIcNewId(R.drawable.ic_new);
             page1Spots.add(addDiary);
         }
+
+
+
+
         // listView倒序
 //        Collections.reverse(page1Spots);
 

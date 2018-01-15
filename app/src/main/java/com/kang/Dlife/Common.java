@@ -30,6 +30,7 @@ public class Common {
     public final static String PREFFERENCES_UUID = "userUUID";
     public final static String PREFFERENCES_NICKNAME = "nickname";
     public final static String PREFFERENCES_USER_LAST_LOGIN_DATE = "loginDate";
+    public final static String PREFFERENCES_BIRTHDAY = "birthday";
 
     public final static String TAG = "Common";
 
@@ -163,6 +164,14 @@ public class Common {
         System.out.println(date);
         return date;
 
+    }
+
+    public static boolean checkLoginAccountEmail(String account){
+        if(account.contains("@")){
+            return true;
+        }else{
+            return false;
+        }
     }
 
     public static void startTabActivity(Context c){

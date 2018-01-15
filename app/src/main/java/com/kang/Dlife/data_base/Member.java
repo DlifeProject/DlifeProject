@@ -9,7 +9,7 @@ public class Member {
     private String fb_account;
     private String google_account;
     private String nick_name;
-    private String sex;
+    private int sex;
     private String birthday;
     private String birth_year;
     private String login_date;
@@ -64,10 +64,10 @@ public class Member {
     public void setNick_name(String nick_name) {
         this.nick_name = nick_name;
     }
-    public String getSex() {
+    public int getSex() {
         return sex;
     }
-    public void setSex(String sex) {
+    public void setSex(int sex) {
         this.sex = sex;
     }
     public String getBirthday() {

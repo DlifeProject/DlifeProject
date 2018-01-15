@@ -216,18 +216,9 @@ public class DiaryView extends AppCompatActivity {
                     jsonObject.addProperty("diarySK", igList.get(position).getSk());
                     String jsonOut = jsonObject.toString();
 
-                    //Common.showToast(DiaryView.this,igList.get(position).getSk());
-
                     MyTask getDiaryPhotoSKTask =new MyTask(url, jsonOut);
 
                     String getDiaryPhotoSKjsonIn = getDiaryPhotoSKTask.execute().get();
-
-                    //等等再寫
-//
-//                    Gson gson = new Gson();
-//                    JsonObject diaryInJsonObject = gson.fromJson(getDiaryPhotoSKjsonIn,JsonObject.class);
-//                    String ltDiaryDetailString = diaryInJsonObject.get("getDiaryPhotoSKList").getAsString().trim();
-
                     Type ltWeb = new TypeToken<List<PhotoSpot>>(){}.getType();
                     photoSpotList = new Gson().fromJson(getDiaryPhotoSKjsonIn, ltWeb);
 
@@ -242,9 +233,9 @@ public class DiaryView extends AppCompatActivity {
 
             viewHolder.mRecyclerView.setAdapter(new IgPictureAdapter(context, photoSpotList));
 
-//
-            final DiaryDetailWeb diaryDetail = igList.get(position);
 
+            //寫成function 加入 common
+            final DiaryDetailWeb diaryDetail = igList.get(position);
             //时间格式,HH是24小时制，hh是AM PM12小时制
             SimpleDateFormat sdf=new SimpleDateFormat("HH:mm");
 //比如timestamp=1449210225945；
@@ -265,13 +256,19 @@ public class DiaryView extends AppCompatActivity {
             try {
                 List<Address> addressList =
                         geocoder.getFromLocation(latitude, longitude, 1);
-                Address address = addressList.get(0);
                 String addrStr = "";
-                for (int i = 0; i <= address.getMaxAddressLineIndex(); i++) {
-                    addrStr = address.getAddressLine(i);
+                if (addressList.size() > 0) {
+                    Address address = addressList.get(0);
+                    for (int i = 0; i <= address.getMaxAddressLineIndex(); i++) {
+                        addrStr = address.getAddressLine(i);
 
+                    }
+                    viewHolder.tvLocation.setText(addrStr);
+
+                }else {
+                    viewHolder.tvLocation.setText("unknown");
                 }
-                viewHolder.tvLocation.setText(addrStr);
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -359,11 +356,12 @@ public class DiaryView extends AppCompatActivity {
         }
     }
 
-
+    //新開 SpotGetImageTask 寫入/java 下
     class SpotGetImageTask extends AsyncTask<Object, Integer, Bitmap> {
         private final static String TAG = "SpotGetImageTask";
         private String url;
         private int id, imageSize;
+
         // WeakReference物件不會阻止參照到的實體被回收
         private WeakReference<ImageView> imageViewWeakReference;
 
