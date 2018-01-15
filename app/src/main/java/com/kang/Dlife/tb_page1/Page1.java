@@ -43,7 +43,7 @@ public class Page1 extends Fragment {
     //    public Hashtable<Integer,LocationToDiary> bundleHash = new Hashtable<Integer,LocationToDiary>();
     public Hashtable<Integer, LocationToDiary> bundleHash = new Hashtable<Integer, LocationToDiary>();
     private LocationDao locationDao;
-
+    // 呵呵
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable final Bundle savedInstanceState) {
         //因為有宣告view, 所以之後可以在這頁裡面找下面之後要用到的id
