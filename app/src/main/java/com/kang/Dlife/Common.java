@@ -28,6 +28,7 @@ public class Common {
     public final static String PREFFERENCES_USER_ACCOUNT = "userAccount";
     public final static String PREFFERENCES_USER_PASSWORD = "userPassword";
     public final static String PREFFERENCES_UUID = "userUUID";
+    public final static String PREFFERENCES_NICKNAME = "nickname";
     public final static String PREFFERENCES_USER_LAST_LOGIN_DATE = "loginDate";
 
     public final static String TAG = "Common";

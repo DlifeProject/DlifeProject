@@ -1,6 +1,7 @@
 package com.kang.Dlife;
 
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -41,87 +42,52 @@ public class TabActivity extends FragmentActivity implements OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_tab_activity);
-
         // 初始化控制元件
         initView();
         // 初始tab按鈕事件
         initEvent();
         // 初始化並設定Fragment
         initFragment(0);
-
         //啟動GPS service
         Intent intent = new Intent( this, GPSService.class);
         startService(intent);
 
     }
 
+    private void switchFragment(Fragment fragment) {
+        FragmentManager fragmentManager = TabActivity.this.getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction =
+                fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.viewpage, fragment);
+        fragmentTransaction.commit();
+    }
+
     private void initFragment(int index) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-        // 隱藏所有Fragment, 當選到該頁面時顯示該頁
-        hideFragment(transaction);
         switch (index) {
             case 0:
-                if (homeFragment == null) {
                     homeFragment = new Page1();
-                    transaction.add(R.id.viewpage, homeFragment);
-                } else {
-                    transaction.show(homeFragment);
-                }
+                    switchFragment(homeFragment);
                 break;
-            case 1:
-                if (addressFragment == null) {
-                    addressFragment = new Page2();
-                    transaction.add(R.id.viewpage, addressFragment);
-                } else {
-                    transaction.show(addressFragment);
-                }
 
+            case 1:
+                    addressFragment = new Page2();
+                    switchFragment(addressFragment);
                 break;
             case 2:
-                if (friendFragment == null) {
                     friendFragment = new Page3();
-                    transaction.add(R.id.viewpage, friendFragment);
-                } else {
-                    transaction.show(friendFragment);
-                }
-
+                    switchFragment(friendFragment);
                 break;
             case 3:
-                if (settingFragment == null) {
                     settingFragment = new Page4();
-                    transaction.add(R.id.viewpage, settingFragment);
-                } else {
-                    transaction.show(settingFragment);
-                }
-
+                    switchFragment(settingFragment);
                 break;
 
             default:
                 break;
         }
 
-        // 輸出結果
-        transaction.commit();
-
     }
 
-    //把Fragment隱藏回去
-    private void hideFragment(FragmentTransaction transaction) {
-        if (homeFragment != null) {
-            transaction.hide(homeFragment);
-        }
-        if (addressFragment != null) {
-            transaction.hide(addressFragment);
-        }
-        if (friendFragment != null) {
-            transaction.hide(friendFragment);
-        }
-        if (settingFragment != null) {
-            transaction.hide(settingFragment);
-        }
-
-    }
 
     private void initEvent() {
         // 建立按鈕偵測

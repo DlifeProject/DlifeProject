@@ -33,7 +33,9 @@ public class CoverButton extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.page2_viewpager, container, false);
-
+        if (getArguments() != null) {
+            item = (CategorySum) getArguments().getSerializable("item");
+        }
         ImageView iv_pic = view.findViewById(R.id.iv_pic);
         iv_pic.setImageResource(item.getDiaryPhotoSK());
 

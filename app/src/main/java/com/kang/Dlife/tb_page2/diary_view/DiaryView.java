@@ -185,7 +185,6 @@ public class DiaryView extends AppCompatActivity {
 
         public void onBindViewHolder(final MyViewHolder viewHolder, int position) {
 
-
             viewHolder.mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.HORIZONTAL));
 
             //先放這就不會滑到底
@@ -270,7 +269,6 @@ public class DiaryView extends AppCompatActivity {
                     }
                 });
             }
-
 
         }
 

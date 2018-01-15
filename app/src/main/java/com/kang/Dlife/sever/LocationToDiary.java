@@ -1,5 +1,7 @@
 package com.kang.Dlife.sever;
 
+import com.kang.Dlife.data_base.DiaryDetail;
+
 import java.io.Serializable;
 
 public class LocationToDiary implements Serializable {
@@ -192,5 +194,24 @@ public class LocationToDiary implements Serializable {
 
     public void setNote(String note) {
         this.note = note;
+    }
+
+    public DiaryDetail toDiaryDetail(){
+        DiaryDetail diaryDetail = new DiaryDetail();
+
+        diaryDetail.setMember_sk(member_sk);
+        diaryDetail.setTop_category_sk(0);
+        diaryDetail.setMember_location_sk(0);
+        diaryDetail.setNote(note);
+        diaryDetail.setStart_stamp(startStamp);
+        diaryDetail.setEnd_stamp(endStamp);
+        diaryDetail.setStart_date(startDate);
+        diaryDetail.setEnd_date(endDate);
+        diaryDetail.setLatitude(latitude);
+        diaryDetail.setLongitude(longitude);
+        diaryDetail.setAltitude(altitude);
+
+        return diaryDetail;
+
     }
 }

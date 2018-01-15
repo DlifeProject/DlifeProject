@@ -9,22 +9,26 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
 import com.kang.Dlife.Common;
 import com.kang.Dlife.R;
 import com.kang.Dlife.data_base.DiaryDetail;
+import com.kang.Dlife.data_base.LocationTrace;
 import com.kang.Dlife.sever.LocationDao;
 import com.kang.Dlife.sever.LocationToDiary;
 import com.kang.Dlife.tb_page1.diary_edit.DiaryEdit;
@@ -36,175 +40,170 @@ import java.util.List;
 
 //不是Activity就一定要宣告View
 public class Page1 extends Fragment {
-    private ListView lvSpots;
-    public Hashtable<Integer,LocationToDiary> bundleHash = new Hashtable<Integer,LocationToDiary>();
+    //    public Hashtable<Integer,LocationToDiary> bundleHash = new Hashtable<Integer,LocationToDiary>();
+    public Hashtable<Integer, LocationToDiary> bundleHash = new Hashtable<Integer, LocationToDiary>();
+    private LocationDao locationDao;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable final Bundle savedInstanceState) {
         //因為有宣告view, 所以之後可以在這頁裡面找下面之後要用到的id
         View view = inflater.inflate(R.layout.page1, container, false);
-        //因為已經宣告過Fragment, 所以可直接在下面寫
-        findViews(view);
-        final List<LocationToDiary> Page1Spots = getSpots();
         //因為是Fragment所以要把this改成getActivity
-        lvSpots.setAdapter(new SpotAdapter(Page1Spots, getActivity()));
-        lvSpots.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int index, long l) {
-
-                Intent intent = new Intent();
-                intent.setClass(getActivity(), DiaryEdit.class);
-                LocationToDiary bundleP = new LocationToDiary(bundleHash.get(index));
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("Page1Spot",bundleP);
-                intent.putExtras(bundle);
-                startActivity(intent);
-            }
-        });
-        lvSpots.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-            @Override
-            //長按事件監聽器
-            public boolean onItemLongClick(AdapterView<?> adapterView, View view, final int index, long l) {
-
-                PopupMenu popupMenu = new PopupMenu(getActivity(), view, Gravity.END);
-                // 彈出視窗
-                popupMenu.inflate(R.menu.popup_menu);
-                // 彈出視窗的點擊監聽器
-                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        LocationToDiary spot = Page1Spots.get(index);
-
-                        Toast.makeText(getActivity(), Common.dateStringToDay(spot.getStartDate())
-                                        + " " + Common.dateStringToHM(spot.getStartDate())
-                                        + "-" + Common.dateStringToHM(spot.getEndDate())
-                                        + "被删除了",
-                                Toast.LENGTH_SHORT).show();
-
-                        //刪除所選該欄
-                        Page1Spots.remove(spot);
-                        //刷新頁面重新呼叫
-                        lvSpots.setAdapter(new SpotAdapter(Page1Spots, getActivity()));
-                        return true;
-                    }
-                });
-                popupMenu.show();
-                return true;
-            }
-        });
+        RecyclerView rvDiary = (RecyclerView) view.findViewById(R.id.diarylist);
+        rvDiary.setLayoutManager(
+                new StaggeredGridLayoutManager(
+                        // spanCount(列數 or 行數), HORIZONTAL -> 水平, VERTICAL -> 垂直
+                        1, StaggeredGridLayoutManager.VERTICAL));
+        final List<LocationToDiary> Page1Spots = getSpots();
+        rvDiary.setAdapter(new DiaryAdapter(getActivity(), Page1Spots));
         return view;
     }
 
-    private class SpotAdapter extends BaseAdapter {
-        List<LocationToDiary> page1Spots;
-        Context context;
+    private class DiaryAdapter extends
+            RecyclerView.Adapter<DiaryAdapter.MyViewHolder> implements View.OnClickListener {
+        private Context context;
+        private List<LocationToDiary> DiaryData;
 
-        public SpotAdapter(List<LocationToDiary> Page1Spots, Context context) {
-            this.page1Spots = Page1Spots;
+        DiaryAdapter(Context context, List<LocationToDiary> DiaryData) {
             this.context = context;
+            this.DiaryData = DiaryData;
+        }
+
+
+        class MyViewHolder extends RecyclerView.ViewHolder {
+            private ImageView imageView;
+            private ImageView icWeather;
+            private ImageView icNew;
+            private TextView tvDate;
+            private TextView tvTimeStart;
+            private TextView tvTimeEnd;
+            private TextView tvPlace;
+            private TextView tvDiary;
+
+            MyViewHolder(View itemView) {
+                super(itemView);
+                imageView = itemView.findViewById(R.id.imageView);
+                icWeather = itemView.findViewById(R.id.weather);
+                icNew = itemView.findViewById(R.id.icnew);
+                tvDate = itemView.findViewById(R.id.tvDate);
+                tvTimeStart = itemView.findViewById(R.id.tvTimeStart);
+                tvTimeEnd = itemView.findViewById(R.id.tvTimeEnd);
+                tvPlace = itemView.findViewById(R.id.tvPlace);
+                tvDiary = itemView.findViewById(R.id.tvDiary);
+            }
         }
 
         @Override
-        public int getCount() {
-            return page1Spots.size();
+        public int getItemCount() {
+            return DiaryData.size();
         }
 
         @Override
-        public View getView(int index, View itemView, ViewGroup viewGroup) {
-
-            LocationToDiary page1Spot = page1Spots.get(index);
+        public MyViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
             LayoutInflater layoutInflater = LayoutInflater.from(context);
-            itemView = layoutInflater.inflate(R.layout.page1_listview, viewGroup, false);
-            ImageView imageView = itemView.findViewById(R.id.imageView);
-            ImageView icWeather = itemView.findViewById(R.id.weather);
-            ImageView icNew = itemView.findViewById(R.id.icnew);
-            TextView tvDate = itemView.findViewById(R.id.tvDate);
-            TextView tvTimeStart = itemView.findViewById(R.id.tvTimeStart);
-            TextView tvTimeEnd = itemView.findViewById(R.id.tvTimeEnd);
-            TextView tvPlace = itemView.findViewById(R.id.tvPlace);
-            TextView tvDiary = itemView.findViewById(R.id.tvDiary);
+            View itemView = layoutInflater.inflate(R.layout.page1_recycleview, viewGroup, false);
+            itemView.setOnClickListener(this);
+            return new MyViewHolder(itemView);
+        }
 
-            imageView.setImageResource(page1Spot.getImageId());
-            icWeather.setImageResource(page1Spot.getIcNewId());
-            icNew.setImageResource(page1Spot.getIcNewId());
-            tvDate.setText(Common.dateStringToDay(page1Spot.getStartDate()));
-            tvTimeStart.setText(Common.dateStringToHM(page1Spot.getStartDate()));
-            tvTimeEnd.setText(Common.dateStringToHM(page1Spot.getEndDate()));
+        @Override
+        public void onBindViewHolder(MyViewHolder viewHolder, final int position) {
+            final LocationToDiary locationToDiary = DiaryData.get(position);
+            viewHolder.imageView.setImageResource(locationToDiary.getImageId());
+            viewHolder.icWeather.setImageResource(locationToDiary.getIcWeatherId());
+            viewHolder.icNew.setImageResource(locationToDiary.getIcNewId());
+            viewHolder.tvDate.setText(Common.dateStringToDay(locationToDiary.getStartDate()));
+            viewHolder.tvTimeStart.setText(Common.dateStringToHM(locationToDiary.getStartDate()));
+            viewHolder.tvTimeEnd.setText(Common.dateStringToHM(locationToDiary.getEndDate()));
             Geocoder geocoder = new Geocoder(getActivity());
-
             //測試時初始化防呆
-            if(page1Spot.getLatitude() != 0.0){
-                try{
+            if (locationToDiary.getLatitude() != 0.0) {
+                try {
                     List<Address> addressList =
-                            geocoder.getFromLocation(page1Spot.getLatitude(), page1Spot.getLongitude(), 1);
-                    if(addressList.size() > 0){
+                            geocoder.getFromLocation(locationToDiary.getLatitude(), locationToDiary.getLongitude(), 1);
+                    if (addressList.size() > 0) {
                         Address address = addressList.get(0);
                         String addrStr = "";
-                        for (int i = 0; i <= address.getMaxAddressLineIndex(); i++){
+                        for (int i = 0; i <= address.getMaxAddressLineIndex(); i++) {
                             addrStr = address.getLocality();
                         }
-                        tvPlace.setText(addrStr);
-                    }else{
-                        tvPlace.setText("Place");
+                        viewHolder.tvPlace.setText(addrStr);
+                    } else {
+                        viewHolder.tvPlace.setText("Place");
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
+            // 長按監聽
+            viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+                @Override
+                public boolean onLongClick(View v) {
+                    PopupMenu popupMenu = new PopupMenu(getActivity(), v, Gravity.END);
+                    // 彈出視窗
+                    popupMenu.inflate(R.menu.popup_menu);
+                    // 彈出視窗的點擊監聽器
+                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
 
-            tvDiary.setText(page1Spot.getNote());
+                            LocationToDiary spot = DiaryData.get(position);
+                            Toast.makeText(getActivity(), Common.dateStringToDay(spot.getStartDate())
+                                            + " " + Common.dateStringToHM(spot.getStartDate())
+                                            + "-" + Common.dateStringToHM(spot.getEndDate())
+                                            + "被删除了",
+                                    Toast.LENGTH_SHORT).show();
 
-            bundleHash.put(index,page1Spot);
+                            DiaryData.remove(position);
+                            // 刪除有動畫效果
+                            notifyItemRemoved(position);
+                            // 刪除SQL_lite的欄位
+                            locationDao.deleteById(locationToDiary.getEndLocationSK());
+                            // 重置DiaryData
+                            DiaryData = getSpots();
+                            // 重新執行recycleView
+                            notifyDataSetChanged();
+                            return true;
 
-            return itemView;
+                        }
+                    });
+                    popupMenu.show();
+                    return true;
+                }
+            });
+            viewHolder.itemView.setTag(position);
+            bundleHash.put(position, locationToDiary);
         }
 
+        // recyclerview 點擊監聽
         @Override
-        public Object getItem(int i) {
-            return null;
+        public void onClick(View view) {
+            Intent intent = new Intent();
+            intent.setClass(getActivity(), DiaryEdit.class);
+            LocationToDiary bundleP = new LocationToDiary(bundleHash.get((int) view.getTag()));
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("Page1Adapter", bundleP);
+            intent.putExtras(bundle);
+            startActivity(intent);
         }
-
-        @Override
-        public long getItemId(int i) {
-            return 0;
-        }
-
     }
 
-
-    //因為前面是用到view所以findViews裡面不能為空值
-    private void findViews(View view) {
-        lvSpots = view.findViewById(R.id.listView);
-    }
 
     private List<LocationToDiary> getSpots() {
-        LocationDao locationDao = new LocationDao(getContext());
+        locationDao = new LocationDao(getContext());
         List<LocationToDiary> ltDiary = locationDao.autoDiary(getContext());
         List<LocationToDiary> page1Spots = new ArrayList<>();
-        for(LocationToDiary d:ltDiary) {
+        for (LocationToDiary d : ltDiary) {
             LocationToDiary addDiary = new LocationToDiary(d);
             addDiary.setImageId(R.drawable.ex_photo);
             addDiary.setIcWeatherId(R.drawable.ic_sun);
             addDiary.setIcNewId(R.drawable.ic_new);
             page1Spots.add(addDiary);
         }
+        // listView倒序
+//        Collections.reverse(page1Spots);
 
-//        Page1Spots.add(new Page1Spot(
-//                R.drawable.picture1,
-//                R.drawable.ic_sun,
-//                R.drawable.ic_new,
-//                "2017/11/10",
-//                "09:00",
-//                "12:00",
-//                "國立中央大學",
-//                "最近每天都在..."));
-//        Page1Spots.add(new Page1Spot(R.drawable.picture2, R.drawable.ic_cloudy,
-//                0, "2017/11/9", "08:00", "10:00",
-//                "拉亞漢堡", "吃早餐"));
-//        Page1Spots.add(new Page1Spot(R.drawable.picture3, R.drawable.ic_raining,
-//                0, "2017/11/8", "14:00", "16:00",
-//                "文化國小", "沒事不知道做啥"));
         return page1Spots;
     }
 }

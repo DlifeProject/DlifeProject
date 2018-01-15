@@ -15,20 +15,20 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.kang.Dlife.R;
-import com.kang.Dlife.data_base.DiaryDetail;
+import com.kang.Dlife.sever.LocationToDiary;
 
 public class GoogleMap extends AppCompatActivity
         implements OnMapReadyCallback {
     private com.google.android.gms.maps.GoogleMap map;
     private LatLng MarkPlace;
-    public DiaryDetail bundleP;
+    public LocationToDiary bundleP;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.page1_google_map);
         Bundle bundle = getIntent().getExtras();
-        bundleP = (DiaryDetail) bundle.getSerializable("place");
+        bundleP = (LocationToDiary) bundle.getSerializable("place");
         initPoints();
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getSupportFragmentManager()
