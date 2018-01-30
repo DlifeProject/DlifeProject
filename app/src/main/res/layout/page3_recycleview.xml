@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="4dp"
+    android:background="@color/background_gray">
+
+
+    <LinearLayout
+        android:id="@+id/llFriendItem"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_weight="4"
+            android:layout_width="0dp"
+            android:padding="10dp"
+            android:orientation="horizontal"
+            android:background="@color/background_white"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tvMyCategory"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:layout_marginRight="20dp"
+                android:textSize="32sp"
+                android:text="H"
+                android:gravity="center"
+                android:textColor="@color/background_white"
+                android:background="@drawable/image_button_background_dark"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/tvMyFriendName"
+                android:text="Regan"
+                android:textSize="28sp"
+                android:layout_toRightOf="@id/tvMyCategory"
+                android:layout_marginRight="20dp"
+                android:layout_centerInParent="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:padding="10dp"
+            android:orientation="horizontal"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tvMyFriendCategory"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:textSize="32sp"
+                android:text="H"
+                android:layout_centerInParent="true"
+                android:background="@drawable/image_button_background"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

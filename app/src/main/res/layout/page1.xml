@@ -3,13 +3,12 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/background_gray"
-    >
+    android:background="@color/background_gray">
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:background="@color/primary_green">
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -20,6 +19,7 @@
             android:textSize="20sp"
             android:textStyle="bold" />
     </RelativeLayout>
+
     <!-- divider => 分隔線顏色 -->
     <!-- dividerHeight => 分隔線粗細 -->
     <android.support.v7.widget.RecyclerView

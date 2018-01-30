@@ -34,7 +34,7 @@
             android:layout_weight="5"
             android:gravity="center"
             android:orientation="vertical"
-            android:text="@string/ChangePassword"
+            android:text="@string/ChangeGender"
             android:textColor="@color/background_white"
             android:textSize="20sp"
             android:textStyle="bold" />
@@ -52,41 +52,49 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <EditText
-            android:layout_marginTop="60dp"
-            android:layout_marginLeft="40dp"
-            android:layout_marginRight="40dp"
-            android:id="@+id/etChangePassword"
-            android:textSize="32sp"
-            android:hint="@string/NewPassword"
-            android:inputType="textVisiblePassword"
-            android:gravity="center"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
         <TextView
             android:id="@+id/tvUpdate"
             android:text=""
-            android:textSize="16sp"
+            android:textSize="24sp"
             android:gravity="center"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="40dp"
             android:layout_marginLeft="40dp"
             android:layout_marginRight="40dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
+        <RadioGroup
+            android:id="@+id/rgGender"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+            <RadioButton
+                android:id="@+id/rbMan"
+                android:text="@string/man"
+                android:textSize="32sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <RadioButton
+                android:id="@+id/rbLady"
+                android:text="@string/lady"
+                android:textSize="32sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </RadioGroup>
+
         <Button
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="30dp"
             android:layout_marginLeft="40dp"
             android:layout_marginRight="40dp"
-            android:id="@+id/btChangePassword"
+            android:id="@+id/btChangeGenger"
             android:text="@string/text_Submit"
             android:textColor="@color/background_white"
             android:background="@drawable/image_button_background"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        </LinearLayout>
+    </LinearLayout>
 
 
 </LinearLayout>
-

@@ -251,11 +251,96 @@ public class MemberDao {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-			
-				
+		}		
 		close();
 		return member;
 	}
+
+	public int updatePassword(String asString) {
+		int count = 0;
+		String sql = "update member set app_pwd = ? where sk = ? ";
+		try {
+			conn = DriverManager.getConnection(Common.DBURL, Common.DBACCOUNT,
+					Common.DBPWD);
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, asString);
+			ps.setInt(2, memberSK);
+			ps.executeUpdate();
+			count = ps.executeUpdate();		
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("updateLoginDate err = " + sql);
+		}
+		close();	
+		return count;
+	}
+
+	public int updateNickname(String asString) {
+		int count = 0;
+		String sql = "update member set nick_name = ? where sk = ? ";
+		try {
+			conn = DriverManager.getConnection(Common.DBURL, Common.DBACCOUNT,
+					Common.DBPWD);
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, asString);
+			ps.setInt(2, memberSK);
+			ps.executeUpdate();
+			count = ps.executeUpdate();		
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("updateLoginDate err = " + sql);
+		}
+		close();	
+		return count;
+	}
+
+	public int updateBirthday(String asString) {
+		int count = 0;
+		String[] birthdayArray = asString.split("-");
+		int birthdayYear = Integer.parseInt(birthdayArray[0]);
+		
+		String sql = "update member set birthday = ?, birth_year = ? where sk = ? ";
+		try {
+			conn = DriverManager.getConnection(Common.DBURL, Common.DBACCOUNT,
+					Common.DBPWD);
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, asString);
+			ps.setInt(2, birthdayYear);
+			ps.setInt(3, memberSK);
+			ps.executeUpdate();
+			count = ps.executeUpdate();		
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("updateLoginDate err = " + sql);
+		}
+		close();	
+		return count;
+	}
+
+	public int updateBirthday(int asInt) {
+		
+		int count = 0;
+		
+		String sql = "update member set sex = ? where sk = ? ";
+		try {
+			conn = DriverManager.getConnection(Common.DBURL, Common.DBACCOUNT,
+					Common.DBPWD);
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, asInt);
+			ps.setInt(2, memberSK);
+			ps.executeUpdate();
+			count = ps.executeUpdate();		
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("updateLoginDate err = " + sql);
+		}
+		close();	
+		return count;
+	}
+
 
 }

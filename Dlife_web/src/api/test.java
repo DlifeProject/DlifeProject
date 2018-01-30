@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import db.MemberLocationDao;
+
 @WebServlet("/test")
 public class test extends HttpServlet{
 	private static final long serialVersionUID = 1L;
@@ -25,24 +27,14 @@ public class test extends HttpServlet{
 		response.getWriter().append(datetime + "<br>");
 		//do getdiary
 		
-		String date = "2018-01-01 12:30:45";
-		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		double longitude = 121.19182735193802;
+		double latitude = 24.967921295607205;
+		response.getWriter().append(longitude + "<br>");
+		response.getWriter().append(latitude + "<br>");
 		
-		try {
-			Date today = dateFormat.parse(date);
-			DateFormat chtDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-			//System.out.println(chtDateFormat.format(today));  
-			
-			date = chtDateFormat.format(today);
-			
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	
-		System.out.println(date);  
-
-		 
+		MemberLocationDao memberLocationDao = new MemberLocationDao(1);
+		int count = memberLocationDao.addNew();
+		response.getWriter().append("count: " + count + "<br>");	 
 		
 	}
 

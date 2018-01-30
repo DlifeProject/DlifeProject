@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.kang.Dlife.Common;
 import com.kang.Dlife.R;
 
 
@@ -159,6 +160,13 @@ public class Page4 extends Fragment {
             }
         });
         return view;
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        //Common.showToast(getContext(),"test");
+
     }
 
     private void findViews(View view) {

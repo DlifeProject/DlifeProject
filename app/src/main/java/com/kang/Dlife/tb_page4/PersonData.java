@@ -11,9 +11,12 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.kang.Dlife.Common;
 import com.kang.Dlife.R;
-import com.kang.Dlife.TabActivity;
 import com.kang.Dlife.data_base.Member;
 import com.kang.Dlife.sever.MyTask;
+import com.kang.Dlife.tb_page4.personData.ChangeBirthday;
+import com.kang.Dlife.tb_page4.personData.ChangeGender;
+import com.kang.Dlife.tb_page4.personData.ChangeNickname;
+import com.kang.Dlife.tb_page4.personData.ChangePassword;
 
 
 public class PersonData extends AppCompatActivity {
@@ -24,7 +27,7 @@ public class PersonData extends AppCompatActivity {
     private ImageButton ibChangePassword, ibNickname, ibBirthday, ibGender, ibLogout;
 
     private String account = "";
-    private String nickname = "";
+    public String nickname = "";
     private String birthday = "";
     private int gender = 2;
     private String logout = "";
@@ -36,8 +39,8 @@ public class PersonData extends AppCompatActivity {
         setContentView(R.layout.page4_person_data);
         findView();
 
-
     }
+
 
     private void findView() {
 
@@ -75,6 +78,9 @@ public class PersonData extends AppCompatActivity {
 
             account = memberProfile.getApp_account();
             nickname = memberProfile.getNick_name();
+            if(nickname.isEmpty()){
+                nickname = "";
+            }
             birthday = memberProfile.getBirthday();
             gender = memberProfile.getSex();
             logout = memberProfile.getLogin_date();
@@ -101,6 +107,43 @@ public class PersonData extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent();
                 intent.setClass( PersonData.this, ChangePassword.class);
+                startActivity(intent);
+            }
+        });
+
+        ibNickname.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setClass( PersonData.this, ChangeNickname.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("nickname",nickname);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        });
+
+        ibBirthday.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setClass( PersonData.this, ChangeBirthday.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("birthday",birthday);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        });
+        ibGender.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setClass( PersonData.this, ChangeGender.class);
+                Bundle bundle = new Bundle();
+                bundle.putInt("gender",gender);
+                intent.putExtras(bundle);
                 startActivity(intent);
             }
         });

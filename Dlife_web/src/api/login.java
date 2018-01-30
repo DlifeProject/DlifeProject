@@ -30,7 +30,12 @@ public class login extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {		
+		
 		request.setCharacterEncoding("utf-8");
+		
+		response.setCharacterEncoding("utf-8");
+		response.setContentType("text/html;charset=utf-8");
+		
 		BufferedReader br = request.getReader();
 		StringBuffer sb = new StringBuffer();
 		String text = "";
@@ -62,12 +67,85 @@ public class login extends HttpServlet {
 					,jsonObject.get("password").getAsString());
 			MemberDao memberDao = new MemberDao(member);
 			int memberSK = memberDao.getMemberSK();
-			Member memberProfile = new Member(memberDao.getMemberProfileBySK(memberSK));
-			JsonObject outJsonObject = new JsonObject();
-			outJsonObject.addProperty("memberProfile", new Gson().toJson(memberProfile));
-			System.out.println("memberProfile = " + outJsonObject.toString());
-			response.getWriter().println(outJsonObject.toString());
+			if(memberSK > 0) {
+				Member memberProfile = new Member(memberDao.getMemberProfileBySK(memberSK));
+				JsonObject outJsonObject = new JsonObject();
+				outJsonObject.addProperty("memberProfile", new Gson().toJson(memberProfile));
+				System.out.println("memberProfile = " + outJsonObject.toString());
+				response.getWriter().println(outJsonObject.toString());
+			}else {
+				System.out.println("memberProfile : member account notfound ");
+			}
 			
+		}else if(action.equals("changePassword")) {
+			Member member = new Member(jsonObject.get("account").getAsString()
+					,jsonObject.get("password").getAsString());
+			MemberDao memberDao = new MemberDao(member);
+			int memberSK = memberDao.getMemberSK();
+			if(memberSK > 0) {
+				memberDao.memberSK = memberSK;
+				int checkcount = memberDao.updatePassword(jsonObject.get("newPassword").getAsString());
+				if(checkcount > 0) {
+					response.getWriter().println("passwordUpdateSuccess");
+				}else {
+					response.getWriter().println("passwordUpdateError");
+				}
+				
+			}else {
+				response.getWriter().println("passwordUpdateError");
+			}
+			
+		}else if(action.equals("changeNickname")) {
+			Member member = new Member(jsonObject.get("account").getAsString()
+					,jsonObject.get("password").getAsString());
+			MemberDao memberDao = new MemberDao(member);
+			int memberSK = memberDao.getMemberSK();
+			if(memberSK > 0) {
+				memberDao.memberSK = memberSK;
+				int checkcount = memberDao.updateNickname(jsonObject.get("newNickname").getAsString());
+				if(checkcount > 0) {
+					response.getWriter().println("nicknameUpdateSuccess");
+				}else {
+					response.getWriter().println("nicknameUpdateError");
+				}
+				
+			}else {
+				response.getWriter().println("nicknameUpdateError");
+			}
+		}else if(action.equals("changeBirthday")) {
+			Member member = new Member(jsonObject.get("account").getAsString()
+					,jsonObject.get("password").getAsString());
+			MemberDao memberDao = new MemberDao(member);
+			int memberSK = memberDao.getMemberSK();
+			if(memberSK > 0) {
+				memberDao.memberSK = memberSK;
+				int checkcount = memberDao.updateBirthday(jsonObject.get("newBirthday").getAsString());
+				if(checkcount > 0) {
+					response.getWriter().println("birthdayUpdateSuccess");
+				}else {
+					response.getWriter().println("birthdayUpdateError");
+				}
+				
+			}else {
+				response.getWriter().println("birthdayUpdateError");
+			}
+		}else if(action.equals("changeGender")) {
+			Member member = new Member(jsonObject.get("account").getAsString()
+					,jsonObject.get("password").getAsString());
+			MemberDao memberDao = new MemberDao(member);
+			int memberSK = memberDao.getMemberSK();
+			if(memberSK > 0) {
+				memberDao.memberSK = memberSK;
+				int checkcount = memberDao.updateBirthday(jsonObject.get("newGender").getAsInt());
+				if(checkcount > 0) {
+					response.getWriter().println("genderUpdateSuccess");
+				}else {
+					response.getWriter().println("genderUpdateError");
+				}
+				
+			}else {
+				response.getWriter().println("genderUpdateError");
+			}
 		}
 		
 		

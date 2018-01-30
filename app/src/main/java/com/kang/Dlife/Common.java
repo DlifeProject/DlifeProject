@@ -146,7 +146,6 @@ public class Common {
             e.printStackTrace();
         }
 
-        System.out.println(date);
         return date;
 
     }
@@ -209,5 +208,16 @@ public class Common {
             Log.d(TAG, text);
         }
         return srcBitmap;
+    }
+
+    public static String checkPWDSecurity(String newPassword) {
+
+        String msg = "ok";
+        return "ok";
+
+    }
+
+    public static String setDateFormat(int year, int month, int dayOfMonth) {
+        return String.valueOf(year) + "-" + String.valueOf(month) + "-" + String.valueOf(dayOfMonth);
     }
 }

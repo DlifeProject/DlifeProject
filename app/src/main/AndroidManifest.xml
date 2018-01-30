@@ -87,10 +87,19 @@
         <activity
             android:name=".tb_page2.diary_view.GoogleMap"
             android:screenOrientation="portrait" />
-
         <activity
-            android:name=".tb_page4.ChangePassword"
+            android:name=".tb_page4.personData.ChangePassword"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".tb_page4.personData.ChangeNickname"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".tb_page4.personData.ChangeBirthday"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".tb_page4.personData.ChangeGender"
+            android:screenOrientation="portrait" />
+
 
         <!-- enabled : 系統可否產生Service物件 -->
         <service

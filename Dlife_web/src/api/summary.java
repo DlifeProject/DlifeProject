@@ -30,6 +30,9 @@ public class summary extends HttpServlet{
 			throws ServletException, IOException {
 		
 		request.setCharacterEncoding("utf-8");
+		response.setCharacterEncoding("utf-8");
+		response.setContentType("text/html;charset=utf-8");
+		
 		BufferedReader br = request.getReader();
 		StringBuffer sb = new StringBuffer();
 		String text = "";

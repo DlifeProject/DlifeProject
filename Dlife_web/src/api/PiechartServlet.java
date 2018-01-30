@@ -33,9 +33,13 @@ public class PiechartServlet extends HttpServlet {
 	}
 
 	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		BufferedReader br = new BufferedReader(req.getReader());
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		request.setCharacterEncoding("utf-8");
+		response.setCharacterEncoding("utf-8");
+		response.setContentType("text/html;charset=utf-8");
+		
+		BufferedReader br = new BufferedReader(request.getReader());
 		StringBuffer inStr = new StringBuffer();
 		String line = "";
 		while ((line = br.readLine()) != null) {
@@ -63,7 +67,7 @@ public class PiechartServlet extends HttpServlet {
 				ltPiechartData.add(piechartData);
 			}
 
-			writeText(resp, gson.toJson(ltPiechartData));
+			writeText(response, gson.toJson(ltPiechartData));
 		}
 	}
 
