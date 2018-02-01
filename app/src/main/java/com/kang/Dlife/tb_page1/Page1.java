@@ -1,5 +1,7 @@
 package com.kang.Dlife.tb_page1;
 
+import android.annotation.TargetApi;
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Address;
@@ -11,55 +13,67 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 import com.kang.Dlife.Common;
 import com.kang.Dlife.R;
-import com.kang.Dlife.data_base.LocationTrace;
+import com.kang.Dlife.data_base.DiaryDetailWeb;
 import com.kang.Dlife.sever.LocationDao;
 import com.kang.Dlife.sever.LocationToDiary;
+import com.kang.Dlife.sever.MyTask;
 import com.kang.Dlife.tb_page1.diary_edit.DiaryEdit;
+import com.kang.Dlife.tb_page1.diary_edit.DiaryEditSpot;
+import com.kang.Dlife.tb_page2.CategorySum;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
+
+import static android.content.ContentValues.TAG;
 
 //不是Activity就一定要宣告View
 public class Page1 extends Fragment {
     //    public Hashtable<Integer,LocationToDiary> bundleHash = new Hashtable<Integer,LocationToDiary>();
     public Hashtable<Integer, LocationToDiary> bundleHash = new Hashtable<Integer, LocationToDiary>();
     private LocationDao locationDao;
-    // 呵呵
+    private RecyclerView rvDiary;
+    public CategorySum categorySum;
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable final Bundle savedInstanceState) {
         //因為有宣告view, 所以之後可以在這頁裡面找下面之後要用到的id
         View view = inflater.inflate(R.layout.page1, container, false);
         //因為是Fragment所以要把this改成getActivity
-        RecyclerView rvDiary = (RecyclerView) view.findViewById(R.id.diarylist);
+        rvDiary = (RecyclerView) view.findViewById(R.id.diarylist);
+        return view;
+    }
+
+    public void onResume() {
+        super.onResume();
         rvDiary.setLayoutManager(
                 new StaggeredGridLayoutManager(
                         // spanCount(列數 or 行數), HORIZONTAL -> 水平, VERTICAL -> 垂直
                         1, StaggeredGridLayoutManager.VERTICAL));
         final List<LocationToDiary> Page1Spots = getSpots();
         rvDiary.setAdapter(new DiaryAdapter(getActivity(), Page1Spots));
-        return view;
     }
-
     private class DiaryAdapter extends
-            RecyclerView.Adapter<DiaryAdapter.MyViewHolder> implements View.OnClickListener {
+            RecyclerView.Adapter<DiaryAdapter.MyViewHolder> {
         private Context context;
         private List<LocationToDiary> DiaryData;
 
@@ -101,12 +115,11 @@ public class Page1 extends Fragment {
         public MyViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
             LayoutInflater layoutInflater = LayoutInflater.from(context);
             View itemView = layoutInflater.inflate(R.layout.page1_recycleview, viewGroup, false);
-            itemView.setOnClickListener(this);
             return new MyViewHolder(itemView);
         }
 
         @Override
-        public void onBindViewHolder(MyViewHolder viewHolder, final int position) {
+        public void onBindViewHolder(final MyViewHolder viewHolder, final int position) {
             final LocationToDiary locationToDiary = DiaryData.get(position);
             viewHolder.imageView.setImageResource(locationToDiary.getImageId());
             viewHolder.icWeather.setImageResource(locationToDiary.getIcWeatherId());
@@ -134,6 +147,22 @@ public class Page1 extends Fragment {
                     e.printStackTrace();
                 }
             }
+            // recyclerview 點擊監聽
+
+            viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+                @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent();
+                    intent.setClass(getActivity(), DiaryEdit.class);
+                    LocationToDiary bundleP = new LocationToDiary(bundleHash.get((int) view.getTag()));
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("Page1Adapter", bundleP);
+                    intent.putExtras(bundle);
+                    startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(getActivity(), viewHolder.itemView, "shareNames").toBundle());
+                }
+            });
             // 長按監聽
             viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -159,7 +188,9 @@ public class Page1 extends Fragment {
                             notifyItemRemoved(position);
                             // 刪除SQL_lite的欄位
                             locationDao.deleteById(locationToDiary.getEndLocationSK());
-                            // 重置DiaryData
+                            locationDao.deleteById(locationToDiary.getEndLocationSK() - 1);
+                            locationDao.deleteById(locationToDiary.getEndLocationSK() + 1);
+                            // 重置DiaryDat
                             DiaryData = getSpots();
                             // 重新執行recycleView
                             notifyDataSetChanged();
@@ -175,17 +206,6 @@ public class Page1 extends Fragment {
             bundleHash.put(position, locationToDiary);
         }
 
-        // recyclerview 點擊監聽
-        @Override
-        public void onClick(View view) {
-            Intent intent = new Intent();
-            intent.setClass(getActivity(), DiaryEdit.class);
-            LocationToDiary bundleP = new LocationToDiary(bundleHash.get((int) view.getTag()));
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("Page1Adapter", bundleP);
-            intent.putExtras(bundle);
-            startActivity(intent);
-        }
     }
 
 
@@ -200,9 +220,11 @@ public class Page1 extends Fragment {
             addDiary.setIcNewId(R.drawable.ic_new);
             page1Spots.add(addDiary);
         }
+
         // listView倒序
 //        Collections.reverse(page1Spots);
 
         return page1Spots;
     }
+
 }

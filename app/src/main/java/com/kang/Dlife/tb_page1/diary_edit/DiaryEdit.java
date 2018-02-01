@@ -1,6 +1,8 @@
 package com.kang.Dlife.tb_page1.diary_edit;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
@@ -12,20 +14,25 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PagerSnapHelper;
 import android.support.v7.widget.RecyclerView;
+import android.transition.Transition;
+import android.transition.TransitionInflater;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -40,7 +47,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.kang.Dlife.Common;
 import com.kang.Dlife.R;
-import com.kang.Dlife.data_base.DiaryDetail;
+import com.kang.Dlife.sever.LocationDao;
 import com.kang.Dlife.sever.LocationToDiary;
 import com.kang.Dlife.sever.MyTask;
 import com.kang.GalleryPick.config.GalleryConfig;
@@ -70,10 +77,26 @@ public class DiaryEdit extends Activity {
     private ImageView iv;
     private MyTask dataUploadTask;
     private final int PERMISSIONS_REQUEST_READ_CONTACTS = 8;
-    private TextView tvDate,tvTimeStart,tvTimeEnd,tvLocation;
+    private TextView tvDate, tvTimeStart, tvTimeEnd, tvLocation;
     private ImageButton ibMap;
     public LocationToDiary bundleP;
-    public Hashtable<Integer,LocationToDiary> bundleHash = new Hashtable<Integer,LocationToDiary>();
+    public Hashtable<Integer, LocationToDiary> bundleHash = new Hashtable<Integer, LocationToDiary>();
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    @Override
+    public void setContentView(View view) {
+        super.setContentView(view);
+        getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
+        @SuppressLint("ResourceType") Transition explode = TransitionInflater.from(this).inflateTransition(R.anim.explode);
+        //退出時使用
+        getWindow().setExitTransition(explode);
+        //進入時使用
+        getWindow().setEnterTransition(explode);
+        //再次進入時使用
+        getWindow().setReenterTransition(explode);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,18 +132,18 @@ public class DiaryEdit extends Activity {
         init();
 
         Geocoder geocoder = new Geocoder(DiaryEdit.this);
-        try{
+        try {
             List<Address> addressList =
                     geocoder.getFromLocation(bundleP.getLatitude(), bundleP.getLongitude(), 1);
 
             String addrStr = "";
-            if(addressList.size() > 0){
+            if (addressList.size() > 0) {
                 Address address = addressList.get(0);
-                for (int i = 0; i <= address.getMaxAddressLineIndex(); i++){
+                for (int i = 0; i <= address.getMaxAddressLineIndex(); i++) {
                     addrStr = address.getLocality();
 
                 }
-            }else{
+            } else {
                 addrStr = "unknown";
             }
             tvLocation.setText(addrStr);
@@ -128,6 +151,11 @@ public class DiaryEdit extends Activity {
             e.printStackTrace();
         }
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         ibMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -141,10 +169,14 @@ public class DiaryEdit extends Activity {
         });
         // 上傳日記內容和類別
         ibOk.setOnClickListener(new View.OnClickListener() {
+            @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+            @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
             @Override
             public void onClick(View view) {
                 String diary = etDiary.getText().toString().trim();
                 String category_select = categorySelect;
+                double longitude = bundleP.getLongitude();
+                double latitude = bundleP.getLatitude();
                 if (diary.isEmpty()) {
                     Toast.makeText(DiaryEdit.this,
                             R.string.text_InvalidName,
@@ -152,14 +184,14 @@ public class DiaryEdit extends Activity {
                     return;
                 }
 
-                DiaryEditSpot spot = new DiaryEditSpot(diary, category_select);
+                DiaryEditSpot spot = new DiaryEditSpot(diary, category_select, longitude, latitude);
                 JsonObject jsonObject = new JsonObject();
                 jsonObject.addProperty("action", "insertDiary");
                 jsonObject.addProperty("account", Common.getAccount(DiaryEdit.this));
                 jsonObject.addProperty("password", Common.getPWD(DiaryEdit.this));
-                jsonObject.addProperty("categoryType",category_select);
+                jsonObject.addProperty("categoryType", category_select);
                 bundleP.setNote(diary);
-                jsonObject.addProperty("diaryDetail",new Gson().toJson(bundleP.toDiaryDetail()));
+                jsonObject.addProperty("diaryDetail", new Gson().toJson(bundleP.toDiaryDetail()));
 
                 int insterCount = 0;
                 if (networkConnected()) {
@@ -168,7 +200,7 @@ public class DiaryEdit extends Activity {
                     try {
                         String inStr = myTask.execute().get().trim();
                         insterCount = Integer.valueOf(inStr);
-                        if (insterCount == 0 ) {
+                        if (insterCount == 0) {
 
                         } else {
 
@@ -199,7 +231,7 @@ public class DiaryEdit extends Activity {
                             try {
                                 String inStr = myTask.execute().get().trim();
                                 int count = Integer.valueOf(inStr);
-                                if (count == 0 ) {
+                                if (count == 0) {
 
                                 } else {
 
@@ -210,12 +242,15 @@ public class DiaryEdit extends Activity {
                         }
                     }
                 }
+                LocationDao locationDao = new LocationDao(DiaryEdit.this);
+                locationDao.deleteById(bundleP.getEndLocationSK());
+                locationDao.deleteById(bundleP.getEndLocationSK() - 1);
+                locationDao.deleteById(bundleP.getEndLocationSK() + 1);
                 finish();
+
             }
         });
-
     }
-
 
     // 檢察網路連線
     private boolean networkConnected() {
@@ -410,6 +445,8 @@ public class DiaryEdit extends Activity {
     }
 
     // 返回上一頁面
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     public void onBackClick(View view) {
         finish();
     }
@@ -443,5 +480,6 @@ public class DiaryEdit extends Activity {
             super.onCreate();
         }
     }
+
 
 }

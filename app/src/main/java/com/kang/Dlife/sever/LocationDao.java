@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.location.Location;
 
 import com.kang.Dlife.Common;
+
 import com.kang.Dlife.data_base.LocationTrace;
 
 import java.util.ArrayList;

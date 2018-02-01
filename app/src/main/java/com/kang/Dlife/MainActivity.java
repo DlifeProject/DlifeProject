@@ -151,7 +151,7 @@ public class MainActivity extends Activity {
         if(loginAccount.isEmpty()){
             Common.showToast(this, "Account is empty");
             return false;
-        }else if(!checkLoginAccountEmail(loginAccount)){
+        }else if(!Common.checkLoginAccountEmail(loginAccount)){
             Common.showToast(this, "Is not an email address!");
             return false;
         }else if(loginPassword.length() < 6){
@@ -163,15 +163,6 @@ public class MainActivity extends Activity {
 
     }
 
-    private boolean checkLoginAccountEmail(String account){
-
-        if(account.contains("@")){
-            return true;
-        }else{
-            return false;
-        }
-
-    }
 
     public static String webLogin(Context c,String userAccount, String userPassword, String userUUID){
 

@@ -16,4 +16,13 @@
     <string name="birthday">Birthday</string>
     <string name="gender">Gender</string>
     <string name="lastLoginDate">Login</string>
+    <string name="lady">Lady</string>
+    <string name="man">Man</string>
+    <string name="ChangePassword">Password</string>
+    <string name="NewPassword">New Password</string>
+    <string name="ChangeNickname">Nickname</string>
+    <string name="NewNickName">new nickname</string>
+    <string name="ChangeBirthday">Birthday</string>
+    <string name="initBirthday">Your birthday</string>
+    <string name="ChangeGender">Gender</string>
 </resources>

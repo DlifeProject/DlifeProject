@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_gray"
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/primary_green"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:onClick="onBackClick">
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#00000000"
+                android:clickable="false"
+                android:src="@drawable/ic_back" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="5"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:text="@string/ChangeNickname"
+            android:textColor="@color/background_white"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+        <LinearLayout
+            android:id="@+id/check"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tvUpdate"
+            android:text=""
+            android:textSize="24sp"
+            android:gravity="center"
+            android:layout_marginTop="40dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <EditText
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:id="@+id/etChangeNickname"
+            android:textSize="32sp"
+            android:hint="@string/NewNickName"
+            android:inputType="textVisiblePassword"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:layout_marginTop="30dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:id="@+id/btChangeNickName"
+            android:text="@string/text_Submit"
+            android:textColor="@color/background_white"
+            android:background="@drawable/image_button_background"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+
+</LinearLayout>

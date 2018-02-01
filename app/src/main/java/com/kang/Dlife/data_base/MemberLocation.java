@@ -5,7 +5,7 @@ public class MemberLocation {
     private int sk;
     private int member_sk;
     private String google_title;
-    private String used_title;
+    private String user_title;
     private double latitude;
     private double longitude;
     private String latest_date;
@@ -21,7 +21,7 @@ public class MemberLocation {
         this.sk = sk;
         this.member_sk = member_sk;
         this.google_title = google_title;
-        this.used_title = used_title;
+        this.user_title = used_title;
         this.latest_date = latest_date;
         this.post_date = post_date;
         this.latitude = latitude;
@@ -59,13 +59,13 @@ public class MemberLocation {
     }
 
 
-    public String getUsed_title() {
-        return used_title;
+    public String getUser_title() {
+        return user_title;
     }
 
 
-    public void setUsed_title(String used_title) {
-        this.used_title = used_title;
+    public void setUser_title(String user_title) {
+        this.user_title = user_title;
     }
 
 
