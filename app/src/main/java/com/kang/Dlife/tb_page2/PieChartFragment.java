@@ -39,7 +39,6 @@ import com.kang.Dlife.Common;
 import com.kang.Dlife.R;
 import com.kang.Dlife.sever.MyTask;
 import com.kang.Dlife.tb_page2.diary_view.DiaryView;
-import com.kang.Dlife.tb_page3.Page3;
 
 import java.lang.reflect.Type;
 import java.sql.Timestamp;
@@ -48,7 +47,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import static android.content.ContentValues.TAG;
 import static android.content.Context.CONNECTIVITY_SERVICE;
 
 
@@ -60,8 +58,9 @@ public class PieChartFragment extends Fragment {
         TextView tv_click, tv_startyear, tv_startmonth, tv_startday, tv_endyear, tv_endmonth, tv_endday;
         public long shopping = 10, work = 10, hobby = 10, travel = 10, learning = 10;
         Timestamp startDate, endDate;
-        private final static String TAG = "CategoryPieFragment";
         private PieChart pieChart;
+        private final static String TAG = "CategoryPieFragment";
+
 
 
 
@@ -248,31 +247,31 @@ public class PieChartFragment extends Fragment {
                             System.out.println("inStr:" + inStr.toString());
                             Log.d(TAG, "inStr:" + inStr.toString());
                             Gson gson = new Gson();
-                            Type listType = new TypeToken<List<PiechartDeta>>() {
+                            Type listType = new TypeToken<List<PiechartData>>() {
                             }.getType();
-                            List<PiechartDeta> piechartDetaList = gson.fromJson(inStr, listType);
-                            for (PiechartDeta piechartDeta : piechartDetaList) {
-                                String cat = piechartDeta.getCategory();
+                            List<PiechartData> piechartDataList = gson.fromJson(inStr, listType);
+                            for (PiechartData piechartData : piechartDataList) {
+                                String cat = piechartData.getCategory();
                                 switch (cat) {
                                     case "shopping":
                                         shopping = 0;
-                                        shopping += piechartDeta.categoryTime;
+                                        shopping += piechartData.categoryTime;
                                         break;
                                     case "work":
                                         work = 0;
-                                        work += piechartDeta.categoryTime;
+                                        work += piechartData.categoryTime;
                                         break;
                                     case "hobby":
                                         hobby = 0;
-                                        hobby += piechartDeta.categoryTime;
+                                        hobby += piechartData.categoryTime;
                                         break;
                                     case "travel":
                                         travel = 0;
-                                        travel += piechartDeta.categoryTime;
+                                        travel += piechartData.categoryTime;
                                         break;
                                     case "learning":
                                         learning = 0;
-                                        learning += piechartDeta.categoryTime;
+                                        learning += piechartData.categoryTime;
                                         break;
                                     default:
                                         break;

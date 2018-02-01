@@ -69,15 +69,6 @@ public class DiaryView extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.page2_diary_view);
 
-        Bundle bundle = getIntent().getExtras();
-        categorySum = (CategorySum) bundle.getSerializable("CategorySum");
-
-        Common.showToast(this,categorySum.getCategoryType());
-
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL));
-
-
         initView();
         ibMap = (ImageButton) super.findViewById(R.id.ibMap);
         btBack.setOnClickListener(new View.OnClickListener() {
@@ -86,7 +77,21 @@ public class DiaryView extends AppCompatActivity {
                 finish();
             }
         });
-        showAllNews();
+        Bundle bundle = getIntent().getExtras();
+
+
+        if (bundle == null) {
+            Common.showToast(this, R.string.msg_NoNewsFound);
+        } else {
+            categorySum = (CategorySum) bundle.getSerializable("CategorySum");
+
+
+            recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+            recyclerView.setLayoutManager(new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL));
+
+
+            showAllNews();
+        }
 
     }
 
