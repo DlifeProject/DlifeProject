@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/background_gray">
+    android:background="@color/background_gray"
+    android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:background="@color/primary_green">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -20,11 +21,65 @@
             android:textStyle="bold" />
     </RelativeLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingTop="10dp"
+        android:paddingBottom="5dp"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:id="@+id/rlNoUpload"
+            android:layout_width="100dp"
+            android:layout_height="30dp">
+
+            <ImageView
+                android:id="@+id/ivNoUpload"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/select_left_onclick" />
+            <TextView
+                android:id="@+id/tvNoUpload"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:text="未上傳"
+                android:textColor="@color/background_white"
+                android:textStyle="bold" />
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/rlAlreadyUpload"
+            android:layout_width="100dp"
+            android:layout_height="30dp"
+            >
+
+            <ImageView
+                android:id="@+id/ivAlreadyUpload"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/select_right" />
+
+            <TextView
+                android:id="@+id/tvAlreadyUpload"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:text="已上傳"
+                android:textColor="@color/primary_green"
+                android:textStyle="bold" />
+        </RelativeLayout>
+    </LinearLayout>
     <!-- divider => 分隔線顏色 -->
     <!-- dividerHeight => 分隔線粗細 -->
-    <android.support.v7.widget.RecyclerView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:id="@+id/diarylist" />
+    <FrameLayout
+        android:id="@+id/viewover"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1" >
+    </FrameLayout>
+
 
 </LinearLayout>

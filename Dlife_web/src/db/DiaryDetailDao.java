@@ -233,7 +233,56 @@ public class DiaryDetailDao {
 		close();
 		return diarycount;
 	}
+	// 第一頁RecyclerView全取
+	public List<DiaryDetail> getRecyclerViewDiary() {
 
+		List<DiaryDetail> ltDiaryDetail = new ArrayList<DiaryDetail>();
+
+		ResultSet rs = null;
+	
+			String sql = "select " + " sk, member_sk, top_category_sk, member_location_sk, note"
+					+ ",start_stamp, end_stamp, start_date, end_date, post_day"
+					+ ",post_date, longitude, latitude, altitude" + " from diary_detail" + " where member_sk = ? ";
+			try {
+				conn = DriverManager.getConnection(Common.DBURL, Common.DBACCOUNT, Common.DBPWD);
+				ps = conn.prepareStatement(sql);
+				ps.setInt(1, memberSK);
+				rs = ps.executeQuery();
+
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		
+
+		try {
+			while (rs.next()) {
+				DiaryDetail diaryDetail = new DiaryDetail();
+				diaryDetail.setSk(rs.getInt(1));
+				diaryDetail.setMember_sk(rs.getInt(2));
+				diaryDetail.setTop_category_sk(rs.getInt(3));
+				diaryDetail.setMember_location_sk(rs.getInt(4));
+				diaryDetail.setNote(rs.getString(5));
+				diaryDetail.setStart_stamp(rs.getString(6));
+				diaryDetail.setEnd_stamp(rs.getString(7));
+				diaryDetail.setStart_date(rs.getString(8));
+				diaryDetail.setEnd_date(rs.getString(9));
+				diaryDetail.setPost_day(rs.getString(10));
+				diaryDetail.setPost_date(rs.getString(11));
+				diaryDetail.setLongitude(rs.getDouble(12));
+				diaryDetail.setLatitude(rs.getDouble(13));
+				diaryDetail.setAltitude(rs.getDouble(14));
+				ltDiaryDetail.add(diaryDetail);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		close();
+		return ltDiaryDetail;
+	}
+	
 	public List<DiaryDetail> getDiaryByCategoryType(String categoryType) {
 
 		List<DiaryDetail> ltDiaryDetail = new ArrayList<DiaryDetail>();

@@ -102,7 +102,6 @@ public class DiaryEdit extends Activity {
         super.onCreate(savedInstanceState);
         Bundle bundle = getIntent().getExtras();
         bundleP = (LocationToDiary) bundle.getSerializable("Page1Adapter");
-
         setContentView(R.layout.page1_diary_edit);
         // Spinner選單
         Spinner spinner = (Spinner) findViewById(R.id.spinner);

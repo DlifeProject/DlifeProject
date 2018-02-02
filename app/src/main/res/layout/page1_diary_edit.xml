@@ -60,7 +60,6 @@
                 android:src="@drawable/ic_check_circle" />
         </LinearLayout>
     </LinearLayout>
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="240dp"
@@ -90,7 +89,6 @@
 
 
     </RelativeLayout>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -234,11 +232,12 @@
         </LinearLayout>
     </LinearLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:layout_marginTop="10dp"
+        android:orientation="vertical"
         android:background="@color/background_white"
         android:padding="10dp">
 
@@ -259,10 +258,9 @@
             android:layout_alignParentStart="true"
             android:layout_below="@+id/textView4"
             android:background="@color/background_white"
-            android:hint="      請在這裡輸入這篇日記的內容"
+            android:hint="請在這裡輸入這篇日記的內容"
             android:textColor="@color/text_black"
             android:textSize="20dp"
             android:textStyle="bold" />
-    </RelativeLayout>
-
+    </LinearLayout>
 </LinearLayout>

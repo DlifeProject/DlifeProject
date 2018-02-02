@@ -134,7 +134,27 @@ public class diary extends HttpServlet {
 					System.out.println("outStr: " + msg.toString());
 
 				}
-			}
+				
+			}else if (action.equals("getRecyclerViewDiary")) {
+				System.out.println("Start getDiary!! ");
+				DiaryDetailDao diaryDetailDao = new DiaryDetailDao(memberSK);
+				List<DiaryDetail> ltDiaryDetail = new ArrayList<DiaryDetail>();
+				ltDiaryDetail = diaryDetailDao.getRecyclerViewDiary();
+				JsonObject outJsonObject = new JsonObject();
+
+				if (ltDiaryDetail.size() > 0) {
+					exeString = "getDiarySuccess";
+					outJsonObject.addProperty("getRecyclerViewDiary", new Gson().toJson(ltDiaryDetail));
+					msg = outJsonObject.toString();
+					System.out.println("outStr: " + msg.toString());
+
+				} else {
+					exeString = "getDiaryNull";
+					outJsonObject.addProperty("getRecyclerViewDiary", "");
+					msg = outJsonObject.toString();
+					System.out.println("outStr: " + msg.toString());
+
+				}
 
 		} else {
 			exeString = "accountError";
@@ -155,6 +175,7 @@ public class diary extends HttpServlet {
 			response.getWriter().println(msg);
 		} else {
 			response.getWriter().println("0");
+		}
 		}
 
 	}
