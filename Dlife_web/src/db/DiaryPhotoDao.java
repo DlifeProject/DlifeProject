@@ -19,26 +19,23 @@ public class DiaryPhotoDao {
 
 	public DiaryPhotoDao() {
 		super();
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
+		Common.initDB();
 	}
 
 	public DiaryPhotoDao(int diarySK) {
 		super();
 		this.diarySK = diarySK;
+		Common.initDB();
 	}
 
 	public DiaryPhotoDao(int memberSK, int diarySK) {
 		super();
 		this.memberSK = memberSK;
 		this.diarySK = diarySK;
+		Common.initDB();
 	}
 
 	public DiaryPhotoDao close() {
-
 		if (ps != null) {
 			try {
 				ps.close();

@@ -20,22 +20,14 @@ public class MemberDao {
 
 	public MemberDao(int memberSK) {
 		super();
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
 		this.memberSK = memberSK;
+		Common.initDB();
 	}
 	
 	public MemberDao(Member member) {
 		super();
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
 		this.member = member;
+		Common.initDB();
 	}
 	
 	public MemberDao close() {

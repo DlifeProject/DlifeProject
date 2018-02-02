@@ -17,7 +17,17 @@ public class Common {
 	public final static String DBPWD = "root";
 	public final static String DBKEY = "sk";
 	public final static String[] DEFAULTCATE = {"Shopping","Hobby","Learning","Travel","Work"};
+	public final static String[] NONSHARECATE = {"Work"};
+	public final static int CATEGORYMATCHDAY = -100;
 	
+	public static void initDB() {
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+	 
 	public static String getNowDateTimeString() {
 		//目前時間
 		Date date = new Date();
