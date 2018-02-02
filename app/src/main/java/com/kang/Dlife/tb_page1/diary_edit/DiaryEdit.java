@@ -242,9 +242,7 @@ public class DiaryEdit extends Activity {
                     }
                 }
                 LocationDao locationDao = new LocationDao(DiaryEdit.this);
-                locationDao.deleteById(bundleP.getEndLocationSK());
-                locationDao.deleteById(bundleP.getEndLocationSK() - 1);
-                locationDao.deleteById(bundleP.getEndLocationSK() + 1);
+                locationDao.deleteById(bundleP.getStartLocationSK(), bundleP.getEndLocationSK());
                 finish();
 
             }

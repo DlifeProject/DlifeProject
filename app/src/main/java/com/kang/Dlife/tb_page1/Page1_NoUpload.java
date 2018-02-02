@@ -127,6 +127,9 @@ public class Page1_NoUpload extends Fragment {
         public void onBindViewHolder(final MyViewHolder viewHolder, final int position) {
 
             final LocationToDiary locationToDiary = SQLiteDiary.get(position);
+            final int deleteStartSK = locationToDiary.getStartLocationSK();
+            final int deleteEndSK = locationToDiary.getEndLocationSK();
+
 
                 viewHolder.imageView.setImageResource(locationToDiary.getImageId());
                 viewHolder.icWeather.setImageResource(R.drawable.ic_sun);
@@ -194,9 +197,7 @@ public class Page1_NoUpload extends Fragment {
                                 // 刪除有動畫效果
                                 notifyItemRemoved(position);
                                 // 刪除SQL_lite的欄位
-                                locationDao.deleteById(locationToDiary.getEndLocationSK());
-                                locationDao.deleteById(locationToDiary.getEndLocationSK() - 1);
-                                locationDao.deleteById(locationToDiary.getEndLocationSK() + 1);
+                                locationDao.deleteById(deleteStartSK, deleteEndSK);
                                 // 重置DiaryDat
                                 SQLiteDiary = getSpots();
                                 // 重新執行recycleView
