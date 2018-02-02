@@ -197,7 +197,7 @@ public class DiaryDetailDao {
 			categorySum.setYear("00");
 			categorySum.setMonth("00");
 			categorySum.setDay("00");
-			categorySum.setNote(""); // TODO Auto-generated catch block
+			categorySum.setNote("");
 			e.printStackTrace();
 		}
 
