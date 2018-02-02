@@ -121,6 +121,7 @@ public class DiaryDetailDao {
 
 	public int insert() {
 		int insertCount = 0;
+		memberSK = diaryDetail.getMember_sk();
 		String sql = "insert into diary_detail" + "(member_sk, top_category_sk, member_location_sk, note, start_stamp,"
 				+ " end_stamp, start_date, end_date, post_day, post_date," + " longitude, latitude, altitude)"
 				+ " VALUES (" + " ?,?,?,?,?," + " ?,?,?,?,?," + " ?,?,?)";
