@@ -23,22 +23,14 @@ public class DiaryDetailDao {
 
 	public DiaryDetailDao(int memberSK) {
 		super();
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
 		this.memberSK = memberSK;
+		Common.initDB();
 	}
 
 	public DiaryDetailDao(DiaryDetail diaryDetail) {
 		super();
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
 		this.diaryDetail = diaryDetail;
+		Common.initDB();
 	}
 
 	public DiaryDetailDao close() {
@@ -129,6 +121,7 @@ public class DiaryDetailDao {
 
 	public int insert() {
 		int insertCount = 0;
+		memberSK = diaryDetail.getMember_sk();
 		String sql = "insert into diary_detail" + "(member_sk, top_category_sk, member_location_sk, note, start_stamp,"
 				+ " end_stamp, start_date, end_date, post_day, post_date," + " longitude, latitude, altitude)"
 				+ " VALUES (" + " ?,?,?,?,?," + " ?,?,?,?,?," + " ?,?,?)";
@@ -159,6 +152,10 @@ public class DiaryDetailDao {
 		}
 
 		close();
+		if (insertCount > 0) {
+			CategoryMatchDao categoryMatchDao = new CategoryMatchDao(memberSK);
+			categoryMatchDao.updateCategoryMatch(getCategoryMatch(Common.CATEGORYMATCHDAY));
+		}
 		return insertCount;
 	}
 
@@ -200,7 +197,7 @@ public class DiaryDetailDao {
 			categorySum.setYear("00");
 			categorySum.setMonth("00");
 			categorySum.setDay("00");
-			categorySum.setNote(""); // TODO Auto-generated catch block
+			categorySum.setNote("");
 			e.printStackTrace();
 		}
 
@@ -234,6 +231,55 @@ public class DiaryDetailDao {
 		return diarycount;
 	}
 
+	// 第一頁RecyclerView全取
+	public List<DiaryDetail> getRecyclerViewDiary() {
+
+		List<DiaryDetail> ltDiaryDetail = new ArrayList<DiaryDetail>();
+
+		ResultSet rs = null;
+
+		String sql = "select " + " sk, member_sk, top_category_sk, member_location_sk, note"
+				+ ",start_stamp, end_stamp, start_date, end_date, post_day"
+				+ ",post_date, longitude, latitude, altitude" + " from diary_detail" + " where member_sk = ? ";
+		try {
+			conn = DriverManager.getConnection(Common.DBURL, Common.DBACCOUNT, Common.DBPWD);
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, memberSK);
+			rs = ps.executeQuery();
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		try {
+			while (rs.next()) {
+				DiaryDetail diaryDetail = new DiaryDetail();
+				diaryDetail.setSk(rs.getInt(1));
+				diaryDetail.setMember_sk(rs.getInt(2));
+				diaryDetail.setTop_category_sk(rs.getInt(3));
+				diaryDetail.setMember_location_sk(rs.getInt(4));
+				diaryDetail.setNote(rs.getString(5));
+				diaryDetail.setStart_stamp(rs.getString(6));
+				diaryDetail.setEnd_stamp(rs.getString(7));
+				diaryDetail.setStart_date(rs.getString(8));
+				diaryDetail.setEnd_date(rs.getString(9));
+				diaryDetail.setPost_day(rs.getString(10));
+				diaryDetail.setPost_date(rs.getString(11));
+				diaryDetail.setLongitude(rs.getDouble(12));
+				diaryDetail.setLatitude(rs.getDouble(13));
+				diaryDetail.setAltitude(rs.getDouble(14));
+				ltDiaryDetail.add(diaryDetail);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		close();
+		return ltDiaryDetail;
+	}
+
 	public List<DiaryDetail> getDiaryByCategoryType(String categoryType) {
 
 		List<DiaryDetail> ltDiaryDetail = new ArrayList<DiaryDetail>();
@@ -241,9 +287,12 @@ public class DiaryDetailDao {
 		int top_category_sk = 0;
 		ResultSet rs = null;
 		if (categoryType.equals("nonCategory")) {
-			String sql = "select " + " sk, member_sk, top_category_sk, member_location_sk, note"
+			String sql = "select " 
+					+ " sk, member_sk, top_category_sk, member_location_sk, note"
 					+ ",start_stamp, end_stamp, start_date, end_date, post_day"
-					+ ",post_date, longitude, latitude, altitude" + " from diary_detail" + " where member_sk = ? "
+					+ ",post_date, longitude, latitude, altitude" 
+					+ " from diary_detail" 
+					+ " where member_sk = ? "
 					+ " order by sk desc limit 5";
 			try {
 				conn = DriverManager.getConnection(Common.DBURL, Common.DBACCOUNT, Common.DBPWD);
@@ -331,6 +380,52 @@ public class DiaryDetailDao {
 
 	}
 
+	public ArrayList<CategoryMatchFormat> getCategoryMatch(int days) {
+
+		ArrayList<CategoryMatchFormat> summary = new ArrayList<CategoryMatchFormat>();
+
+		String sql = "select " + "category.category_type as category_type"
+				+ ",max(diary_detail.sk) as max_diary_detail_sk" + ",min(diary_detail.sk) as min_diary_detail_sk"
+				+ ",sum(diary_detail.start_stamp) as sum_start_stamp" + ",sum(diary_detail.end_stamp) as sum_end_stamp"
+				+ ",(sum(diary_detail.start_stamp) - sum(diary_detail.end_stamp)) as total_stamp"
+				+ ",category.sk as top_category_sk" + ",count(diary_detail.sk) as diary_count"
+				+ " from diary_detail, category" + " where" + " diary_detail.top_category_sk = category.sk"
+				+ " and category.is_shareable = 1" + " and category.is_useful = 1" + " and diary_detail.member_sk = ?"
+				+ " and diary_detail.post_day >= ?" + " group by diary_detail.top_category_sk"
+				+ " order by total_stamp desc";
+
+		System.out.println(sql);
+
+		try {
+			conn = (Connection) DriverManager.getConnection(Common.DBURL, Common.DBACCOUNT, Common.DBPWD);
+			ps = (PreparedStatement) conn.prepareStatement(sql);
+			ps.setInt(1, memberSK);
+			ps.setString(2, Common.getTimeString(Common.CATEGORYMATCHDAY));
+			ResultSet rs = ps.executeQuery();
+
+			while (rs.next()) {
+
+				CategoryMatchFormat categoryMatchFormat = new CategoryMatchFormat();
+				categoryMatchFormat.category_type = rs.getString(1);
+				categoryMatchFormat.max_diary_detail_sk = rs.getInt(2);
+				categoryMatchFormat.min_diary_detail_sk = rs.getInt(3);
+				categoryMatchFormat.sum_start_stamp = Long.valueOf(rs.getString(4));
+				categoryMatchFormat.sum_end_stamp = Long.valueOf(rs.getString(5));
+				categoryMatchFormat.top_category_sk = rs.getInt(7);
+				categoryMatchFormat.diary_count = rs.getInt(8);
+
+				summary.add(categoryMatchFormat);
+			}
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		close();
+		return summary;
+	}
+
+	// 大程
 	public PiechartData getPiechartDate(String categoryType, SelectDate sd) {
 		int category_sk = new CategoryDao().getCategory_sk(categoryType);
 		String sql = "SELECT sum(end_stamp - start_stamp) FROM diary_detail"

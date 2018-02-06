@@ -8,7 +8,17 @@ import java.io.Serializable;
 
 public class LocationToDiary implements Serializable {
 
+    private int sk;
     private int member_sk;
+    private int top_category_sk;
+    private int member_location_sk;
+    private String start_stamp;
+    private String end_stamp;
+    private String start_date;
+    private String end_date;
+    private String post_day;
+    private String post_date;
+
     private double longitude;
     private double latitude;
     private double altitude;
@@ -26,7 +36,7 @@ public class LocationToDiary implements Serializable {
     private int icWeatherId;
     private int icNewId;
     private String place = "中央大學";
-    private String note = "";
+    private String note;
 
     public LocationToDiary(){
         super();
@@ -34,7 +44,17 @@ public class LocationToDiary implements Serializable {
 
     public LocationToDiary(LocationToDiary d) {
         super();
+        this.sk = d.getSk();
         this.member_sk = d.getMember_sk();
+        this.top_category_sk = d.getTop_category_sk();
+        this.member_location_sk = d.getMember_location_sk();
+        this.start_stamp = d.getStart_stamp();
+        this.end_stamp = d.getEnd_stamp();
+        this.start_date = d.getStart_date();
+        this.end_date = d.getEnd_date();
+        this.post_day = d.getPost_day();
+        this.post_date = d.getPost_date();
+
         this.longitude = d.getLongitude();
         this.latitude = d.getLatitude();
         this.altitude = d.getAltitude();
@@ -215,5 +235,77 @@ public class LocationToDiary implements Serializable {
 
         return diaryDetail;
 
+    }
+
+    public int getSk() {
+        return sk;
+    }
+
+    public void setSk(int sk) {
+        this.sk = sk;
+    }
+
+    public int getTop_category_sk() {
+        return top_category_sk;
+    }
+
+    public void setTop_category_sk(int top_category_sk) {
+        this.top_category_sk = top_category_sk;
+    }
+
+    public int getMember_location_sk() {
+        return member_location_sk;
+    }
+
+    public void setMember_location_sk(int member_location_sk) {
+        this.member_location_sk = member_location_sk;
+    }
+
+    public String getStart_stamp() {
+        return start_stamp;
+    }
+
+    public void setStart_stamp(String start_stamp) {
+        this.start_stamp = start_stamp;
+    }
+
+    public String getEnd_stamp() {
+        return end_stamp;
+    }
+
+    public void setEnd_stamp(String end_stamp) {
+        this.end_stamp = end_stamp;
+    }
+
+    public String getStart_date() {
+        return start_date;
+    }
+
+    public void setStart_date(String start_date) {
+        this.start_date = start_date;
+    }
+
+    public String getEnd_date() {
+        return end_date;
+    }
+
+    public void setEnd_date(String end_date) {
+        this.end_date = end_date;
+    }
+
+    public String getPost_day() {
+        return post_day;
+    }
+
+    public void setPost_day(String post_day) {
+        this.post_day = post_day;
+    }
+
+    public String getPost_date() {
+        return post_date;
+    }
+
+    public void setPost_date(String post_date) {
+        this.post_date = post_date;
     }
 }

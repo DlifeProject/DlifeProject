@@ -18,20 +18,17 @@ public class CategoryDao {
 	PreparedStatement ps = null;	
 
 	public CategoryDao() {
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-
+		super();
+		Common.initDB();
 	}
+	
 	public CategoryDao(int memberSK) {
 		super();
 		this.memberSK = memberSK;
+		Common.initDB();
 	}
 	
 	public CategoryDao close() {
-		
 		if(ps != null) {
 			try {
 				ps.close();

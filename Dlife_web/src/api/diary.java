@@ -134,38 +134,50 @@ public class diary extends HttpServlet {
 					System.out.println("outStr: " + msg.toString());
 
 				}
+
+			} else if (action.equals("getRecyclerViewDiary")) {
+				System.out.println("Start getDiary!! ");
+				DiaryDetailDao diaryDetailDao = new DiaryDetailDao(memberSK);
+				List<DiaryDetail> ltDiaryDetail = new ArrayList<DiaryDetail>();
+				ltDiaryDetail = diaryDetailDao.getRecyclerViewDiary();
+				JsonObject outJsonObject = new JsonObject();
+
+				if (ltDiaryDetail.size() > 0) {
+					exeString = "getDiarySuccess";
+					outJsonObject.addProperty("getRecyclerViewDiary", new Gson().toJson(ltDiaryDetail));
+					msg = outJsonObject.toString();
+					System.out.println("outStr: " + msg.toString());
+
+				} else {
+					exeString = "getDiaryNull";
+					outJsonObject.addProperty("getRecyclerViewDiary", "");
+					msg = outJsonObject.toString();
+					System.out.println("outStr: " + msg.toString());
+
+				}
+
+			} else {
+				exeString = "accountError";
 			}
 
-		} else {
-			exeString = "accountError";
-		}
-
-		if (exeString.equals("inserDiarySuccess")) {
-			response.getWriter().println(insertCount);
-			System.out.println("Start insert num print " + insertCount);
-		} else if (exeString.equals("insertDiaryError")) {
-			response.getWriter().println("0");
-		} else if (exeString.equals("inserPhotoSuccess")) {
-			response.getWriter().println(insertCount);
-		} else if (exeString.equals("insertPhotoError")) {
-			response.getWriter().println("0");
-		} else if (exeString.equals("getDiarySuccess")) {
-			response.getWriter().println(msg);
-		} else if (exeString.equals("getDiaryNull")) {
-			response.getWriter().println(msg);
-		} else {
-			response.getWriter().println("0");
+			if (exeString.equals("inserDiarySuccess")) {
+				response.getWriter().println(insertCount);
+				System.out.println("Start insert num print " + insertCount);
+			} else if (exeString.equals("insertDiaryError")) {
+				response.getWriter().println("0");
+			} else if (exeString.equals("inserPhotoSuccess")) {
+				response.getWriter().println(insertCount);
+			} else if (exeString.equals("insertPhotoError")) {
+				response.getWriter().println("0");
+			} else if (exeString.equals("getDiarySuccess")) {
+				response.getWriter().println(msg);
+			} else if (exeString.equals("getDiaryNull")) {
+				response.getWriter().println(msg);
+			} else {
+				response.getWriter().println("0");
+			}
 		}
 
 	}
 
-	private db.DiaryCategoryDao DiaryCategoryDao(int memberSK) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	private DiaryCategoryDao DiaryCategoryDao(int memberSK, DiaryCategory diaryCategory) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }

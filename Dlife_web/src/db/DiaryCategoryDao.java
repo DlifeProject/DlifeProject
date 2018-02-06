@@ -16,24 +16,17 @@ public class DiaryCategoryDao {
 	PreparedStatement ps = null;	
 
 	public DiaryCategoryDao() {
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
+		super();
+		Common.initDB();
 	}
 	
 	public DiaryCategoryDao(int memberSK) {
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
+		super();
 		this.memberSK = memberSK;
+		Common.initDB();
 	}
 	
 	public DiaryCategoryDao close() {
-		
 		if(ps != null) {
 			try {
 				ps.close();

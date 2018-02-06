@@ -19,23 +19,15 @@ public class LocationTraceDao {
 	
 	public LocationTraceDao(int memberSK) {
 		super();
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
 		this.memberSK = memberSK;
+		Common.initDB();
 	}
 	
 	public LocationTraceDao(LocationTrace locationTrace, int memberSK) {
 		super();
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
 		this.locationTrace = locationTrace;
 		this.memberSK = memberSK;
+		Common.initDB();
 	}
 	
 	public LocationTraceDao close() {

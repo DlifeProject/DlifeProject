@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_gray"
+    android:background="@color/background_white"
     android:orientation="vertical"
     android:transitionName="shareNames">
 
@@ -60,7 +60,6 @@
                 android:src="@drawable/ic_check_circle" />
         </LinearLayout>
     </LinearLayout>
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="240dp"
@@ -90,11 +89,21 @@
 
 
     </RelativeLayout>
-
+    <ScrollView android:id="@+id/contencrollView"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="@color/background_gray">
+    </LinearLayout>
+        <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:background="@color/background_white"
         android:orientation="vertical"
         android:padding="15dp">
@@ -233,12 +242,17 @@
 
         </LinearLayout>
     </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:background="@color/background_gray">
 
-    <RelativeLayout
+        </LinearLayout>
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
-        android:layout_marginTop="10dp"
+        android:orientation="vertical"
         android:background="@color/background_white"
         android:padding="10dp">
 
@@ -253,16 +267,17 @@
 
         <EditText
             android:id="@+id/etDiary"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_below="@+id/textView4"
             android:background="@color/background_white"
-            android:hint="      請在這裡輸入這篇日記的內容"
+            android:hint="Try to write something!"
             android:textColor="@color/text_black"
             android:textSize="20dp"
             android:textStyle="bold" />
-    </RelativeLayout>
-
+    </LinearLayout>
+    </LinearLayout>
+    </ScrollView>
 </LinearLayout>

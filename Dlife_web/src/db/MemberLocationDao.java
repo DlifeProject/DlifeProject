@@ -17,22 +17,14 @@ public class MemberLocationDao {
 	
 	public MemberLocationDao(int memberSK) {
 		super();
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
 		this.memberSK = memberSK;
+		Common.initDB();
 	}
 	
 	public MemberLocationDao(MemberLocation memberLocation) {
 		super();
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
 		this.memberLocation = memberLocation;
+		Common.initDB();
 	}
 	
 	public MemberLocationDao close() {

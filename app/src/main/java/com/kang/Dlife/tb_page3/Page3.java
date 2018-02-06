@@ -80,9 +80,6 @@ public class Page3 extends Fragment {
                 }
             });
 
-            int i;
-            i = 0;
-
 
         }
 

@@ -293,6 +293,7 @@ public class LocationDao extends SQLiteOpenHelper {
         newDiary.setLongitude(sumLongitude/timesCount);
         newDiary.setLatitude(sumLatitude/timesCount);
         newDiary.setAltitude(sumAltitude/timesCount);
+        newDiary.setStartLocationSK(ltForward.getSk());
         newDiary.setEndLocationSK(ltLast.getSk());
 
         return newDiary;
@@ -311,10 +312,13 @@ public class LocationDao extends SQLiteOpenHelper {
         message += "post_date : " + queryLocationTrace.getPost_date() + "\n";
         return message;
     }
-    public int deleteById(int id) {
+    public int deleteById(int idStart, int idEnd) {
         SQLiteDatabase db = getWritableDatabase();
-        String whereClause = COL_sk + " = ?;";
-        String[] whereArgs = {String.valueOf(id)};
-        return db.delete(TABLE_NAME, whereClause, whereArgs);
+        for (int i = idStart; i <= idEnd; i++) {
+            String whereClause = COL_sk + " = ?;";
+            String[] whereArgs = {String.valueOf(i)};
+            db.delete(TABLE_NAME, whereClause, whereArgs);
+        }
+        return idStart;
     }
 }
