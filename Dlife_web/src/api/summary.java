@@ -15,6 +15,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import db.CategoryDao;
+import db.DiaryPhotoDao;
 import db.Member;
 import db.MemberDao;
 import system.Common;
@@ -69,11 +70,14 @@ public class summary extends HttpServlet{
                 outJsonObject.addProperty("CategorySum", new Gson().toJson(ltCategorySum));
                 outPut = outJsonObject.toString();
 				System.out.println("Start summary !! outPut " + outPut);	
+			} 
+				else if (action.equals("getImage")) {
+				int diaryPhotoSK = jsonObject.get("diaryPhotoSK").getAsInt();
+				DiaryPhotoDao diaryPhotoDao = new DiaryPhotoDao();
+				byte[] image = diaryPhotoDao.getImage(diaryPhotoSK);
+				outPut = new Gson().toJson(image);
 			}
 		}
-		
-		response.getWriter().println(outPut);
-		
-		
+		response.getWriter().println(outPut);		
 	}
 }

@@ -1,70 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/RelativeLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
 
     >
 
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="match_parent"
         android:orientation="horizontal"
         android:padding="10dp"
+        android:layout_weight="2"
         >
         <ImageView
             android:id="@+id/iv_pic"
-            android:src="@drawable/shopping"
+            android:src="@drawable/no_photo"
             android:layout_height="match_parent"
             android:layout_width="match_parent" />
     </LinearLayout>
 
-    <RelativeLayout
-       android:layout_below="@+id/linearLayout"
-        android:layout_centerInParent="true"
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="100dp"        >
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_weight="3.5">
         <RelativeLayout
             android:id="@+id/ry_click"
-            android:layout_centerInParent="true"
-            android:layout_width="200dp"
-            android:layout_height="100dp">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5">
             <TextView
                 android:id="@+id/tv_click"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
                 android:text="Shopping"
                 android:textSize="35sp"
-                android:layout_centerInParent="true"
                 android:fontFamily="PingFang TC"
                 android:textColor="@color/background_white"
                 />
         </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
 
-    </RelativeLayout>
 
-    <RelativeLayout
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="330dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_height="match_parent"
+        android:layout_weight="3"
+        android:orientation="vertical"
+        >
 
         <TextView
             android:id="@+id/tv_theme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="140dp"
             android:text="我又敗家了，圍巾入手！"
             android:textColor="@color/text_black"
             android:textSize="30sp" />
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="30dp"
-            android:layout_below="@+id/tv_theme">
+            android:layout_below="@+id/tv_theme"
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/tv_year"
@@ -111,13 +123,14 @@
                 android:textColor="@color/text_black"
                 android:textSize="20dp" />
 
-        </RelativeLayout>
+        </LinearLayout>
 
-        <RelativeLayout
+        <LinearLayout
             android:id="@+id/three_day"
             android:layout_width="match_parent"
             android:layout_height="30dp"
-            android:layout_marginTop="215dp">
+            android:orientation="horizontal"
+            >
 
             <TextView
                 android:id="@+id/three_day_title"
@@ -135,11 +148,12 @@
                 android:layout_toRightOf="@+id/three_day_title"
                 android:text="3"
                 android:textColor="@color/text_black" />
-        </RelativeLayout>
+        </LinearLayout>
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="30dp"
+            android:orientation="horizontal"
             android:layout_below="@+id/three_day">
 
             <TextView
@@ -158,9 +172,9 @@
                 android:layout_toRightOf="@+id/seven_day_title"
                 android:text="6"
                 android:textColor="@color/text_black" />
-        </RelativeLayout>
+        </LinearLayout>
 
 
-    </RelativeLayout>
+    </LinearLayout>
 
-</RelativeLayout>
+</LinearLayout>

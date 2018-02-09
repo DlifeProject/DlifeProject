@@ -27,7 +27,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.kang.Dlife.Common;
 import com.kang.Dlife.R;
-import com.kang.Dlife.data_base.DiaryDetailWeb;
+import com.kang.Dlife.sever.LocationToDiary;
 import com.kang.Dlife.sever.MyTask;
 import com.kang.Dlife.tb_page2.CategorySum;
 import com.kang.Dlife.tb_page2.PieChartItem;
@@ -44,7 +44,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import com.kang.Dlife.data_base.DiaryDetailWeb;
 
 
 public class DiaryView extends AppCompatActivity {
@@ -55,7 +54,7 @@ public class DiaryView extends AppCompatActivity {
 
     private MyTask newsGetAllTask;
     private SpotGetImageTask spotGetImageTask;
-    List<DiaryDetailWeb>igList;
+    List<LocationToDiary>igList;
 
 
     private ImageButton ibMap;
@@ -104,7 +103,7 @@ public class DiaryView extends AppCompatActivity {
 
         if (networkConnected()) {
             String url = "";
-            List<DiaryDetailWeb> ltJson = null;
+            List<LocationToDiary> ltJson = null;
             try {
 
                 JsonObject jsonObject = new JsonObject();
@@ -122,7 +121,7 @@ public class DiaryView extends AppCompatActivity {
                 JsonObject diaryInJsonObject = gson.fromJson(getDiaryJsonIn, JsonObject.class);
                 String ltDiaryDetailString = diaryInJsonObject.get("getDiary").getAsString();
 
-                Type tySum = new TypeToken<List<DiaryDetailWeb>>() {
+                Type tySum = new TypeToken<List<LocationToDiary>>() {
                 }.getType();
                 igList = new Gson().fromJson(ltDiaryDetailString, tySum);
 
@@ -159,10 +158,10 @@ public class DiaryView extends AppCompatActivity {
             RecyclerView.Adapter<IgAdapter.MyViewHolder> {
 
         private Context context;
-        private List<DiaryDetailWeb> igList;
+        private List<LocationToDiary> igList;
 
         //顯示什麼東西
-        IgAdapter(Context context, List<DiaryDetailWeb> igList) {
+        IgAdapter(Context context, List<LocationToDiary> igList) {
             this.context = context;
             this.igList = igList;
         }
@@ -230,6 +229,7 @@ public class DiaryView extends AppCompatActivity {
                     photoSpotList = new Gson().fromJson(getDiaryPhotoSKjsonIn, ltWeb);
 
 
+
                 } catch (Exception e) {
                     Log.e(TAG, e.toString());
                 }
@@ -241,7 +241,7 @@ public class DiaryView extends AppCompatActivity {
 
 
             //寫成function 加入 common
-            final DiaryDetailWeb diaryDetail = igList.get(position);
+            final LocationToDiary diaryDetail = igList.get(position);
             //时间格式,HH是24小时制，hh是AM PM12小时制
             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
             //比如timestamp=1449210225945；

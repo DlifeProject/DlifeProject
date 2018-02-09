@@ -1,18 +1,21 @@
 package com.kang.Dlife.tb_page2;
 
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.PagerSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -25,6 +28,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,13 +51,19 @@ import com.kang.Dlife.R;
 import com.kang.Dlife.sever.MyTask;
 import com.kang.Dlife.tb_page2.diary_view.DiaryView;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.lang.ref.WeakReference;
 import java.lang.reflect.Type;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
 import static android.content.Context.CONNECTIVITY_SERVICE;
 
@@ -69,6 +79,7 @@ public class Page2 extends Fragment implements View.OnClickListener {
     RecyclerView rvItem;
     int rvposition = 0;
     ImageButton previousImageButton, nextImageButton;
+    Bitmap bitmap;
 
 
     @Override
@@ -395,7 +406,12 @@ public class Page2 extends Fragment implements View.OnClickListener {
                 default:
                     final CategoryViewHolder categoryViewHolder = (CategoryViewHolder) holder;
                     item = categorySum;
-                    categoryViewHolder.iv_pic.setImageResource(item.getDiaryPhotoSK());
+                    int diaryPhotoSK = item.getDiaryPhotoSK();
+                    String url = Common.URL + Common.WEBPHOTO;
+                    int imageSize = getResources().getDisplayMetrics().widthPixels;
+                    SpotGetImageTask spotGetImageTask = new SpotGetImageTask(url, diaryPhotoSK, imageSize, categoryViewHolder.iv_pic);
+                    spotGetImageTask.execute();
+                    //categoryViewHolder.iv_pic.setImageResource(item.getDiaryPhotoSK());
                     categoryViewHolder.tv_click.setText(item.getCategoryType());
 
                     categoryViewHolder.ry_click.setOnTouchListener(new View.OnTouchListener() {
@@ -466,6 +482,7 @@ public class Page2 extends Fragment implements View.OnClickListener {
 
             RelativeLayout ry_Since, ry_End, ry_click;
 
+
             TextView tv_click, tv_startyear, tv_startmonth, tv_startday, tv_endyear, tv_endmonth, tv_endday;
             PieChart pieChart;
 
@@ -497,6 +514,7 @@ public class Page2 extends Fragment implements View.OnClickListener {
             ImageView iv_pic;
             TextView tv_click, tv_theme, tv_year, tv_month, tv_day, tv_threedays, tv_sevendays;
 
+            @SuppressLint("WrongViewCast")
             public CategoryViewHolder(View itemView) {
                 super(itemView);
                 ry_click = itemView.findViewById(R.id.ry_click);
@@ -513,6 +531,8 @@ public class Page2 extends Fragment implements View.OnClickListener {
 
 
     }
+
+
 
 
     public List<Object> getItemList() {
@@ -646,6 +666,82 @@ public class Page2 extends Fragment implements View.OnClickListener {
             return networkInfo.isConnected();
         } else {
             return false;
+        }
+    }
+    public  class SpotGetImageTask extends AsyncTask<Object, Integer, Bitmap> {
+        private final static String TAG = "SpotGetImageTask";
+        private String url;
+        private int id, imageSize;
+
+        // WeakReference物件不會阻止參照到的實體被回收
+        private WeakReference<ImageView> imageViewWeakReference;
+
+        SpotGetImageTask(String url, int id, int imageSize) {
+            this(url, id, imageSize, null);
+        }
+
+        public SpotGetImageTask(String url, int id, int imageSize, ImageView imageView) {
+            this.url = url;
+            this.id = id;
+            this.imageSize = imageSize;
+            this.imageViewWeakReference = new WeakReference<>(imageView);
+        }
+
+        @Override
+        protected Bitmap doInBackground(Object... params) {
+
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("action", "getImage");
+            jsonObject.addProperty("account", Common.getAccount(getContext()));
+            jsonObject.addProperty("password", Common.getPWD(getContext()));
+            jsonObject.addProperty("id", id);
+            jsonObject.addProperty("imageSize", imageSize);
+            return getRemoteImage(url, jsonObject.toString());
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            ImageView imageView = imageViewWeakReference.get();
+            if (isCancelled() || imageView == null) {
+                return;
+            }
+            if (bitmap != null) {
+                imageView.setImageBitmap(bitmap);
+            } else {
+//            imageView.setImageResource(R.drawable.default_image);
+            }
+        }
+
+        private Bitmap getRemoteImage(String url, String jsonOut) {
+            HttpURLConnection connection = null;
+            Bitmap bitmap = null;
+            try {
+                connection = (HttpURLConnection) new URL(url).openConnection();
+                connection.setDoInput(true); // allow inputs
+                connection.setDoOutput(true); // allow outputs
+                connection.setUseCaches(false); // do not use a cached copy
+                connection.setRequestMethod("POST");
+                BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(connection.getOutputStream()));
+                bw.write(jsonOut);
+                Log.d(TAG, "output: " + jsonOut);
+                bw.close();
+
+                int responseCode = connection.getResponseCode();
+
+                if (responseCode == 200) {
+                    bitmap = BitmapFactory.decodeStream(
+                            new BufferedInputStream(connection.getInputStream()));
+                } else {
+                    Log.d(TAG, "response code: " + responseCode);
+                }
+            } catch (IOException e) {
+                Log.e(TAG, e.toString());
+            } finally {
+                if (connection != null) {
+                    connection.disconnect();
+                }
+            }
+            return bitmap;
         }
     }
 }
