@@ -1,13 +1,19 @@
 package com.kang.Dlife.tb_page1;
 
+import android.annotation.TargetApi;
+import android.app.ActivityOptions;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
+import android.media.Image;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PagerSnapHelper;
@@ -20,7 +26,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 import com.google.gson.Gson;
@@ -28,9 +33,10 @@ import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.kang.Dlife.Common;
 import com.kang.Dlife.R;
-import com.kang.Dlife.data_base.DiaryDetailWeb;
 import com.kang.Dlife.sever.LocationDao;
+import com.kang.Dlife.sever.LocationToDiary;
 import com.kang.Dlife.sever.MyTask;
+import com.kang.Dlife.tb_page1.diary_edit.DiaryEdit;
 import com.kang.Dlife.tb_page2.diary_view.PhotoSpot;
 
 import java.io.BufferedInputStream;
@@ -48,13 +54,16 @@ import java.util.List;
 import static android.content.ContentValues.TAG;
 
 public class Page1_AlreadyUpload extends Fragment {
+    public Hashtable<Integer, LocationToDiary> bundleHash = new Hashtable<Integer, LocationToDiary>();
+    private Bundle bundleImage;
     private LocationDao locationDao;
     private RecyclerView rvDiary;
     private MyTask getAllDiaryTask;
-    private List<DiaryDetailWeb> allDiaryList;
+    private List<LocationToDiary> allDiaryList;
     private SpotGetImageTask spotGetImageTask;
     private MyTask newsGetAllTask;
     private ImageView ivNoUploadDiary;
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable final Bundle savedInstanceState) {
         //因為有宣告view, 所以之後可以在這頁裡面找下面之後要用到的id
@@ -63,6 +72,7 @@ public class Page1_AlreadyUpload extends Fragment {
         ivNoUploadDiary = view.findViewById(R.id.ivNoUploadDiary);
         return view;
     }
+
     public void onResume() {
         super.onResume();
         showAllDiarys();
@@ -82,10 +92,10 @@ public class Page1_AlreadyUpload extends Fragment {
     private class DiaryAdapter extends
             RecyclerView.Adapter<DiaryAdapter.MyViewHolder> {
         private Context context;
-        private List<DiaryDetailWeb> allDiary;
+        private List<LocationToDiary> allDiary;
 
 
-        DiaryAdapter(Context context, List<DiaryDetailWeb> allDiary) {
+        DiaryAdapter(Context context, List<LocationToDiary> allDiary) {
             this.context = context;
             this.allDiary = allDiary;
         }
@@ -127,55 +137,54 @@ public class Page1_AlreadyUpload extends Fragment {
         @Override
         public void onBindViewHolder(final MyViewHolder viewHolder, final int position) {
 
-            final DiaryDetailWeb diaryDetailWeb = allDiary.get(position);
+            final LocationToDiary diaryDetailWeb = allDiary.get(position);
             // 抓sever的資料
 
-                viewHolder.tvDiary.setText(diaryDetailWeb.getNote());
-                viewHolder.icWeather.setImageResource(R.drawable.ic_sun);
-                viewHolder.icNew.setImageResource(0);
-                viewHolder.tvDate.setText(Common.dateStringToDay(diaryDetailWeb.getEnd_date()));
-                viewHolder.tvTimeStart.setText(Common.dateStringToHM(diaryDetailWeb.getStart_date()));
-                viewHolder.tvTimeEnd.setText(Common.dateStringToHM(diaryDetailWeb.getEnd_date()));
-                Geocoder geocoder = new Geocoder(getActivity());
-                //測試時初始化防呆
-                if (diaryDetailWeb.getLatitude() != 0.0) {
-                    try {
-                        List<Address> addressList =
-                                geocoder.getFromLocation(diaryDetailWeb.getLatitude(), diaryDetailWeb.getLongitude(), 1);
-                        if (addressList.size() > 0) {
-                            Address address = addressList.get(0);
-                            String addrStr = "";
-                            for (int i = 0; i <= address.getMaxAddressLineIndex(); i++) {
-                                addrStr = address.getLocality();
-                            }
-                            viewHolder.tvPlace.setText(addrStr);
-                        } else {
-                            viewHolder.tvPlace.setText("Place");
+            viewHolder.tvDiary.setText(diaryDetailWeb.getNote());
+            viewHolder.icWeather.setImageResource(R.drawable.ic_sun);
+            viewHolder.icNew.setImageResource(0);
+            viewHolder.tvDate.setText(Common.dateStringToDay(diaryDetailWeb.getEnd_date()));
+            viewHolder.tvTimeStart.setText(Common.dateStringToHM(diaryDetailWeb.getStart_date()));
+            viewHolder.tvTimeEnd.setText(Common.dateStringToHM(diaryDetailWeb.getEnd_date()));
+            Geocoder geocoder = new Geocoder(getActivity());
+            //測試時初始化防呆
+            if (diaryDetailWeb.getLatitude() != 0.0) {
+                try {
+                    List<Address> addressList =
+                            geocoder.getFromLocation(diaryDetailWeb.getLatitude(), diaryDetailWeb.getLongitude(), 1);
+                    if (addressList.size() > 0) {
+                        Address address = addressList.get(0);
+                        String addrStr = "";
+                        for (int i = 0; i <= address.getMaxAddressLineIndex(); i++) {
+                            addrStr = address.getLocality();
                         }
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                        viewHolder.tvPlace.setText(addrStr);
+                    } else {
+                        viewHolder.tvPlace.setText("Place");
                     }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
                 // 照片的recyclerView
-                    viewHolder.rvPhoto.setLayoutManager(new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.HORIZONTAL));
-                    // 禁止recyclerView滑動
-                    CustomLinearLayoutManager linearLayoutManager = new CustomLinearLayoutManager(getActivity());
-                    linearLayoutManager.setScrollEnabled(false);
-                    viewHolder.rvPhoto.setLayoutManager(linearLayoutManager);
-                    //先放這就不會滑到底
-                    viewHolder.rvPhoto.setOnFlingListener(null);
-                    PagerSnapHelper pagerSnapHelper = new PagerSnapHelper();
-                    pagerSnapHelper.attachToRecyclerView(viewHolder.rvPhoto);
+                viewHolder.rvPhoto.setLayoutManager(new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.HORIZONTAL));
+                // 禁止recyclerView滑動
+                CustomLinearLayoutManager linearLayoutManager = new CustomLinearLayoutManager(getActivity());
+                linearLayoutManager.setScrollEnabled(false);
+                viewHolder.rvPhoto.setLayoutManager(linearLayoutManager);
+                //先放這就不會滑到底
+                viewHolder.rvPhoto.setOnFlingListener(null);
+                PagerSnapHelper pagerSnapHelper = new PagerSnapHelper();
+                pagerSnapHelper.attachToRecyclerView(viewHolder.rvPhoto);
 
-                    List<PhotoSpot> photoSpotList = null;
+                List<PhotoSpot> photoSpotList = null;
 
-                    if (Common.checkNetConnected(getActivity())) {
-                        String url = Common.URL + Common.WEBPHOTO;
+                if (Common.checkNetConnected(getActivity())) {
+                    String url = Common.URL + Common.WEBPHOTO;
 
-                        try {
+                    try {
 
-
-                            JsonObject jsonObject = new JsonObject();
+                        JsonObject jsonObject = new JsonObject();
                         jsonObject.addProperty("action", "getDiaryPhotoSKList");
                         jsonObject.addProperty("account", Common.getAccount(getActivity()));
                         jsonObject.addProperty("password", Common.getPWD(getActivity()));
@@ -188,15 +197,33 @@ public class Page1_AlreadyUpload extends Fragment {
                         Type ltWeb = new TypeToken<List<PhotoSpot>>() {
                         }.getType();
                         photoSpotList = new Gson().fromJson(getDiaryPhotoSKjsonIn, ltWeb);
-
+                        bundleImage.putInt("Image",photoSpotList.get(position).getSk());
 
                     } catch (Exception e) {
                         Log.e(TAG, e.toString());
                     }
 
                 }
-                    viewHolder.rvPhoto.setAdapter(new photoAdapter(context, photoSpotList));
+                viewHolder.rvPhoto.setAdapter(new photoAdapter(context, photoSpotList));
+
+            }
+            // recyclerview 點擊監聽
+            viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+                @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent();
+                    intent.setClass(getActivity(), DiaryEdit.class);
+                    LocationToDiary bundleP = new LocationToDiary(bundleHash.get((int) view.getTag()));
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("Page1Adapter", bundleP);
+                    intent.putExtras(bundle);
+                    startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(getActivity(), viewHolder.itemView, "shareNames").toBundle());
                 }
+            });
+            viewHolder.itemView.setTag(position);
+            bundleHash.put(position, diaryDetailWeb);
         }
 
         @Override
@@ -210,7 +237,7 @@ public class Page1_AlreadyUpload extends Fragment {
     private void showAllDiarys() {
         if (Common.checkNetConnected(getActivity())) {
             String url = "";
-            List<DiaryDetailWeb> diaryList = null;
+            List<LocationToDiary> diaryList = null;
             try {
                 JsonObject jsonObject = new JsonObject();
                 jsonObject.addProperty("action", "getRecyclerViewDiary");
@@ -226,7 +253,8 @@ public class Page1_AlreadyUpload extends Fragment {
                 JsonObject diaryInJsonObject = gson.fromJson(getDiaryJsonIn, JsonObject.class);
                 String ltDiaryDetailString = diaryInJsonObject.get("getRecyclerViewDiary").getAsString();
 
-                Type tySum = new TypeToken<List<DiaryDetailWeb>>() { }.getType();
+                Type tySum = new TypeToken<List<LocationToDiary>>() {
+                }.getType();
                 allDiaryList = new Gson().fromJson(ltDiaryDetailString, tySum);
             } catch (Exception e) {
                 Log.e(TAG, e.toString());
@@ -262,7 +290,6 @@ public class Page1_AlreadyUpload extends Fragment {
                 super(itemView);
                 ivRecyclerImage = (ImageView) itemView.findViewById(R.id.ivPhotoImage);
 
-
             }
         }
 
@@ -287,10 +314,12 @@ public class Page1_AlreadyUpload extends Fragment {
             final PhotoSpot photoSpot = photoSpotList.get(position);
 
             String url = Common.URL + Common.WEBPHOTO;
-
             int id = photoSpot.getSk();
             spotGetImageTask = new SpotGetImageTask(url, id, imageSize, viewHolder.ivRecyclerImage);
-            spotGetImageTask.execute();   //只要沒寫get 就是一直讓他抓 不等圖 不然會卡著等圖
+            spotGetImageTask.execute();
+
+
+            //只要沒寫get 就是一直讓他抓 不等圖 不然會卡著等圖
         }
     }
 
@@ -299,6 +328,8 @@ public class Page1_AlreadyUpload extends Fragment {
         private final static String TAG = "SpotGetImageTask";
         private String url;
         private int id, imageSize;
+        private HttpURLConnection connection;
+        private Bitmap bitmap;
 
         // WeakReference物件不會阻止參照到的實體被回收
         private WeakReference<ImageView> imageViewWeakReference;
@@ -340,8 +371,7 @@ public class Page1_AlreadyUpload extends Fragment {
         }
 
         private Bitmap getRemoteImage(String url, String jsonOut) {
-            HttpURLConnection connection = null;
-            Bitmap bitmap = null;
+
             try {
                 connection = (HttpURLConnection) new URL(url).openConnection();
                 connection.setDoInput(true); // allow inputs
@@ -368,8 +398,11 @@ public class Page1_AlreadyUpload extends Fragment {
                     connection.disconnect();
                 }
             }
+
             return bitmap;
         }
+
+
     }
 
     @Override

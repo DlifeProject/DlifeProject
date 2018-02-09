@@ -112,6 +112,7 @@ public class DiaryEdit extends Activity {
 
         category_list.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(category_list);
+        spinner.setSelection(bundleP.getTop_category_sk() - 1);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -132,8 +133,10 @@ public class DiaryEdit extends Activity {
 
         Geocoder geocoder = new Geocoder(DiaryEdit.this);
         try {
-            List<Address> addressList =
-                    geocoder.getFromLocation(bundleP.getLatitude(), bundleP.getLongitude(), 1);
+            List<Address> addressList = null;
+
+                addressList = geocoder.getFromLocation(bundleP.getLatitude(), bundleP.getLongitude(), 1);
+
 
             String addrStr = "";
             if (addressList.size() > 0) {
@@ -268,13 +271,20 @@ public class DiaryEdit extends Activity {
         etDiary = (EditText) super.findViewById(R.id.etDiary);
         ibOk = (ImageButton) super.findViewById(R.id.ibOk);
         tvDate = (TextView) super.findViewById(R.id.tvDate);
-        tvDate.setText(Common.dateStringToDay(page1Spot.getStartDate()));
         tvLocation = (TextView) super.findViewById(R.id.tvLocation);
         tvTimeStart = (TextView) super.findViewById(R.id.tvTimeStart);
-        tvTimeStart.setText(Common.dateStringToHM(page1Spot.getStartDate()));
         tvTimeEnd = (TextView) super.findViewById(R.id.tvTimeEnd);
-        tvTimeEnd.setText(Common.dateStringToHM(page1Spot.getEndDate()));
         ibMap = (ImageButton) super.findViewById(R.id.ibMap);
+        if(page1Spot.getStartDate() != null){
+        tvDate.setText(Common.dateStringToDay(page1Spot.getStartDate()));
+        tvTimeStart.setText(Common.dateStringToHM(page1Spot.getStartDate()));
+        tvTimeEnd.setText(Common.dateStringToHM(page1Spot.getEndDate()));
+        }else {
+            tvDate.setText(Common.dateStringToDay(page1Spot.getEnd_date()));
+            tvTimeStart.setText(Common.dateStringToHM(page1Spot.getStart_date()));
+            tvTimeEnd.setText(Common.dateStringToHM(page1Spot.getEnd_date()));
+            etDiary.setText(page1Spot.getNote());
+        }
     }
 
     // 照片選取器
