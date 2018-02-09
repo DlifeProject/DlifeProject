@@ -3,7 +3,7 @@ package com.kang.Dlife.data_base;
 
 import java.io.Serializable;
 
-public class DiaryDetailWeb implements Serializable {
+public class locationToDiary implements Serializable {
 
     private int sk;
     private int member_sk;
@@ -34,12 +34,12 @@ public class DiaryDetailWeb implements Serializable {
         System.out.println("post_date : " + post_date);
         System.out.println("--------------------");
     }
-    public DiaryDetailWeb() {
+    public locationToDiary(locationToDiary diaryDetailWeb) {
         super();
     }
 
-    public DiaryDetailWeb(int member_sk, String note,
-                       String start_stamp, String end_stamp) {
+    public locationToDiary(int member_sk, String note,
+                           String start_stamp, String end_stamp) {
         super();
         this.member_sk = member_sk;
         this.note = note;
@@ -47,8 +47,8 @@ public class DiaryDetailWeb implements Serializable {
         this.end_stamp = end_stamp;
     }
 
-    public DiaryDetailWeb(int member_sk, int top_category_sk, int member_location_sk, String note,
-                       String start_stamp, String end_stamp, String post_day, String post_date) {
+    public locationToDiary(int member_sk, int top_category_sk, int member_location_sk, String note,
+                           String start_stamp, String end_stamp, String post_day, String post_date) {
         super();
         this.member_sk = member_sk;
         this.top_category_sk = top_category_sk;
@@ -60,9 +60,9 @@ public class DiaryDetailWeb implements Serializable {
         this.post_date = post_date;
     }
 
-    public DiaryDetailWeb(int sk, int member_sk, int top_category_sk, int member_location_sk, String note,
-                       String start_stamp, String end_stamp, String start_date, String end_date, String post_day,
-                       String post_date) {
+    public locationToDiary(int sk, int member_sk, int top_category_sk, int member_location_sk, String note,
+                           String start_stamp, String end_stamp, String start_date, String end_date, String post_day,
+                           String post_date) {
         super();
         this.sk = sk;
         this.member_sk = member_sk;

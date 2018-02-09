@@ -223,14 +223,14 @@ public class Page1_NoUpload extends Fragment {
     private List<LocationToDiary> getSpots() {
         locationDao = new LocationDao(getContext());
         List<LocationToDiary> ltDiary = locationDao.autoDiary(getContext());
-        List<LocationToDiary> page1Spots = new ArrayList<>();
+        List<LocationToDiary> SQliteDiary = new ArrayList<>();
         for (LocationToDiary d : ltDiary) {
             LocationToDiary addDiary = new LocationToDiary(d);
             addDiary.setImageId(R.drawable.picture1);
-            page1Spots.add(addDiary);
+            SQliteDiary.add(addDiary);
         }
         // listView倒序
-        Collections.reverse(page1Spots);
-        return page1Spots;
+        Collections.reverse(SQliteDiary);
+        return SQliteDiary;
     }
 }

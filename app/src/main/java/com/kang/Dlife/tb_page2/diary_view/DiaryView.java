@@ -119,10 +119,11 @@ public class DiaryView extends AppCompatActivity {
                 String getDiaryJsonIn = getDiaryTask.execute().get();
 
                 Gson gson = new Gson();
-                JsonObject diaryInJsonObject = gson.fromJson(getDiaryJsonIn,JsonObject.class);
+                JsonObject diaryInJsonObject = gson.fromJson(getDiaryJsonIn, JsonObject.class);
                 String ltDiaryDetailString = diaryInJsonObject.get("getDiary").getAsString();
 
-                Type tySum = new TypeToken<List<DiaryDetailWeb>>(){}.getType();
+                Type tySum = new TypeToken<List<DiaryDetailWeb>>() {
+                }.getType();
                 igList = new Gson().fromJson(ltDiaryDetailString, tySum);
 
             } catch (Exception e) {
@@ -221,12 +222,12 @@ public class DiaryView extends AppCompatActivity {
                     jsonObject.addProperty("diarySK", igList.get(position).getSk());
                     String jsonOut = jsonObject.toString();
 
-                    MyTask getDiaryPhotoSKTask =new MyTask(url, jsonOut);
+                    MyTask getDiaryPhotoSKTask = new MyTask(url, jsonOut);
 
                     String getDiaryPhotoSKjsonIn = getDiaryPhotoSKTask.execute().get();
-                    Type ltWeb = new TypeToken<List<PhotoSpot>>(){}.getType();
+                    Type ltWeb = new TypeToken<List<PhotoSpot>>() {
+                    }.getType();
                     photoSpotList = new Gson().fromJson(getDiaryPhotoSKjsonIn, ltWeb);
-
 
 
                 } catch (Exception e) {
@@ -242,15 +243,14 @@ public class DiaryView extends AppCompatActivity {
             //寫成function 加入 common
             final DiaryDetailWeb diaryDetail = igList.get(position);
             //时间格式,HH是24小时制，hh是AM PM12小时制
-            SimpleDateFormat sdf=new SimpleDateFormat("HH:mm");
-//比如timestamp=1449210225945；
+            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+            //比如timestamp=1449210225945；
             long longStart = Long.valueOf(diaryDetail.getStart_stamp());
-            long longEnd=Long.valueOf(diaryDetail.getEnd_stamp());
+            long longEnd = Long.valueOf(diaryDetail.getEnd_stamp());
             String startTime = sdf.format(new Date(longStart * 1000L));
-            String endTime =sdf.format(new Date(longEnd * 1000L));
-//至于取10位或取13位，date_temp*1000L就是这种截取作用。如果是和服务器传值的，就和后台商量好就可以了
-            String time=startTime+"-"+endTime;
-
+            String endTime = sdf.format(new Date(longEnd * 1000L));
+            //至于取10位或取13位，date_temp*1000L就是这种截取作用。如果是和服务器传值的，就和后台商量好就可以了
+            String time = startTime + "-" + endTime;
 
 
 //          String time = Common.dateStringToHM(diaryDetail.getStart_stamp())  + "-" +Common.dateStringToHM(diaryDetail.getEnd_stamp()) ;
@@ -270,7 +270,7 @@ public class DiaryView extends AppCompatActivity {
                     }
                     viewHolder.tvLocation.setText(addrStr);
 
-                }else {
+                } else {
                     viewHolder.tvLocation.setText("unknown");
                 }
 
@@ -362,7 +362,7 @@ public class DiaryView extends AppCompatActivity {
     }
 
     //新開 SpotGetImageTask 寫入/java 下
-    class SpotGetImageTask extends AsyncTask<Object, Integer, Bitmap> {
+    public class SpotGetImageTask extends AsyncTask<Object, Integer, Bitmap> {
         private final static String TAG = "SpotGetImageTask";
         private String url;
         private int id, imageSize;
@@ -374,7 +374,7 @@ public class DiaryView extends AppCompatActivity {
             this(url, id, imageSize, null);
         }
 
-        SpotGetImageTask(String url, int id, int imageSize, ImageView imageView) {
+        public SpotGetImageTask(String url, int id, int imageSize, ImageView imageView) {
             this.url = url;
             this.id = id;
             this.imageSize = imageSize;
