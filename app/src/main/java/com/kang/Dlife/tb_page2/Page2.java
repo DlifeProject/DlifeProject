@@ -480,7 +480,8 @@ public class Page2 extends Fragment implements View.OnClickListener {
         class PieChartViewHolder extends RecyclerView.ViewHolder {
 
 
-            RelativeLayout ry_Since, ry_End, ry_click;
+            RelativeLayout   ry_click;
+            LinearLayout ry_End, ry_Since;
 
 
             TextView tv_click, tv_startyear, tv_startmonth, tv_startday, tv_endyear, tv_endmonth, tv_endday;

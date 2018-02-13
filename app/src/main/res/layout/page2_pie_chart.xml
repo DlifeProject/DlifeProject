@@ -50,36 +50,44 @@
         android:layout_weight="3"
         >
 
-        <RelativeLayout
+        <LinearLayout
             android:id="@+id/ry_Since"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_marginTop="20dp">
-
-            <TextView
-                android:id="@+id/tv_start_time"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal">
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="40dp"
-                android:text="Since"
-                android:textColor="@color/text_black"
-                android:textSize="35sp" />
+                android:layout_weight="3"
+                android:gravity="center_horizontal">
+                <TextView
+                    android:id="@+id/tv_start_time"
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:text="From"
+                    android:gravity="center_horizontal"
+                    android:textColor="@color/text_black"
+                    android:textSize="35sp" />
+            </LinearLayout>
+
+
 
             <TextView
                 android:id="@+id/tv_year"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="25dp"
-                android:layout_toRightOf="@+id/tv_start_time"
+                android:layout_weight="0.8"
                 android:textColor="@color/text_black"
-                android:textSize="30dp" />
+                android:textSize="30dp"
+                android:gravity="center_horizontal"/>
 
             <TextView
                 android:id="@+id/tv_year_month"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="10dp"
-                android:layout_toRightOf="@+id/tv_year"
+                android:layout_weight="0.8"
+                android:gravity="center_horizontal"
                 android:text="/"
                 android:textColor="@color/text_black"
                 android:textSize="30dp" />
@@ -88,56 +96,64 @@
                 android:id="@+id/tv_month"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="10dp"
-                android:layout_toRightOf="@+id/tv_year_month"
-
+                android:layout_weight="0.8"
                 android:textColor="@color/text_black"
-                android:textSize="30dp" />
+                android:textSize="30dp"
+                android:gravity="center_horizontal"/>
 
             <TextView
                 android:id="@+id/tv_month_day"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="10dp"
-                android:layout_toRightOf="@+id/tv_month"
+                android:layout_weight="0.8"
                 android:text="/"
                 android:textColor="@color/text_black"
-                android:textSize="30dp" />
+                android:textSize="30dp"
+                android:gravity="center_horizontal"/>
 
             <TextView
                 android:id="@+id/tv_day"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="10dp"
-                android:layout_toRightOf="@+id/tv_month_day"
-
+                android:layout_weight="0.8"
                 android:textColor="@color/text_black"
-                android:textSize="30dp" />
+                android:textSize="30dp"
+                android:gravity="center_horizontal"/>
+            <LinearLayout
+                android:layout_weight="4"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"></LinearLayout>
 
-        </RelativeLayout>
+        </LinearLayout>
 
-        <RelativeLayout
+        <LinearLayout
             android:id="@+id/ry_End"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_below="@+id/tv_theme"
-            android:layout_marginTop="80dp">
-
-            <TextView
-                android:id="@+id/tv_end_time"
+            android:layout_marginTop="70dp"
+            android:orientation="horizontal">
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="55dp"
-                android:text="End"
-                android:textColor="@color/text_black"
-                android:textSize="35sp" />
+                android:layout_weight="3"
+                android:gravity="center_horizontal">
+                <TextView
+                    android:id="@+id/tv_end_time"
+                    android:layout_width="109dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center_horizontal"
+                    android:text="To"
+                    android:textColor="@color/text_black"
+                    android:textSize="35sp" />
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/tv_year_end"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="35dp"
-                android:layout_toRightOf="@+id/tv_end_time"
+                android:layout_weight="0.8"
+                android:gravity="center_horizontal"
                 android:textColor="@color/text_black"
                 android:textSize="30dp" />
 
@@ -145,8 +161,8 @@
                 android:id="@+id/tv_year_month_end"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="10dp"
-                android:layout_toRightOf="@+id/tv_year_end"
+                android:layout_weight="0.8"
+                android:gravity="center_horizontal"
                 android:text="/"
                 android:textColor="@color/text_black"
                 android:textSize="30dp" />
@@ -155,8 +171,8 @@
                 android:id="@+id/tv_month_end"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="10dp"
-                android:layout_toRightOf="@+id/tv_year_month_end"
+                android:layout_weight="0.8"
+                android:gravity="center_horizontal"
                 android:textColor="@color/text_black"
                 android:textSize="30dp" />
 
@@ -164,8 +180,8 @@
                 android:id="@+id/tv_month_day_end"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="10dp"
-                android:layout_toRightOf="@+id/tv_month_end"
+                android:layout_weight="0.8"
+                android:gravity="center_horizontal"
                 android:text="/"
                 android:textColor="@color/text_black"
                 android:textSize="30dp" />
@@ -174,12 +190,18 @@
                 android:id="@+id/tv_day_end"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="10dp"
-                android:layout_toRightOf="@+id/tv_month_day_end"
+                android:layout_weight="0.8"
+                android:gravity="center_horizontal"
                 android:textColor="@color/text_black"
                 android:textSize="30dp" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="4">
 
-        </RelativeLayout>
+            </LinearLayout>
+
+        </LinearLayout>
 
         <Button
             android:id="@+id/bt_check"
@@ -187,9 +209,10 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/ry_End"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="2dp"
             android:background="@drawable/shape_rectangle_dark"
             android:text="確認"
+            android:textSize="20dp"
             android:textColor="@color/text_black" />
 
 
