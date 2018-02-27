@@ -4,7 +4,10 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Dlife.iml" filepath="$PROJECT_DIR$/Dlife.iml" />
       <module fileurl="file://$PROJECT_DIR$/DlifeProject.iml" filepath="$PROJECT_DIR$/DlifeProject.iml" />
+      <module fileurl="file://$PROJECT_DIR$/DlifeProject.iml" filepath="$PROJECT_DIR$/DlifeProject.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/gallerypick/gallerypick.iml" filepath="$PROJECT_DIR$/gallerypick/gallerypick.iml" />
       <module fileurl="file://$PROJECT_DIR$/gallerypick/gallerypick.iml" filepath="$PROJECT_DIR$/gallerypick/gallerypick.iml" />
     </modules>
   </component>

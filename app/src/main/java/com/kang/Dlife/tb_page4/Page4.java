@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.kang.Dlife.Common;
 import com.kang.Dlife.R;
 
 
@@ -92,7 +91,7 @@ public class Page4 extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent();
-                intent.setClass(getActivity(), Facebook.class);
+                intent.setClass(getActivity(), FacebookActivity.class);
                 startActivity(intent);
             }
         });

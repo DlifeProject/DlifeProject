@@ -67,33 +67,34 @@
         android:textSize="16sp"
         android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/tvNote"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/tvTime"
-        android:layout_alignRight="@+id/tvTime"
-        android:layout_below="@+id/tvTime"
+        android:orientation="horizontal">
 
-        android:layout_marginTop="11dp"
-        android:hint="Note:"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:textColor="@color/text_black"
-        android:textSize="20sp" />
+        <TextView
+            android:id="@+id/tvNote"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="11dp"
+            android:hint="Note:"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:textColor="@color/text_black"
+            android:textSize="20sp" />
 
-    <TextView
-        android:id="@+id/tvContinue"
-        android:layout_width="100dp"
-        android:layout_height="30dp"
-        android:layout_alignBaseline="@+id/tvNote"
-        android:layout_alignBottom="@+id/tvNote"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:text="...繼續閱讀"
-        android:textColor="@android:color/holo_blue_dark" />
+        <TextView
+            android:id="@+id/tvContinue"
+            android:layout_width="100dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="11dp"
 
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:text="...繼續閱讀"
+            android:textColor="@android:color/holo_blue_dark" />
+
+
+    </LinearLayout>
 
 </LinearLayout>

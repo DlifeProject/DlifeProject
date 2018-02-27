@@ -1,4 +1,4 @@
-package com.kang.Dlife.tb_page2.diary_view;
+package com.kang.Dlife.tb_page3;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -21,16 +21,15 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.kang.Dlife.Common;
 import com.kang.Dlife.R;
-import com.kang.Dlife.sever.LocationToDiary;
 import com.kang.Dlife.sever.MyTask;
 import com.kang.Dlife.tb_page2.CategorySum;
-import com.kang.Dlife.tb_page2.PieChartItem;
+import com.kang.Dlife.tb_page2.diary_view.PhotoSpot;
+import com.kang.Dlife.sever.LocationToDiary;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedWriter;
@@ -41,12 +40,14 @@ import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class DiaryView extends AppCompatActivity {
+/**
+ * Created by weisunquan on 2018/2/1.
+ */
 
+public class FriendDiaryViewActivity extends AppCompatActivity {
     private ImageButton btBack;
     private final static String TAG = "IgTestRecycler2Activity";
     private RecyclerView recyclerView;
@@ -106,8 +107,8 @@ public class DiaryView extends AppCompatActivity {
 
                 JsonObject jsonObject = new JsonObject();
                 jsonObject.addProperty("action", "getDiary");
-                jsonObject.addProperty("account", Common.getAccount(this));
-                jsonObject.addProperty("password", Common.getPWD(this));
+                jsonObject.addProperty("account", Common.getAccount(FriendDiaryViewActivity.this));
+                jsonObject.addProperty("password", Common.getPWD(FriendDiaryViewActivity.this));
                 jsonObject.addProperty("categoryType", categorySum.getCategoryType());
                 String jsonOut = jsonObject.toString();
 
@@ -159,8 +160,7 @@ public class DiaryView extends AppCompatActivity {
         private List<LocationToDiary> igList;
 
         //顯示什麼東西
-        IgAdapter(Context context
-                , List<LocationToDiary> igList) {
+        IgAdapter(Context context, List<LocationToDiary> igList) {
             this.context = context;
             this.igList = igList;
         }
@@ -192,12 +192,12 @@ public class DiaryView extends AppCompatActivity {
             LayoutInflater layoutInflater = LayoutInflater.from(context);
             View itemView = layoutInflater.inflate(R.layout.page2_diary_view_recyclerview, viewGroup, false);
 
-            return new MyViewHolder(itemView);
+            return new IgAdapter.MyViewHolder(itemView);
         }
 
         @Override
 
-        public void onBindViewHolder(final MyViewHolder viewHolder, int position) {
+        public void onBindViewHolder(final IgAdapter.MyViewHolder viewHolder, int position) {
 
             viewHolder.mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.HORIZONTAL));
 
@@ -215,8 +215,8 @@ public class DiaryView extends AppCompatActivity {
 
                     JsonObject jsonObject = new JsonObject();
                     jsonObject.addProperty("action", "getDiaryPhotoSKList");
-                    jsonObject.addProperty("account", Common.getAccount(DiaryView.this));
-                    jsonObject.addProperty("password", Common.getPWD(DiaryView.this));
+                    jsonObject.addProperty("account", Common.getAccount(FriendDiaryViewActivity.this));
+                    jsonObject.addProperty("password", Common.getPWD(FriendDiaryViewActivity.this));
                     jsonObject.addProperty("diarySK", igList.get(position).getSk());
                     String jsonOut = jsonObject.toString();
 
@@ -255,7 +255,7 @@ public class DiaryView extends AppCompatActivity {
             viewHolder.tvDate.setText(diaryDetail.getPost_day());
             longitude = diaryDetail.getLongitude();
             latitude = diaryDetail.getLatitude();
-            Geocoder geocoder = new Geocoder(DiaryView.this);
+            Geocoder geocoder = new Geocoder(FriendDiaryViewActivity.this);
             try {
                 List<Address> addressList =
                         geocoder.getFromLocation(latitude, longitude, 1);
@@ -281,7 +281,7 @@ public class DiaryView extends AppCompatActivity {
             viewHolder.tvNote.setText(diaryDetail.getNote());
             viewHolder.tvContinue.setVisibility(View.GONE);
 
-            if (viewHolder.tvNote.length() >= 11) {
+            if (viewHolder.tvNote.length() > 11) {
                 viewHolder.tvNote.setText(diaryDetail.getNote().substring(0, 11));
 
                 viewHolder.tvContinue.setVisibility(View.VISIBLE);
@@ -338,16 +338,16 @@ public class DiaryView extends AppCompatActivity {
         }
 
         @Override
-        public MyViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+        public IgPictureAdapter.MyViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
 
             LayoutInflater layoutInflater = LayoutInflater.from(context);
             View itemView = layoutInflater.inflate(R.layout.page2_diary_view_photo_item, viewGroup, false);
-            return new MyViewHolder(itemView);
+            return new IgPictureAdapter.MyViewHolder(itemView);
         }
 
         //position 就是當初listview的 index
         @Override
-        public void onBindViewHolder(final MyViewHolder viewHolder, int position) {
+        public void onBindViewHolder(final IgPictureAdapter.MyViewHolder viewHolder, int position) {
 
             final PhotoSpot photoSpot = photoSpotList.get(position);
 
@@ -356,7 +356,6 @@ public class DiaryView extends AppCompatActivity {
             int id = photoSpot.getSk();
             spotGetImageTask = new SpotGetImageTask(url, id, imageSize, viewHolder.ivRecyclerImage);
             spotGetImageTask.execute();   //只要沒寫get 就是一直讓他抓 不等圖 不然會卡著等圖
-            int a=1;
         }
     }
 
@@ -385,8 +384,8 @@ public class DiaryView extends AppCompatActivity {
 
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("action", "getImage");
-            jsonObject.addProperty("account", Common.getAccount(DiaryView.this));
-            jsonObject.addProperty("password", Common.getPWD(DiaryView.this));
+            jsonObject.addProperty("account", Common.getAccount(FriendDiaryViewActivity.this));
+            jsonObject.addProperty("password", Common.getPWD(FriendDiaryViewActivity.this));
             jsonObject.addProperty("id", id);
             jsonObject.addProperty("imageSize", imageSize);
             return getRemoteImage(url, jsonObject.toString());

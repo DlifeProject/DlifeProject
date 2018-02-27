@@ -1,6 +1,7 @@
 package com.kang.Dlife.tb_page3;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -9,6 +10,7 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -24,6 +26,17 @@ public class Page3 extends Fragment {
 
         View view = inflater.inflate(R.layout.page3, container, false);
 
+        //我加了切換activity的button
+        ImageButton addExchange=view.findViewById(R.id.addExchange);
+        addExchange.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent();
+                intent.setClass(getActivity()  , ExchangeActivity.class);
+                startActivity(intent);
+            }
+        });
+        //
         RecyclerView rvFriendlist = (RecyclerView) view.findViewById(R.id.rvFriendlist);
 
         rvFriendlist.setLayoutManager(

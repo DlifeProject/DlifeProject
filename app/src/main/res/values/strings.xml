@@ -9,7 +9,7 @@
     <string name="login">Log in</string>
     <string name="Reset">Reset</string>
     <string name="hello_blank_fragment">Helloblankfragment</string>
-    <string name="msg_NoNewsFound">沒有日記</string>
+    <string name="msg_NoNewsFound">您的搜尋範圍內沒有日記</string>
     <string name="msg_NoNetwork">NoNetwork</string>
     <string name="PersonalFile">My profile</string>
     <string name="myNickName">Nickname</string>
@@ -25,4 +25,7 @@
     <string name="ChangeBirthday">Birthday</string>
     <string name="initBirthday">Your birthday</string>
     <string name="ChangeGender">Gender</string>
+    <string name="facebook_app_id">168926520384746</string>
+    <string name="fb_login_protocol_scheme">fb168926520384746</string>
+
 </resources>

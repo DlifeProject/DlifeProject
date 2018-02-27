@@ -1,0 +1,158 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:id="@+id/fmIg"
+    android:background="@color/background_white">
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:id="@+id/rlTop"
+        android:background="@color/primary_green">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="今日好友"
+            android:textColor="@color/background_white"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:id="@+id/textView" />
+
+        <ImageButton
+            android:id="@+id/imageButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="24dp"
+            android:layout_marginStart="24dp"
+            android:onClick="back"
+            android:background="@color/primary_green"
+            app:srcCompat="@drawable/ic_back" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="282dp">
+        <!--android:layout_weight="1">-->
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:src="@drawable/tired" />
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <TextView
+            android:id="@+id/tvName"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:gravity="center_horizontal"
+            android:text="Nameeeeeee"
+            android:textColor="@color/text_black"
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/tvName"
+            android:paddingLeft="10dp"
+            android:text="選擇交換的類別"
+            android:textColor="@color/text_black"
+            android:textSize="20sp" />
+
+        <ImageButton
+            android:id="@+id/ibPre"
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/btCenter"
+            android:layout_marginBottom="8dp"
+            android:layout_toLeftOf="@+id/btCenter"
+            android:layout_toStartOf="@+id/btCenter"
+            android:background="@drawable/vector_left"
+            android:onClick="clickPre"/>
+
+        <Button
+            android:id="@+id/btCenter"
+            android:layout_width="175dp"
+            android:layout_height="70dp"
+
+            android:layout_below="@+id/textView3"
+            android:layout_toLeftOf="@+id/ibNext"
+            android:layout_toStartOf="@+id/ibNext"
+            android:background="@drawable/shape_rectangle"
+            android:fontFamily="PingFang TC"
+            android:text="Shopping"
+            android:textColor="@color/background_white"
+            android:textSize="30sp" />
+
+        <ImageButton
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/ibPre"
+
+            android:layout_marginEnd="27dp"
+            android:layout_marginRight="27dp"
+            android:background="@drawable/vector_right"
+            android:id="@+id/ibNext"
+            android:onClick="clickNext"/>
+
+        <Button
+            android:id="@+id/exchange"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:layout_below="@+id/ibPre"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/rectangle"
+            android:text="確認"
+            android:textColor="@color/background_white"
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/tvYes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="15dp"
+           android:layout_below="@+id/btCenter"
+            android:layout_centerHorizontal="true"
+            android:textSize="30dp"
+            android:textColor="#BDBDBD"
+            android:text="已送出邀請" />
+
+
+        />
+    </RelativeLayout>
+
+
+
+    <!--<include layout="@layout/bottom_layout" />-->
+</LinearLayout>
