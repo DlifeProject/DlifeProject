@@ -87,6 +87,7 @@ public class DiaryEdit extends Activity {
     private TextView tvDate, tvTimeStart, tvTimeEnd, tvLocation;
     private ImageButton ibMap;
     public LocationToDiary bundleP;
+    private int selectPhotoSize;
     public static ArrayList<Integer> bundlePhoto;
     public Hashtable<Integer, LocationToDiary> bundleHash = new Hashtable<Integer, LocationToDiary>();
     private static SpotGetImageTask spotGetImageTask;
@@ -262,7 +263,8 @@ public class DiaryEdit extends Activity {
             }
         });
 
-        if (rvResultPhoto != null ) {
+
+        if (bundlePhoto != null && (bundlePhoto.size() != 0 || selectPhotoSize != 0)) {
             ivExPhoto.setVisibility(View.GONE);
         } else {
             ivExPhoto.setVisibility(View.VISIBLE);
@@ -384,27 +386,37 @@ public class DiaryEdit extends Activity {
 
             switch (getItemViewType(position)) {
 
-                case 0:
-                    // 抓sever的圖片
-                    String url = Common.URL + Common.WEBPHOTO;
-                    int id = bundlePhoto.get(position);
-                    spotGetImageTask = new SpotGetImageTask(url, id, imageSize, holder.ivPhoto);
-                    spotGetImageTask.execute();
-                    break;
+                    case 0:
+                        // 抓sever的圖片
+                        if (bundlePhoto.size() != 0) {
+                            String url = Common.URL + Common.WEBPHOTO;
+                            int id = bundlePhoto.get(position);
+                            spotGetImageTask = new SpotGetImageTask(url, id, imageSize, holder.ivPhoto);
+                            spotGetImageTask.execute();
+                        }
+                        break;
 
                 default:
                     // 抓使用者選的圖片
+                    selectPhotoSize = result.size();
+                    if (bundlePhoto != null) {
                     Glide.with(context)
                             .load(result.get(position - bundlePhoto.size()))
                             .centerCrop()
                             .into(holder.ivPhoto);
+                    } else {
+                        Glide.with(context)
+                                .load(result.get(position))
+                                .centerCrop()
+                                .into(holder.ivPhoto);
+                    }
                     break;
             }
         }
 
         @Override
         public int getItemViewType(int position) {
-            if (position <= bundlePhoto.size() - 1) {
+            if (bundlePhoto != null && position <= bundlePhoto.size() - 1) {
                 return 0;
             } else {
                 return 1;
@@ -413,7 +425,11 @@ public class DiaryEdit extends Activity {
 
         @Override
         public int getItemCount() {
-            return bundlePhoto.size() + result.size();
+            if (bundlePhoto != null) {
+                return bundlePhoto.size() + result.size();
+            } else {
+                return result.size();
+            }
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
