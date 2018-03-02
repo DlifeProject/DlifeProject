@@ -295,6 +295,7 @@ public class LocationDao extends SQLiteOpenHelper {
         newDiary.setAltitude(sumAltitude/timesCount);
         newDiary.setStartLocationSK(ltForward.getSk());
         newDiary.setEndLocationSK(ltLast.getSk());
+        newDiary.setStartLocationSK(ltForward.getSk());
 
         return newDiary;
     }

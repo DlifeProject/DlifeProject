@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import db.MemberLocationDao;
+import system.GoogleMapPlace;
 
 @WebServlet("/test")
 public class test extends HttpServlet{
@@ -27,14 +28,11 @@ public class test extends HttpServlet{
 		response.getWriter().append(datetime + "<br>");
 		//do getdiary
 		
-		double longitude = 121.19182735193802;
-		double latitude = 24.967921295607205;
-		response.getWriter().append(longitude + "<br>");
-		response.getWriter().append(latitude + "<br>");
+		GoogleMapPlace googleMapPlace = new GoogleMapPlace("25.0487345","121.51423060000002");
+		String json = googleMapPlace.getLocationJson();
 		
-		MemberLocationDao memberLocationDao = new MemberLocationDao(1);
-		int count = memberLocationDao.addNew();
-		response.getWriter().append("count: " + count + "<br>");	 
+		System.out.println(json);
+		googleMapPlace.parserJson();
 		
 	}
 
