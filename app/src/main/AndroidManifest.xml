@@ -51,7 +51,7 @@
             android:value="@integer/google_play_services_version" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDGkE4FG31EUpY8-EA8lO5HH4SN8bDneuE" />
+            android:value="AIzaSyDswsqzUxctj_f-WfiGyMCwsld4z3EHYQo" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"

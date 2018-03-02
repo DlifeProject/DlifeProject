@@ -47,6 +47,7 @@ import java.lang.ref.WeakReference;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Hashtable;
 import java.util.List;
@@ -55,7 +56,6 @@ import static android.content.ContentValues.TAG;
 
 public class Page1_AlreadyUpload extends Fragment {
     public Hashtable<Integer, LocationToDiary> bundleHash = new Hashtable<Integer, LocationToDiary>();
-    private Bundle bundleImage;
     private LocationDao locationDao;
     private RecyclerView rvDiary;
     private MyTask getAllDiaryTask;
@@ -63,7 +63,7 @@ public class Page1_AlreadyUpload extends Fragment {
     private SpotGetImageTask spotGetImageTask;
     private MyTask newsGetAllTask;
     private ImageView ivNoUploadDiary;
-
+    private ArrayList<Integer> photoSK;
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable final Bundle savedInstanceState) {
         //因為有宣告view, 所以之後可以在這頁裡面找下面之後要用到的id
@@ -76,6 +76,7 @@ public class Page1_AlreadyUpload extends Fragment {
     public void onResume() {
         super.onResume();
         showAllDiarys();
+        photoSK = new ArrayList<Integer>();
         rvDiary.setLayoutManager(
                 new StaggeredGridLayoutManager(
                         // spanCount(列數 or 行數), HORIZONTAL -> 水平, VERTICAL -> 垂直
@@ -138,8 +139,8 @@ public class Page1_AlreadyUpload extends Fragment {
         public void onBindViewHolder(final MyViewHolder viewHolder, final int position) {
 
             final LocationToDiary diaryDetailWeb = allDiary.get(position);
+            List<PhotoSpot> photoSpotList = null;
             // 抓sever的資料
-
             viewHolder.tvDiary.setText(diaryDetailWeb.getNote());
             viewHolder.icWeather.setImageResource(R.drawable.ic_sun);
             viewHolder.icNew.setImageResource(0);
@@ -177,7 +178,6 @@ public class Page1_AlreadyUpload extends Fragment {
                 PagerSnapHelper pagerSnapHelper = new PagerSnapHelper();
                 pagerSnapHelper.attachToRecyclerView(viewHolder.rvPhoto);
 
-                List<PhotoSpot> photoSpotList = null;
 
                 if (Common.checkNetConnected(getActivity())) {
                     String url = Common.URL + Common.WEBPHOTO;
@@ -197,8 +197,6 @@ public class Page1_AlreadyUpload extends Fragment {
                         Type ltWeb = new TypeToken<List<PhotoSpot>>() {
                         }.getType();
                         photoSpotList = new Gson().fromJson(getDiaryPhotoSKjsonIn, ltWeb);
-                        bundleImage.putInt("Image",photoSpotList.get(position).getSk());
-
                     } catch (Exception e) {
                         Log.e(TAG, e.toString());
                     }
@@ -207,17 +205,25 @@ public class Page1_AlreadyUpload extends Fragment {
                 viewHolder.rvPhoto.setAdapter(new photoAdapter(context, photoSpotList));
 
             }
-            // recyclerview 點擊監聽
+            // recyclerView 點擊監聽
+
+            final List<PhotoSpot> finalPhotoSpotList = photoSpotList;
             viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
                 @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
                 @Override
                 public void onClick(View view) {
+                    for(int i = 0; i <= finalPhotoSpotList.size() - 1; i++){
+                    final PhotoSpot photoSpot = finalPhotoSpotList.get(i);
+                    int id = photoSpot.getSk();
+                    photoSK.add(id);
+                    }
                     Intent intent = new Intent();
                     intent.setClass(getActivity(), DiaryEdit.class);
                     LocationToDiary bundleP = new LocationToDiary(bundleHash.get((int) view.getTag()));
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("Page1Adapter", bundleP);
+                    bundle.putIntegerArrayList("Page1Photo", photoSK);
                     intent.putExtras(bundle);
                     startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(getActivity(), viewHolder.itemView, "shareNames").toBundle());
                 }
@@ -306,6 +312,7 @@ public class Page1_AlreadyUpload extends Fragment {
             View itemView = layoutInflater.inflate(R.layout.page1_recycleview_photo, viewGroup, false);
             return new MyViewHolder(itemView);
         }
+
 
         //position 就是當初listview的 index
         @Override

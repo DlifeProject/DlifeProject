@@ -14,6 +14,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -56,7 +57,13 @@ import com.kang.GalleryPick.inter.IHandlerCallBack;
 import com.kang.GalleryPick.inter.ImageLoader;
 import com.kang.GalleryPick.widget.GalleryImageView;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.lang.ref.WeakReference;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
@@ -74,13 +81,16 @@ public class DiaryEdit extends Activity {
     private String categorySelect;
     private GalleryConfig galleryConfig;
     private IHandlerCallBack iHandlerCallBack;
-    private ImageView iv;
+    private ImageView ivExPhoto;
     private MyTask dataUploadTask;
     private final int PERMISSIONS_REQUEST_READ_CONTACTS = 8;
     private TextView tvDate, tvTimeStart, tvTimeEnd, tvLocation;
     private ImageButton ibMap;
     public LocationToDiary bundleP;
+    public static ArrayList<Integer> bundlePhoto;
     public Hashtable<Integer, LocationToDiary> bundleHash = new Hashtable<Integer, LocationToDiary>();
+    private static SpotGetImageTask spotGetImageTask;
+
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -102,6 +112,7 @@ public class DiaryEdit extends Activity {
         super.onCreate(savedInstanceState);
         Bundle bundle = getIntent().getExtras();
         bundleP = (LocationToDiary) bundle.getSerializable("Page1Adapter");
+        bundlePhoto = (ArrayList<Integer>) bundle.getIntegerArrayList("Page1Photo");
         setContentView(R.layout.page1_diary_edit);
         // Spinner選單
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
@@ -135,7 +146,7 @@ public class DiaryEdit extends Activity {
         try {
             List<Address> addressList = null;
 
-                addressList = geocoder.getFromLocation(bundleP.getLatitude(), bundleP.getLongitude(), 1);
+            addressList = geocoder.getFromLocation(bundleP.getLatitude(), bundleP.getLongitude(), 1);
 
 
             String addrStr = "";
@@ -250,6 +261,12 @@ public class DiaryEdit extends Activity {
 
             }
         });
+
+        if (rvResultPhoto != null ) {
+            ivExPhoto.setVisibility(View.GONE);
+        } else {
+            ivExPhoto.setVisibility(View.VISIBLE);
+        }
     }
 
     // 檢察網路連線
@@ -274,12 +291,13 @@ public class DiaryEdit extends Activity {
         tvLocation = (TextView) super.findViewById(R.id.tvLocation);
         tvTimeStart = (TextView) super.findViewById(R.id.tvTimeStart);
         tvTimeEnd = (TextView) super.findViewById(R.id.tvTimeEnd);
+        ivExPhoto = (ImageView) super.findViewById(R.id.iv_exphoto);
         ibMap = (ImageButton) super.findViewById(R.id.ibMap);
-        if(page1Spot.getStartDate() != null){
-        tvDate.setText(Common.dateStringToDay(page1Spot.getStartDate()));
-        tvTimeStart.setText(Common.dateStringToHM(page1Spot.getStartDate()));
-        tvTimeEnd.setText(Common.dateStringToHM(page1Spot.getEndDate()));
-        }else {
+        if (page1Spot.getStartDate() != null) {
+            tvDate.setText(Common.dateStringToDay(page1Spot.getStartDate()));
+            tvTimeStart.setText(Common.dateStringToHM(page1Spot.getStartDate()));
+            tvTimeEnd.setText(Common.dateStringToHM(page1Spot.getEndDate()));
+        } else {
             tvDate.setText(Common.dateStringToDay(page1Spot.getEnd_date()));
             tvTimeStart.setText(Common.dateStringToHM(page1Spot.getStart_date()));
             tvTimeEnd.setText(Common.dateStringToHM(page1Spot.getEnd_date()));
@@ -338,18 +356,22 @@ public class DiaryEdit extends Activity {
     }
 
     //RecyclerView 物件
-    public static class PhotoAdapter extends
+    public class PhotoAdapter extends
             RecyclerView.Adapter<PhotoAdapter.ViewHolder> {
 
         private Context context;
         private LayoutInflater mLayoutInflater;
         private List<String> result;
+        private int imageSize;
         private final static String TAG = "Page1Adapter";
+        private Bitmap bitmap;
+
 
         public PhotoAdapter(Context context, List<String> result) {
             mLayoutInflater = LayoutInflater.from(context);
             this.context = context;
             this.result = result;
+            imageSize = getResources().getDisplayMetrics().widthPixels;
         }
 
         @Override
@@ -359,15 +381,39 @@ public class DiaryEdit extends Activity {
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-            Glide.with(context)
-                    .load(result.get(position))
-                    .centerCrop()
-                    .into(holder.ivPhoto);
+
+            switch (getItemViewType(position)) {
+
+                case 0:
+                    // 抓sever的圖片
+                    String url = Common.URL + Common.WEBPHOTO;
+                    int id = bundlePhoto.get(position);
+                    spotGetImageTask = new SpotGetImageTask(url, id, imageSize, holder.ivPhoto);
+                    spotGetImageTask.execute();
+                    break;
+
+                default:
+                    // 抓使用者選的圖片
+                    Glide.with(context)
+                            .load(result.get(position - bundlePhoto.size()))
+                            .centerCrop()
+                            .into(holder.ivPhoto);
+                    break;
+            }
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            if (position <= bundlePhoto.size() - 1) {
+                return 0;
+            } else {
+                return 1;
+            }
         }
 
         @Override
         public int getItemCount() {
-            return result.size();
+            return bundlePhoto.size() + result.size();
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
@@ -486,6 +532,91 @@ public class DiaryEdit extends Activity {
         public void onCreate() {
             super.onCreate();
         }
+    }
+
+
+
+
+    //新開 SpotGetImageTask 寫入/java 下
+    public class SpotGetImageTask extends AsyncTask<Object, Integer, Bitmap> {
+        private final static String TAG = "SpotGetImageTask";
+        private String url;
+        private int id, imageSize;
+        private HttpURLConnection connection;
+        private Bitmap bitmap;
+
+        // WeakReference物件不會阻止參照到的實體被回收
+        private WeakReference<ImageView> imageViewWeakReference;
+
+        SpotGetImageTask(String url, int id, int imageSize) {
+            this(url, id, imageSize, null);
+        }
+
+        public SpotGetImageTask(String url, int id, int imageSize, ImageView imageView) {
+            this.url = url;
+            this.id = id;
+            this.imageSize = imageSize;
+            this.imageViewWeakReference = new WeakReference<>(imageView);
+        }
+
+        @Override
+        protected Bitmap doInBackground(Object... params) {
+
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("action", "getImage");
+            jsonObject.addProperty("account", Common.getAccount(DiaryEdit.this));
+            jsonObject.addProperty("password", Common.getPWD(DiaryEdit.this));
+            jsonObject.addProperty("id", id);
+            jsonObject.addProperty("imageSize", imageSize);
+            return getRemoteImage(url, jsonObject.toString());
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            ImageView imageView = imageViewWeakReference.get();
+            if (isCancelled() || imageView == null) {
+                return;
+            }
+            if (bitmap != null) {
+                imageView.setImageBitmap(bitmap);
+            } else {
+//            imageView.setImageResource(R.drawable.default_image);
+            }
+        }
+
+        private Bitmap getRemoteImage(String url, String jsonOut) {
+
+            try {
+                connection = (HttpURLConnection) new URL(url).openConnection();
+                connection.setDoInput(true); // allow inputs
+                connection.setDoOutput(true); // allow outputs
+                connection.setUseCaches(false); // do not use a cached copy
+                connection.setRequestMethod("POST");
+                BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(connection.getOutputStream()));
+                bw.write(jsonOut);
+                Log.d(TAG, "output: " + jsonOut);
+                bw.close();
+
+                int responseCode = connection.getResponseCode();
+
+                if (responseCode == 200) {
+                    bitmap = BitmapFactory.decodeStream(
+                            new BufferedInputStream(connection.getInputStream()));
+                } else {
+                    Log.d(TAG, "response code: " + responseCode);
+                }
+            } catch (IOException e) {
+                Log.e(TAG, e.toString());
+            } finally {
+                if (connection != null) {
+                    connection.disconnect();
+                }
+            }
+
+            return bitmap;
+        }
+
+
     }
 
 
