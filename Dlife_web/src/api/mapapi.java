@@ -50,8 +50,8 @@ public class mapapi extends HttpServlet{
 		
 		if(action.equals("nearby")) {
 			
-			String latitude = jsonObject.get("latitude").getAsString();
-			String longitude = jsonObject.get("longitude").getAsString();
+			double latitude = jsonObject.get("latitude").getAsDouble();
+			double longitude = jsonObject.get("longitude").getAsDouble();
 			
 			GoogleMapPlace googleMapPlace = new GoogleMapPlace(latitude,longitude);
 			String json = googleMapPlace.getLocationJson();
@@ -60,6 +60,8 @@ public class mapapi extends HttpServlet{
 			
 			JsonObject outJsonObject = new JsonObject();
 			outJsonObject.addProperty("nearbyItems", new Gson().toJson(nearbyList));
+			
+			System.out.println("mapapi nearby outStr: " + outJsonObject.toString());
 			
 			response.getWriter().println(outJsonObject.toString());
 

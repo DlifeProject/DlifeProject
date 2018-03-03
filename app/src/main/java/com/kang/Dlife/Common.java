@@ -42,6 +42,7 @@ public class Common {
     public final static String WEBPHOTO = "photo";
     public static final String WEBGPS = "gps";
     public static final String DBNAME = "dlife";
+    public static final String MAPAPI = "mapapi";
     public final static String WEBSUMMARY = "summary";
     public final static String FRIEND = "friend";
 

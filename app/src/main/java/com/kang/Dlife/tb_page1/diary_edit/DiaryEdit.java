@@ -79,6 +79,7 @@ public class DiaryEdit extends Activity {
     private PhotoAdapter photoAdapter;
     private List<String> path = new ArrayList<>();
     private String categorySelect;
+    private String locationSelect;
     private GalleryConfig galleryConfig;
     private IHandlerCallBack iHandlerCallBack;
     private ImageView ivExPhoto;
@@ -136,6 +137,53 @@ public class DiaryEdit extends Activity {
             }
         });
 
+
+        // 地點Spinner
+        Spinner locationSpinner = (Spinner) findViewById(R.id.locationSpinner);
+        final String[] location = {"地點一", "地點二", "地點三", "地點四", "地點五"};
+        final ArrayAdapter<String> location_list = new ArrayAdapter<>(DiaryEdit.this,
+                android.R.layout.simple_spinner_dropdown_item,
+                location);
+
+        category_list.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        locationSpinner.setAdapter(location_list);
+        locationSpinner.setSelection(0);
+        locationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                locationSelect = location[position];
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
+        // 傳latitude, longitude
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("action", "nearby");
+        jsonObject.addProperty("account", Common.getAccount(DiaryEdit.this));
+        jsonObject.addProperty("password", Common.getPWD(DiaryEdit.this));
+        jsonObject.addProperty("latitude", bundleP.getLatitude());
+        jsonObject.addProperty("longitude", bundleP.getLongitude());
+
+        int insterCount = 0;
+        if (networkConnected()) {
+            String url = Common.URL + Common.MAPAPI;
+            MyTask myTask = new MyTask(url, jsonObject.toString());
+            try {
+                String inStr = myTask.execute().get().trim();
+                insterCount = Integer.valueOf(inStr);
+                if (insterCount == 0) {
+
+                } else {
+
+                }
+            } catch (Exception e) {
+                Log.e(TAG, e.toString());
+            }
+        }
+
         mContext = this;
         mActivity = this;
 
@@ -143,6 +191,8 @@ public class DiaryEdit extends Activity {
         initGallery();
         init();
 
+
+        // 座標轉換
         Geocoder geocoder = new Geocoder(DiaryEdit.this);
         try {
             List<Address> addressList = null;
