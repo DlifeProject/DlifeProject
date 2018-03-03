@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
@@ -14,13 +15,39 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.gson.JsonObject;
 import com.kang.Dlife.Common;
 import com.kang.Dlife.R;
+import com.kang.Dlife.data_base.MemberShareRelation;
+import com.kang.Dlife.sever.MyTask;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Page3 extends Fragment {
+
+    ArrayList<MemberShareRelation> memberShareRelationList = new ArrayList<MemberShareRelation>();
+    int memberShareRelationShowIndex = 0;
+
+    private void setMemberShareRelationList(FragmentActivity activity) {
+
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("action", "getFriendlist");
+        jsonObject.addProperty("account", Common.getAccount(getActivity()));
+        jsonObject.addProperty("password", Common.getPWD(getActivity()));
+        String url = Common.URL + Common.FRIEND;
+
+        MyTask login = new MyTask(url,jsonObject.toString());
+        String inStr = null;
+        try {
+            inStr = login.execute().get().trim();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
@@ -36,9 +63,12 @@ public class Page3 extends Fragment {
                 startActivity(intent);
             }
         });
+
+        //init memberShareRelationList
+        setMemberShareRelationList(getActivity());
+
         //
         RecyclerView rvFriendlist = (RecyclerView) view.findViewById(R.id.rvFriendlist);
-
         rvFriendlist.setLayoutManager(
                 new StaggeredGridLayoutManager(
                         // spanCount(列數 or 行數), HORIZONTAL -> 水平, VERTICAL -> 垂直
@@ -49,6 +79,7 @@ public class Page3 extends Fragment {
         return view;
 
     }
+
 
     private List<MatchFriendItem> getMatchSpots() {
         List<MatchFriendItem> matchFriendItems = new ArrayList<>();

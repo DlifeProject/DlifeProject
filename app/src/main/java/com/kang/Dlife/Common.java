@@ -43,6 +43,7 @@ public class Common {
     public static final String WEBGPS = "gps";
     public static final String DBNAME = "dlife";
     public final static String WEBSUMMARY = "summary";
+    public final static String FRIEND = "friend";
 
     public static String getAccount(Context c){
         String account = getPrefferencesData(c, PREFFERENCES_USER_ACCOUNT);

@@ -32,7 +32,6 @@ public class login extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {		
 		
 		request.setCharacterEncoding("utf-8");
-		
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("text/html;charset=utf-8");
 		
@@ -42,7 +41,7 @@ public class login extends HttpServlet {
 		while((text = br.readLine()) != null) {
 			sb.append(text);
 		}
-		System.out.println("inStr: " + sb.toString());
+		System.out.println("login inStr: " + sb.toString());
 		Gson gson = new Gson();
 		JsonObject jsonObject = gson.fromJson(sb.toString(),JsonObject.class);
 		String action = jsonObject.get("action").getAsString();

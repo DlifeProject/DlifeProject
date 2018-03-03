@@ -50,7 +50,7 @@ public class ChangePassword extends AppCompatActivity {
                     MyTask login = new MyTask(url,jsonObject.toString());
                     String inStr = null;
                     try {
-                        inStr = login.execute().get();
+                        inStr = login.execute().get().trim();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
