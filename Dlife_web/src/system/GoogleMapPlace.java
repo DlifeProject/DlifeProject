@@ -18,21 +18,13 @@ public class GoogleMapPlace {
 	public String googlePlaceLocation = "";
 	public String googlePlace = "";
 	public ArrayList<GoogleNearbyItem> nearbyList = new ArrayList<GoogleNearbyItem>();
-	private String latitude = "";
-	private String longitude = "";
+	private double latitude = 0.0;
+	private double longitude = 0.0;
 	private Map<String, String> sendData = new HashMap<>();
 	private String googleResponeJson;
 	private String googleNearbyItemsJson;
 	
-	
-	public GoogleMapPlace(Long latitude, Long longitude) {
-		super();
-		this.latitude = latitude.toString();
-		this.longitude = longitude.toString();
-		setSendData();
-	}
-	
-	public GoogleMapPlace(String latitude, String longitude) {
+	public GoogleMapPlace(double latitude, double longitude) {
 		super();
 		this.latitude = latitude;
 		this.longitude = longitude;
@@ -74,16 +66,16 @@ public class GoogleMapPlace {
     		return googleNearbyItemsJson;
     }
 
-	public String getLongitude() {
+	public double getLongitude() {
 		return longitude;
 	}
-	public void setLongitude(String longitude) {
+	public void setLongitude(double longitude) {
 		this.longitude = longitude;
 	}
-	public String getLatitude() {
+	public double getLatitude() {
 		return latitude;
 	}
-	public void setLatitude(String latitude) {
+	public void setLatitude(double latitude) {
 		this.latitude = latitude;
 	}
 	

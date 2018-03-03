@@ -33,7 +33,7 @@ public class test extends HttpServlet{
 		response.getWriter().append(datetime + "<br>");
 		//do getdiary
 		
-		GoogleMapPlace googleMapPlace = new GoogleMapPlace("25.0487345","121.51423060000002");
+		GoogleMapPlace googleMapPlace = new GoogleMapPlace(25.0487345,121.51423060000002);
 		String json = googleMapPlace.getLocationJson();
 		
 		System.out.println(json);

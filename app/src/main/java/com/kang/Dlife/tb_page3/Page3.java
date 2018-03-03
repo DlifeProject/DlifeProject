@@ -44,6 +44,9 @@ public class Page3 extends Fragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        if(inStr.isEmpty() == false && !inStr.equals("")){
+
+        }
 
 
     }
