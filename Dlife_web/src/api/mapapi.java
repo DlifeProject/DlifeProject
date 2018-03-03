@@ -53,6 +53,7 @@ public class mapapi extends HttpServlet{
 			double latitude = jsonObject.get("latitude").getAsDouble();
 			double longitude = jsonObject.get("longitude").getAsDouble();
 			
+			//
 			GoogleMapPlace googleMapPlace = new GoogleMapPlace(latitude,longitude);
 			String json = googleMapPlace.getLocationJson();
 			System.out.println("google nearby return json: " + json);

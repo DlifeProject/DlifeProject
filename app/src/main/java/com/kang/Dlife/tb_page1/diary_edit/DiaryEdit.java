@@ -45,9 +45,12 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 import com.kang.Dlife.Common;
 import com.kang.Dlife.R;
+import com.kang.Dlife.sever.GoogleNearbyItem;
 import com.kang.Dlife.sever.LocationDao;
 import com.kang.Dlife.sever.LocationToDiary;
 import com.kang.Dlife.sever.MyTask;
@@ -62,6 +65,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.lang.ref.WeakReference;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -87,11 +91,14 @@ public class DiaryEdit extends Activity {
     private final int PERMISSIONS_REQUEST_READ_CONTACTS = 8;
     private TextView tvDate, tvTimeStart, tvTimeEnd, tvLocation;
     private ImageButton ibMap;
+    private ImageButton ibMap2;
     public LocationToDiary bundleP;
+    public ArrayList<Object> bundleQ;
     private int selectPhotoSize;
     public static ArrayList<Integer> bundlePhoto;
     public Hashtable<Integer, LocationToDiary> bundleHash = new Hashtable<Integer, LocationToDiary>();
     private static SpotGetImageTask spotGetImageTask;
+    private List<GoogleNearbyItem> nearbyItem;
 
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -137,21 +144,60 @@ public class DiaryEdit extends Activity {
             }
         });
 
+        // 傳latitude, longitude , 取得鄰近地標
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("action", "nearby");
+        jsonObject.addProperty("account", Common.getAccount(DiaryEdit.this));
+        jsonObject.addProperty("password", Common.getPWD(DiaryEdit.this));
+        jsonObject.addProperty("latitude", bundleP.getLatitude());
+        jsonObject.addProperty("longitude", bundleP.getLongitude());
+        String jsonOut = jsonObject.toString();
 
+        int insterCount = 0;
+        if (networkConnected()) {
+            String url = Common.URL + Common.MAPAPI;
+            MyTask myTask = new MyTask(url, jsonObject.toString());
+            MyTask getNearByTask = new MyTask(url, jsonOut);
+            try {
+                String getNearByjsonIn = getNearByTask.execute().get();
+                Gson gson = new Gson();
+                JsonObject jsonObject2 = gson.fromJson(getNearByjsonIn, JsonObject.class);
+                String nearbyItems = jsonObject2.get("nearbyItems").getAsString();
+
+                JsonArray nearByItemJsonArray = gson.fromJson(nearbyItems, JsonArray.class);
+                Type tySum = new TypeToken<List<GoogleNearbyItem>>() {
+                }.getType();
+                nearbyItem = new Gson().fromJson(nearByItemJsonArray, tySum);
+                Log.e(TAG, Integer.toString(nearbyItem.size()));
+
+            } catch (Exception e) {
+                Log.e(TAG, e.toString());
+            }
+        }
         // 地點Spinner
         Spinner locationSpinner = (Spinner) findViewById(R.id.locationSpinner);
-        final String[] location = {"地點一", "地點二", "地點三", "地點四", "地點五"};
+
+        ArrayList<String> location = new ArrayList<>();
+        for (int i = 1; i <= nearbyItem.size(); i++) {
+            location.add(nearbyItem.get(i - 1).getName());
+        }
+
+
         final ArrayAdapter<String> location_list = new ArrayAdapter<>(DiaryEdit.this,
                 android.R.layout.simple_spinner_dropdown_item,
                 location);
 
-        category_list.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        location_list.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         locationSpinner.setAdapter(location_list);
         locationSpinner.setSelection(0);
         locationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                locationSelect = location[position];
+                bundleQ = new ArrayList<Object>();
+                bundleQ.add(nearbyItem.get(position).getLatitude());
+                bundleQ.add(nearbyItem.get(position).getLongitude());
+                bundleQ.add(nearbyItem.get(position).getName());
             }
 
             @Override
@@ -159,30 +205,6 @@ public class DiaryEdit extends Activity {
             }
         });
 
-        // 傳latitude, longitude
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("action", "nearby");
-        jsonObject.addProperty("account", Common.getAccount(DiaryEdit.this));
-        jsonObject.addProperty("password", Common.getPWD(DiaryEdit.this));
-        jsonObject.addProperty("latitude", bundleP.getLatitude());
-        jsonObject.addProperty("longitude", bundleP.getLongitude());
-
-        int insterCount = 0;
-        if (networkConnected()) {
-            String url = Common.URL + Common.MAPAPI;
-            MyTask myTask = new MyTask(url, jsonObject.toString());
-            try {
-                String inStr = myTask.execute().get().trim();
-                insterCount = Integer.valueOf(inStr);
-                if (insterCount == 0) {
-
-                } else {
-
-                }
-            } catch (Exception e) {
-                Log.e(TAG, e.toString());
-            }
-        }
 
         mContext = this;
         mActivity = this;
@@ -220,6 +242,7 @@ public class DiaryEdit extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
+
         ibMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -227,6 +250,18 @@ public class DiaryEdit extends Activity {
                 intent.setClass(DiaryEdit.this, GoogleMap.class);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("place", bundleP);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        });
+
+        ibMap2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent();
+                intent.setClass(DiaryEdit.this, GoogleMap.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("nearByLocation", bundleQ);
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
@@ -345,6 +380,8 @@ public class DiaryEdit extends Activity {
         tvTimeEnd = (TextView) super.findViewById(R.id.tvTimeEnd);
         ivExPhoto = (ImageView) super.findViewById(R.id.iv_exphoto);
         ibMap = (ImageButton) super.findViewById(R.id.ibMap);
+        ibMap2 = (ImageButton) super.findViewById(R.id.ibMap2);
+
         if (page1Spot.getStartDate() != null) {
             tvDate.setText(Common.dateStringToDay(page1Spot.getStartDate()));
             tvTimeStart.setText(Common.dateStringToHM(page1Spot.getStartDate()));
@@ -436,24 +473,24 @@ public class DiaryEdit extends Activity {
 
             switch (getItemViewType(position)) {
 
-                    case 0:
-                        // 抓sever的圖片
-                        if (bundlePhoto.size() != 0) {
-                            String url = Common.URL + Common.WEBPHOTO;
-                            int id = bundlePhoto.get(position);
-                            spotGetImageTask = new SpotGetImageTask(url, id, imageSize, holder.ivPhoto);
-                            spotGetImageTask.execute();
-                        }
-                        break;
+                case 0:
+                    // 抓sever的圖片
+                    if (bundlePhoto.size() != 0) {
+                        String url = Common.URL + Common.WEBPHOTO;
+                        int id = bundlePhoto.get(position);
+                        spotGetImageTask = new SpotGetImageTask(url, id, imageSize, holder.ivPhoto);
+                        spotGetImageTask.execute();
+                    }
+                    break;
 
                 default:
                     // 抓使用者選的圖片
                     selectPhotoSize = result.size();
                     if (bundlePhoto != null) {
-                    Glide.with(context)
-                            .load(result.get(position - bundlePhoto.size()))
-                            .centerCrop()
-                            .into(holder.ivPhoto);
+                        Glide.with(context)
+                                .load(result.get(position - bundlePhoto.size()))
+                                .centerCrop()
+                                .into(holder.ivPhoto);
                     } else {
                         Glide.with(context)
                                 .load(result.get(position))
@@ -599,9 +636,6 @@ public class DiaryEdit extends Activity {
             super.onCreate();
         }
     }
-
-
-
 
     //新開 SpotGetImageTask 寫入/java 下
     public class SpotGetImageTask extends AsyncTask<Object, Integer, Bitmap> {
