@@ -35,16 +35,14 @@ public class Common {
     public final static String TAG = "Common";
 
     public static final String URL = "http://10.0.2.2:8080/Dlife/";
-//    public static final String URL = "http://192.168.196.199:8080/Dlife/";
+//    public static final String URL = "http://192.168.1.2:8080/Dlife/";
 
     public final static String WEBLOGIN = "login";
     public final static String WEBDIARY = "diary";
     public final static String WEBPHOTO = "photo";
     public static final String WEBGPS = "gps";
     public static final String DBNAME = "dlife";
-    public static final String MAPAPI = "mapapi";
     public final static String WEBSUMMARY = "summary";
-    public final static String FRIEND = "friend";
 
     public static String getAccount(Context c){
         String account = getPrefferencesData(c, PREFFERENCES_USER_ACCOUNT);

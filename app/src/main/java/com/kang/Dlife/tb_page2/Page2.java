@@ -178,34 +178,34 @@ public class Page2 extends Fragment implements View.OnClickListener {
                         }
                     });
 
-                    Calendar scalendar = Calendar.getInstance();
-                    scalendar.add(Calendar.DAY_OF_MONTH,-2);
-                    Calendar ecalendar = Calendar.getInstance();
-                    ecalendar.add(Calendar.DAY_OF_MONTH,2);
-                    syear = scalendar.get(Calendar.YEAR);
-                    eyear = ecalendar.get(Calendar.YEAR);
-                    smonth = scalendar.get(Calendar.MONTH) + 1;
-                    emonth = ecalendar.get(Calendar.MONTH) + 1;
-                    sday = scalendar.get(Calendar.DAY_OF_MONTH);
-                    eday = ecalendar.get(Calendar.DAY_OF_MONTH);
+                    Calendar calendar = Calendar.getInstance();
+                    int default_syear = calendar.get(Calendar.YEAR);
+                    int default_eyear = default_syear;
+                    int default_smonth = calendar.get(Calendar.MONTH) + 1;
+                    int default_emonth = default_smonth;
+                    int default_sday = calendar.get(Calendar.DAY_OF_MONTH) - 2;
+                    int default_eday = default_sday + 2;
 
-                    pieChartViewHolder.tv_startyear.setText(String.valueOf(syear));
-                    pieChartViewHolder.tv_startmonth.setText(String.valueOf(smonth));
-                    pieChartViewHolder.tv_startday.setText(String.valueOf(sday));
-                    pieChartViewHolder.tv_endyear.setText(String.valueOf(eyear));
-                    pieChartViewHolder.tv_endmonth.setText(String.valueOf(emonth));
-                    pieChartViewHolder.tv_endday.setText(String.valueOf(eday));
+                    pieChartViewHolder.tv_startyear.setText(String.valueOf(default_syear));
+                    pieChartViewHolder.tv_startmonth.setText(String.valueOf(default_smonth));
+                    pieChartViewHolder.tv_startday.setText(String.valueOf(default_sday));
+                    pieChartViewHolder.tv_endyear.setText(String.valueOf(default_eyear));
+                    pieChartViewHolder.tv_endmonth.setText(String.valueOf(default_emonth));
+                    pieChartViewHolder.tv_endday.setText(String.valueOf(default_eday));
                     pieChartViewHolder.ry_Since.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-
+                            Calendar cal = Calendar.getInstance();
+                            int year = cal.get(Calendar.YEAR);
+                            int month = cal.get(Calendar.MONTH);
+                            int day = cal.get(Calendar.DAY_OF_MONTH) - 2;
 
                             DatePickerDialog dialog = new DatePickerDialog(getActivity(),
-                                    android.R.style.Theme_Holo_Dialog_MinWidth, sinceDateSetlistener, syear, smonth, sday);
+                                    android.R.style.Theme_Holo_Dialog_MinWidth, sinceDateSetlistener, year, month, day);
                             DatePicker datePicker = dialog.getDatePicker();
                             if (eday != 0) {
                                 Calendar endcal = Calendar.getInstance();
-                                //endcal.set(eyear, emonth, eday);
+                                endcal.set(eyear, emonth, eday);
                                 datePicker.setMaxDate(endcal.getTimeInMillis());
                                 endcal.add(Calendar.DAY_OF_MONTH, -6);
                                 datePicker.setMinDate(endcal.getTimeInMillis());
@@ -235,24 +235,24 @@ public class Page2 extends Fragment implements View.OnClickListener {
                         @RequiresApi(api = Build.VERSION_CODES.O)
                         @Override
                         public void onClick(View view) {
-//                            int year, month, day;
+                            int year, month, day;
 
                             Calendar cal = Calendar.getInstance();
                             Calendar startcal = Calendar.getInstance();
                             startcal.set(syear, smonth + 1, sday);
-//                            if (startcal.after(cal)) {
-//                                year = syear;
-//                                month = smonth + 1;
-//                                day = sday;
-//
-//                            } else {
-//                                year = cal.get(Calendar.YEAR);
-//                                month = cal.get(Calendar.MONTH);
-//                                day = cal.get(Calendar.DAY_OF_MONTH);
-//                            }
+                            if (startcal.after(cal)) {
+                                year = syear;
+                                month = smonth + 1;
+                                day = sday;
+
+                            } else {
+                                year = cal.get(Calendar.YEAR);
+                                month = cal.get(Calendar.MONTH);
+                                day = cal.get(Calendar.DAY_OF_MONTH);
+                            }
 
                             DatePickerDialog dialog = new DatePickerDialog(getActivity(),
-                                    android.R.style.Theme_Holo_Dialog_MinWidth, endDateSetlistener, eyear, emonth, eday);
+                                    android.R.style.Theme_Holo_Dialog_MinWidth, endDateSetlistener, year, month, day);
                             if (sday == 0) {
                                 DatePicker datePicker = dialog.getDatePicker();
                                 datePicker.setMaxDate(new Date().getTime());
@@ -354,55 +354,53 @@ public class Page2 extends Fragment implements View.OnClickListener {
                             }
                         }
                     });
-                    
-                    //public void createPieChart() {
 
         /* 設定可否旋轉 */
-                pieChartViewHolder.pieChart.setRotationEnabled(true);
-                Calendar calendar = Calendar.getInstance();
-                int piechart_month = calendar.get(Calendar.MONTH) + 1;
+                    pieChartViewHolder.pieChart.setRotationEnabled(true);
+
+                    int piechart_month = calendar.get(Calendar.MONTH) + 1;
 
         /* 設定圓心文字 */
-                pieChartViewHolder.pieChart.setCenterText(String.valueOf(setMonth(piechart_month)));
+                    pieChartViewHolder.pieChart.setCenterText(String.valueOf(setMonth(piechart_month)));
         /* 設定圓心文字大小 */
-                pieChartViewHolder.pieChart.setCenterTextSize(35);
-                pieChartViewHolder.pieChart.animateXY(700, 700);
-                Description description = new Description();
-                description.setText("Total : " + totalHour + "hrs");
-                description.setTextSize(25);
-                pieChartViewHolder.pieChart.setDescription(description);
+                    pieChartViewHolder.pieChart.setCenterTextSize(35);
+                    pieChartViewHolder.pieChart.animateXY(700, 700);
+                    Description description = new Description();
+                    description.setText("Total : " + totalHour + "hrs");
+                    description.setTextSize(25);
+                    pieChartViewHolder.pieChart.setDescription(description);
 
-                pieChartViewHolder.pieChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
-                    @Override
-                    public void onValueSelected(Entry entry, Highlight highlight) {
-                        Log.d(TAG, "entry: " + entry.toString() + "; highlight: " + highlight.toString());
-                        PieEntry pieEntry = (PieEntry) entry;
-                        String text = pieEntry.getLabel() + "\n" + pieEntry.getValue();
-                        Toast.makeText(getContext(), text, Toast.LENGTH_SHORT).show();
-                    }
+                    pieChartViewHolder.pieChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+                        @Override
+                        public void onValueSelected(Entry entry, Highlight highlight) {
+                            Log.d(TAG, "entry: " + entry.toString() + "; highlight: " + highlight.toString());
+                            PieEntry pieEntry = (PieEntry) entry;
+                            String text = pieEntry.getLabel() + "\n" + pieEntry.getValue();
+                            Toast.makeText(getContext(), text, Toast.LENGTH_SHORT).show();
+                        }
 
-                    @Override
-                    public void onNothingSelected() {
+                        @Override
+                        public void onNothingSelected() {
 
-                    }
-                });
+                        }
+                    });
 
-                List<PieEntry> pieEntries = piechartDataList;
+                    List<PieEntry> pieEntries = piechartDataList;
 
-                PieDataSet pieDataSet = new PieDataSet(pieEntries, "Car Sales");
-                pieDataSet.setValueFormatter(new PieChartValue());
-                pieDataSet.setValueTextColor(Color.BLUE);
-                pieDataSet.setValueTextSize(20);
-                pieDataSet.setSliceSpace(2);
+                    PieDataSet pieDataSet = new PieDataSet(pieEntries, "Car Sales");
+                    pieDataSet.setValueFormatter(new PieChartValue());
+                    pieDataSet.setValueTextColor(Color.BLUE);
+                    pieDataSet.setValueTextSize(20);
+                    pieDataSet.setSliceSpace(2);
 
         /* 使用官訂顏色範本，顏色不能超過5種，否則官定範本要加顏色 */
-                pieDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
-                PieData pieData = new PieData(pieDataSet);
-                Legend legend = pieChartViewHolder.pieChart.getLegend();
-                legend.setEnabled(false);
-                pieChartViewHolder.pieChart.setData(pieData);
-                pieChartViewHolder.pieChart.invalidate();
-            //}
+                    pieDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
+                    PieData pieData = new PieData(pieDataSet);
+                    Legend legend = pieChartViewHolder.pieChart.getLegend();
+                    legend.setEnabled(false);
+                    pieChartViewHolder.pieChart.setData(pieData);
+                    pieChartViewHolder.pieChart.invalidate();
+
 
                     break;
                 default:
@@ -711,7 +709,7 @@ public class Page2 extends Fragment implements View.OnClickListener {
             if (bitmap != null) {
                 imageView.setImageBitmap(bitmap);
             } else {
-           // imageView.setImageResource(R.drawable.ex_photo);
+//            imageView.setImageResource(R.drawable.default_image);
             }
         }
 

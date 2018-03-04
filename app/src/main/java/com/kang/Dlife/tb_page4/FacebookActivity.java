@@ -180,7 +180,7 @@ public class FacebookActivity extends AppCompatActivity {
 
 
                         try {
-                            Thread.sleep(3000);//括号里面的5000代表5000毫秒，也就是5秒，可以该成你需要的时间
+                            Thread.sleep(3500);//括号里面的5000代表5000毫秒，也就是5秒，可以该成你需要的时间
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }

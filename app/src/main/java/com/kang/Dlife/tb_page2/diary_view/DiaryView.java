@@ -81,7 +81,7 @@ public class DiaryView extends AppCompatActivity {
             Common.showToast(this, R.string.msg_NoNewsFound);
         }else {
             categorySum = (CategorySum) bundle.getSerializable("CategorySum");
-
+            Log.d(TAG,""+categorySum);
 
             recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
             recyclerView.setLayoutManager(new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL));
@@ -92,8 +92,37 @@ public class DiaryView extends AppCompatActivity {
 
     }
 
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//
+//        initView();
+//        ibMap = (ImageButton) super.findViewById(R.id.ibMap);
+//        btBack.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                finish();
+//            }
+//        });
+//        Bundle bundle = getIntent().getExtras();
+//
+//        if (bundle==null) {
+//            Common.showToast(this, R.string.msg_NoNewsFound);
+//        }else {
+//            categorySum = (CategorySum) bundle.getSerializable("CategorySum");
+//            Log.d(TAG,""+categorySum);
+//
+//            recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+//            recyclerView.setLayoutManager(new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL));
+//
+//
+//            showAllNews();
+//        }
+//
+//    }
+
     private void initView() {
-        btBack = (ImageButton) super.findViewById(R.id.btBack);
+        btBack = (ImageButton) super.findViewById(R.id.ibBack);
     }
 
 
@@ -401,7 +430,7 @@ public class DiaryView extends AppCompatActivity {
             if (bitmap != null) {
                 imageView.setImageBitmap(bitmap);
             } else {
-//            imageView.setImageResource(R.drawable.default_image);
+//            imageView.setImageResource(R.drawable.ex_photo);
             }
         }
 

@@ -21,25 +21,61 @@
             android:orientation="vertical">
 
             <ImageButton
-                android:id="@+id/btBack"
+                android:id="@+id/ibBack"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="#00000000"
                 android:clickable="true"
                 android:onClick="onBackClick"
                 android:src="@drawable/ic_back" />
+
+
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/textView"
+
+        <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:text="D.life"
-            android:textColor="@color/background_white"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:text="D.life"
+                android:textColor="@color/background_white"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <ImageButton
+                android:id="@+id/ibChat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="64dp"
+                android:layout_marginStart="64dp"
+                android:layout_toEndOf="@+id/textView"
+                android:layout_toRightOf="@+id/textView"
+                android:background="#00000000"
+                android:visibility="invisible"
+                app:srcCompat="@drawable/ic_chat" />
+
+            <ImageButton
+                android:id="@+id/ibBlock"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="12dp"
+                android:layout_marginRight="12dp"
+                android:background="#00000000"
+                android:visibility="invisible"
+                app:srcCompat="@drawable/ic_block_friend" />
+
+        </RelativeLayout>
     </RelativeLayout>
 
     <android.support.v7.widget.RecyclerView

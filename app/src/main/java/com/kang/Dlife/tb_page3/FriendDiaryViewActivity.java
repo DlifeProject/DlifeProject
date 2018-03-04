@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
+import android.media.Image;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -49,6 +50,8 @@ import java.util.List;
 
 public class FriendDiaryViewActivity extends AppCompatActivity {
     private ImageButton btBack;
+    private ImageButton ibChat;
+    private ImageButton ibBlock;
     private final static String TAG = "IgTestRecycler2Activity";
     private RecyclerView recyclerView;
 
@@ -94,7 +97,9 @@ public class FriendDiaryViewActivity extends AppCompatActivity {
     }
 
     private void initView() {
-        btBack = (ImageButton) super.findViewById(R.id.btBack);
+        btBack = (ImageButton) super.findViewById(R.id.ibBack);
+        ibChat=findViewById(R.id.ibChat);
+        ibBlock=findViewById(R.id.ibBlock);
     }
 
 
@@ -400,7 +405,7 @@ public class FriendDiaryViewActivity extends AppCompatActivity {
             if (bitmap != null) {
                 imageView.setImageBitmap(bitmap);
             } else {
-//            imageView.setImageResource(R.drawable.default_image);
+            imageView.setImageResource(R.drawable.ex_photo);
             }
         }
 
