@@ -158,6 +158,33 @@ public class DiaryDetailDao {
 		}
 		return insertCount;
 	}
+	
+	public int upload() {
+		int insertCount = 0;
+		memberSK = diaryDetail.getMember_sk();
+		String sql = "update diary_detail set top_category_sk=?, note=?, post_date=?  where sk=?"; 
+		try {
+			conn = DriverManager.getConnection(Common.DBURL, Common.DBACCOUNT, Common.DBPWD);
+			ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+			ps.setInt(1, diaryDetail.getTop_category_sk());
+			ps.setString(2, diaryDetail.getNote());
+			ps.setString(3, Common.getNowDateTimeString());
+			ps.setInt(4, diaryDetail.getSk());
+			ps.executeUpdate();
+			ResultSet tableKeys = ps.getGeneratedKeys();
+			tableKeys.next();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		close();
+		if (insertCount > 0) {
+			CategoryMatchDao categoryMatchDao = new CategoryMatchDao(memberSK);
+			categoryMatchDao.updateCategoryMatch(getCategoryMatch(Common.CATEGORYMATCHDAY));
+		}
+		return insertCount;
+	}
 
 	public CategorySum getfinalDiary(String categoryType) {
 

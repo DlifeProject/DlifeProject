@@ -221,6 +221,7 @@ public class LocationToDiary implements Serializable {
     public DiaryDetail toDiaryDetail(){
         DiaryDetail diaryDetail = new DiaryDetail();
 
+        diaryDetail.setSk(sk);
         diaryDetail.setMember_sk(member_sk);
         diaryDetail.setTop_category_sk(0);
         diaryDetail.setMember_location_sk(0);

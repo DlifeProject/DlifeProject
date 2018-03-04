@@ -111,7 +111,26 @@ public class diary extends HttpServlet {
 					exeString = "insertPhotoError";
 				}
 
-			} else if (action.equals("getDiary")) {
+			} else if (action.equals("uploadDiary")){
+				
+				String categoryType = jsonObject.get("uploadCategoryType").getAsString();
+				System.out.println("Start upload !! ");
+				String diaryString = jsonObject.get("uploadDiaryDetail").getAsString();
+				DiaryDetail diaryDetail = new DiaryDetail();
+				diaryDetail = gson.fromJson(diaryString, DiaryDetail.class);
+				diaryDetail.setMember_sk(memberSK);
+				
+				CategoryDao categoryDao = new CategoryDao();
+				int categorySK = categoryDao.getCategory_sk(categoryType);
+				diaryDetail.setTop_category_sk(categorySK);
+
+				DiaryDetailDao diaryDetailDao = new DiaryDetailDao(diaryDetail);
+				insertCount = diaryDetailDao.upload();
+				
+				
+				
+				
+			}else if (action.equals("getDiary")) {
 
 				System.out.println("Start getDiary!! ");
 				String categoryType = jsonObject.get("categoryType").getAsString();

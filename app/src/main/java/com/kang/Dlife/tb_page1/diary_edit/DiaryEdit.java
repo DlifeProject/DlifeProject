@@ -283,67 +283,95 @@ public class DiaryEdit extends Activity {
                     return;
                 }
 
-                DiaryEditSpot spot = new DiaryEditSpot(diary, category_select, longitude, latitude);
-                JsonObject jsonObject = new JsonObject();
-                jsonObject.addProperty("action", "insertDiary");
-                jsonObject.addProperty("account", Common.getAccount(DiaryEdit.this));
-                jsonObject.addProperty("password", Common.getPWD(DiaryEdit.this));
-                jsonObject.addProperty("categoryType", category_select);
-                bundleP.setNote(diary);
-                jsonObject.addProperty("diaryDetail", new Gson().toJson(bundleP.toDiaryDetail()));
+                if (bundleP.getStartLocationSK() != 0) {
+                    DiaryEditSpot spot = new DiaryEditSpot(diary, category_select, longitude, latitude);
+                    JsonObject jsonObject = new JsonObject();
+                    jsonObject.addProperty("action", "insertDiary");
+                    jsonObject.addProperty("account", Common.getAccount(DiaryEdit.this));
+                    jsonObject.addProperty("password", Common.getPWD(DiaryEdit.this));
+                    jsonObject.addProperty("categoryType", category_select);
+                    bundleP.setNote(diary);
+                    jsonObject.addProperty("diaryDetail", new Gson().toJson(bundleP.toDiaryDetail()));
 
-                int insterCount = 0;
-                if (networkConnected()) {
-                    String url = Common.URL + Common.WEBDIARY;
-                    MyTask myTask = new MyTask(url, jsonObject.toString());
-                    try {
-                        String inStr = myTask.execute().get().trim();
-                        insterCount = Integer.valueOf(inStr);
-                        if (insterCount == 0) {
+                    int insterCount = 0;
+                    if (networkConnected()) {
+                        String url = Common.URL + Common.WEBDIARY;
+                        MyTask myTask = new MyTask(url, jsonObject.toString());
+                        try {
+                            String inStr = myTask.execute().get().trim();
+                            insterCount = Integer.valueOf(inStr);
+                            if (insterCount == 0) {
 
-                        } else {
+                            } else {
 
+                            }
+                        } catch (Exception e) {
+                            Log.e(TAG, e.toString());
                         }
-                    } catch (Exception e) {
-                        Log.e(TAG, e.toString());
                     }
-                }
-                // 上傳多張圖片
-                path.size();
-                path.size();
-                if (path.size() > 0 && insterCount > 0) {
-                    for (int i = 0; i < path.size(); i++) {
-                        Bitmap picture = BitmapFactory.decodeFile(path.get(i));
-                        Bitmap downsizedImage = Common.downSize(picture, 350);
+                    // 上傳多張圖片
+                    path.size();
+                    if (path.size() > 0 && insterCount > 0) {
+                        for (int i = 0; i < path.size(); i++) {
+                            Bitmap picture = BitmapFactory.decodeFile(path.get(i));
+                            Bitmap downsizedImage = Common.downSize(picture, 350);
 
-                        byte[] image = Common.bitmapToPNG(downsizedImage);
-                        JsonObject jsonObject1 = new JsonObject();
-                        jsonObject1.addProperty("action", "insertDiaryPhoto");
-                        jsonObject1.addProperty("account", Common.getAccount(DiaryEdit.this));
-                        jsonObject1.addProperty("password", Common.getPWD(DiaryEdit.this));
-                        jsonObject1.addProperty("diaryDetailSK", insterCount);
-                        jsonObject1.addProperty("imageBase64", Base64.encodeToString(image, Base64.DEFAULT));
+                            byte[] image = Common.bitmapToPNG(downsizedImage);
+                            JsonObject jsonObject1 = new JsonObject();
+                            jsonObject1.addProperty("action", "insertDiaryPhoto");
+                            jsonObject1.addProperty("account", Common.getAccount(DiaryEdit.this));
+                            jsonObject1.addProperty("password", Common.getPWD(DiaryEdit.this));
+                            jsonObject1.addProperty("diaryDetailSK", insterCount);
+                            jsonObject1.addProperty("imageBase64", Base64.encodeToString(image, Base64.DEFAULT));
 
-                        if (networkConnected()) {
-                            String url = Common.URL + Common.WEBDIARY;
-                            MyTask myTask = new MyTask(url, jsonObject1.toString());
-                            try {
-                                String inStr = myTask.execute().get().trim();
-                                int count = Integer.valueOf(inStr);
-                                if (count == 0) {
+                            if (networkConnected()) {
+                                String url = Common.URL + Common.WEBDIARY;
+                                MyTask myTask = new MyTask(url, jsonObject1.toString());
+                                try {
+                                    String inStr = myTask.execute().get().trim();
+                                    int count = Integer.valueOf(inStr);
+                                    if (count == 0) {
 
-                                } else {
+                                    } else {
 
+                                    }
+                                } catch (Exception e) {
+                                    Log.e(TAG, e.toString());
                                 }
-                            } catch (Exception e) {
-                                Log.e(TAG, e.toString());
                             }
                         }
                     }
+                    LocationDao locationDao = new LocationDao(DiaryEdit.this);
+                    locationDao.deleteById(bundleP.getStartLocationSK(), bundleP.getEndLocationSK());
+                    finish();
+                } else {
+                    DiaryEditSpot spot = new DiaryEditSpot(diary, category_select, longitude, latitude);
+                    JsonObject jsonObject = new JsonObject();
+                    jsonObject.addProperty("action", "uploadDiary");
+                    jsonObject.addProperty("account", Common.getAccount(DiaryEdit.this));
+                    jsonObject.addProperty("password", Common.getPWD(DiaryEdit.this));
+                    jsonObject.addProperty("uploadCategoryType", category_select);
+                    bundleP.setNote(diary);
+                    jsonObject.addProperty("uploadDiaryDetail", new Gson().toJson(bundleP.toDiaryDetail()));
+
+                    int insterCount = 0;
+                    if (networkConnected()) {
+                        String url = Common.URL + Common.WEBDIARY;
+                        MyTask myTask = new MyTask(url, jsonObject.toString());
+                        try {
+                            String inStr = myTask.execute().get().trim();
+                            insterCount = Integer.valueOf(inStr);
+                            if (insterCount == 0) {
+
+                            } else {
+
+                            }
+                        } catch (Exception e) {
+                            Log.e(TAG, e.toString());
+                        }
+                    }
+                    finish();
                 }
-                LocationDao locationDao = new LocationDao(DiaryEdit.this);
-                locationDao.deleteById(bundleP.getStartLocationSK(), bundleP.getEndLocationSK());
-                finish();
 
             }
         });
