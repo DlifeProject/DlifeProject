@@ -1,5 +1,6 @@
 package com.kang.Dlife.tb_page3;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,24 +16,82 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 import com.kang.Dlife.Common;
 import com.kang.Dlife.R;
-import com.kang.Dlife.data_base.MemberShareRelation;
 import com.kang.Dlife.sever.MyTask;
 
-import java.util.ArrayList;
+import java.lang.reflect.Type;
 import java.util.List;
 
 public class Page3 extends Fragment {
 
-    ArrayList<MemberShareRelation> memberShareRelationList = new ArrayList<MemberShareRelation>();
-    int memberShareRelationShowIndex = 0;
+    private TextView tvNewFriendName;
+    private TextView tvFriendShareCategory;
+    private TextView tvMyShareCategory;
+
+    private final static String TAG = "Page3";
+    public List<MatchFriendItem> matchFriendItemList;
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        View view = inflater.inflate(R.layout.page3, container, false);
+
+        //init memberShareRelationList
+        setMemberShareRelationList(getActivity());
+
+        //我加了切換activity的button
+        ImageButton addExchange=view.findViewById(R.id.addExchange);
+        addExchange.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent();
+                intent.setClass(getActivity()  , ExchangeActivity.class);
+                startActivity(intent);
+            }
+        });
+
+
+        //init the latest friend
+        tvNewFriendName = (TextView) view.findViewById(R.id.tvNewFriendName);
+        tvMyShareCategory = (TextView) view.findViewById(R.id.tvMyShareCategory);
+        tvFriendShareCategory = (TextView) view.findViewById(R.id.tvFriendShareCategory);
+
+
+        if(matchFriendItemList.size() == 0 || matchFriendItemList.isEmpty()){
+            tvNewFriendName.setText("Get a friend");
+            tvMyShareCategory.setText("?");
+            tvFriendShareCategory.setText("?");
+        }else{
+
+            tvNewFriendName.setText(matchFriendItemList.get(0).getMyFriendName());
+            tvNewFriendName.setOnClickListener(new FriendDiaryListener(getActivity(),matchFriendItemList.get(0)));
+            tvMyShareCategory.setText(matchFriendItemList.get(0).getMyCategory().substring(0,1));
+            tvFriendShareCategory.setText(matchFriendItemList.get(0).getMyFriendCategory().substring(0,1));
+        }
+
+
+        //init friend list
+        RecyclerView rvFriendlist = (RecyclerView) view.findViewById(R.id.rvFriendlist);
+        rvFriendlist.setLayoutManager(
+                new StaggeredGridLayoutManager(
+                        // spanCount(列數 or 行數), HORIZONTAL -> 水平, VERTICAL -> 垂直
+                        1, StaggeredGridLayoutManager.VERTICAL));
+        final List<MatchFriendItem> friendSpots = getMatchSpots();
+        rvFriendlist.setAdapter(new MatchAdapter(getActivity(), friendSpots));
+
+        return view;
+
+    }
 
     private void setMemberShareRelationList(FragmentActivity activity) {
 
         JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("action", "getFriendlist");
+        jsonObject.addProperty("action", "getFriendList");
         jsonObject.addProperty("account", Common.getAccount(getActivity()));
         jsonObject.addProperty("password", Common.getPWD(getActivity()));
         String url = Common.URL + Common.FRIEND;
@@ -46,52 +105,19 @@ public class Page3 extends Fragment {
         }
         if(inStr.isEmpty() == false && !inStr.equals("")){
 
+            Gson gson = new Gson();
+            JsonObject friendListJsonObject = gson.fromJson(inStr, JsonObject.class);
+            String friendListString =  friendListJsonObject.get("friendList").getAsString();
+            JsonArray friendListArray = gson.fromJson(friendListString, JsonArray.class);
+
+            Type tempFriendList = new TypeToken<List<MatchFriendItem>>() {}.getType();
+            matchFriendItemList = new Gson().fromJson(friendListArray, tempFriendList);
+
         }
 
-
     }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-        View view = inflater.inflate(R.layout.page3, container, false);
-
-        //我加了切換activity的button
-        ImageButton addExchange=view.findViewById(R.id.addExchange);
-        addExchange.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent();
-                intent.setClass(getActivity()  , ExchangeActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        //init memberShareRelationList
-        setMemberShareRelationList(getActivity());
-
-        //
-        RecyclerView rvFriendlist = (RecyclerView) view.findViewById(R.id.rvFriendlist);
-        rvFriendlist.setLayoutManager(
-                new StaggeredGridLayoutManager(
-                        // spanCount(列數 or 行數), HORIZONTAL -> 水平, VERTICAL -> 垂直
-                        1, StaggeredGridLayoutManager.VERTICAL));
-        final List<MatchFriendItem> friendSpots = getMatchSpots();
-        rvFriendlist.setAdapter(new MatchAdapter(getActivity(), friendSpots));
-
-        return view;
-
-    }
-
-
     private List<MatchFriendItem> getMatchSpots() {
-        List<MatchFriendItem> matchFriendItems = new ArrayList<>();
-
-        matchFriendItems.add(new MatchFriendItem("H","S","cow"));
-        matchFriendItems.add(new MatchFriendItem("R","S","bay"));
-        matchFriendItems.add(new MatchFriendItem("S","S","la"));
-
-        return matchFriendItems;
+        return matchFriendItemList;
     }
 
     private class MatchAdapter extends
@@ -114,24 +140,28 @@ public class Page3 extends Fragment {
 
         @Override
         public void onBindViewHolder(MyViewHolder viewHolder, int position) {
+
+            position = position + 1;
+
             final MatchFriendItem matchFriendItem = matchFriendItems.get(position);
 
-            viewHolder.tvMyCategory.setText(matchFriendItem.getMyCategory());
+            viewHolder.tvMyCategory.setText(matchFriendItem.getMyCategory().substring(0,1));
             viewHolder.tvMyFriendName.setText(matchFriendItem.getMyFriendName());
-            viewHolder.tvMyFriendCategory.setText(matchFriendItem.getMyFriendCategory());
-
-            viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Common.showToast(context,"hi");
-                }
-            });
-
+            viewHolder.tvMyFriendName.setOnClickListener(new FriendDiaryListener(getActivity(),matchFriendItem));
+            viewHolder.tvMyFriendCategory.setText(matchFriendItem.getMyFriendCategory().substring(0,1));
 
         }
 
         @Override
-        public int getItemCount() { return matchFriendItems.size(); }
+        public int getItemCount() {
+
+            int itemCount = matchFriendItems.size();
+            if(itemCount >= 1){
+                itemCount = itemCount - 1;
+            }
+
+            return itemCount;
+        }
 
 
         public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -148,6 +178,32 @@ public class Page3 extends Fragment {
                 tvMyFriendName = itemView.findViewById(R.id.tvMyFriendName);
                 tvMyFriendCategory = itemView.findViewById(R.id.tvMyFriendCategory);
             }
+        }
+    }
+
+    class FriendDiaryListener implements View.OnClickListener {
+
+        private Activity activity;
+        private MatchFriendItem matchFriendItem;
+
+        public FriendDiaryListener(Activity activity, MatchFriendItem matchFriendItem) {
+            super();
+            this.activity = activity;
+            this.matchFriendItem = matchFriendItem;
+        }
+
+        @Override
+        public void onClick(View v) {
+
+            Intent intent = new Intent();
+            intent.setClass(activity, FriendDiaryViewActivity.class);
+            Bundle bundle = new Bundle();
+
+            bundle.putSerializable("MatchFriendItem", matchFriendItem);
+            bundle.putString("fromPage","page3");
+            intent.putExtras(bundle);
+            startActivity(intent);
+
         }
     }
 

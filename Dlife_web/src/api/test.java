@@ -29,19 +29,6 @@ public class test extends HttpServlet{
 		request.setCharacterEncoding("utf-8");
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 		
-		String datetime = String.valueOf(System.currentTimeMillis());
-		response.getWriter().append(datetime + "<br>");
-		//do getdiary
-		
-		GoogleMapPlace googleMapPlace = new GoogleMapPlace(25.0487345,121.51423060000002);
-		String json = googleMapPlace.getLocationJson();
-		
-		System.out.println(json);
-		googleMapPlace.parserJson();
-		
-		ArrayList<GoogleNearbyItem> nearbyList = googleMapPlace.getNearbyItemList();
-		
-		System.out.println(googleMapPlace.getNearbyItemJson());
 			
 	}
 

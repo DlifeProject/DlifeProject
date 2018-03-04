@@ -279,11 +279,19 @@ public class DiaryDetailDao {
 		close();
 		return ltDiaryDetail;
 	}
+	
+	public List<DiaryDetail> getDiaryByCategoryTypeBySK(int categorySK) {
+		CategoryDao categoryDao = new CategoryDao();
+		List<DiaryDetail> ltDiaryDetail = getDiaryByCategoryType(categoryDao.getCategoryType(categorySK));
+		return ltDiaryDetail;
+	}
 
 	public List<DiaryDetail> getDiaryByCategoryType(String categoryType) {
 
 		List<DiaryDetail> ltDiaryDetail = new ArrayList<DiaryDetail>();
-
+		
+		System.out.println(categoryType);
+		
 		int top_category_sk = 0;
 		ResultSet rs = null;
 		if (categoryType.equals("nonCategory")) {
@@ -294,6 +302,7 @@ public class DiaryDetailDao {
 					+ " from diary_detail" 
 					+ " where member_sk = ? "
 					+ " order by sk desc limit 5";
+			
 			try {
 				conn = DriverManager.getConnection(Common.DBURL, Common.DBACCOUNT, Common.DBPWD);
 				ps = conn.prepareStatement(sql);

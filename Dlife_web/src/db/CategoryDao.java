@@ -3,19 +3,21 @@ package db;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
-import com.mysql.jdbc.Connection;
-import com.mysql.jdbc.PreparedStatement;
-import com.mysql.jdbc.Statement;
+import java.sql.Statement;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 
 import api.CategorySum;
+import api.MatchFriendItem;
 import system.Common;
+import java.util.Hashtable;
 
 public class CategoryDao {
 	public int memberSK;
 	Category category;
 	Connection conn = null;
 	PreparedStatement ps = null;	
+	
 
 	public CategoryDao() {
 		super();
@@ -57,9 +59,9 @@ public class CategoryDao {
 				+ " ?,?,?,?,?,"
 				+ " ?,?,?)";
 		try {
-			conn = (Connection) DriverManager.getConnection(Common.DBURL, Common.DBACCOUNT,
+			conn = DriverManager.getConnection(Common.DBURL, Common.DBACCOUNT,
 					Common.DBPWD);
-			ps = (PreparedStatement) conn.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
+			ps =  conn.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
 			ps.setInt(1, category.getMember_sk());
 			ps.setString(2, category.getTag_title());
 			ps.setString(3, category.getCategory_type());
@@ -76,6 +78,30 @@ public class CategoryDao {
 		close();
 		return insertCount;
 	}
+
+	public String getCategoryType(int sk) {
+		String sql = " select category_type from category"
+				   + " where sk = ?"
+				   + " and is_default = 1"
+				   + " and is_useful = 1"
+				   + " and is_top_category = 1"
+				   + " and is_shareable = 1";
+		String category_type = "";
+		try {
+			conn = (Connection) DriverManager.getConnection(Common.DBURL, Common.DBACCOUNT,
+					Common.DBPWD);
+			ps = (PreparedStatement) conn.prepareStatement(sql);
+			ps.setInt(1, sk);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				category_type = rs.getString("category_type");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		close();
+		return category_type;	
+	}	
 	
 	public int getCategory_sk(String category_type) {
 		String sql = " select sk from category"
@@ -118,6 +144,32 @@ public class CategoryDao {
 		categorySum.setSeven_day(new DiaryDetailDao(memberSK).getDayDiaryCategotyCount(7,top_category_sk));
 				
 		return categorySum;
+	}
+	
+	public Hashtable<Integer,String> getTopCategoryHash(){
+		
+		Hashtable<Integer,String> topCategoryHash = new Hashtable<Integer,String>();
+		
+		String sql = " select "
+				   + " sk, category_type"
+				   + " from category"
+				   + " where is_top_category = 1";
+				   
+		try {
+			conn = DriverManager.getConnection(Common.DBURL, Common.DBACCOUNT, Common.DBPWD);
+			ps = conn.prepareStatement(sql);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				topCategoryHash.put(rs.getInt("sk"), rs.getString("category_type"));
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		close();
+		return topCategoryHash;
 	}
 
 }

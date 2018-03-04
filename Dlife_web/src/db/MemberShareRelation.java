@@ -4,7 +4,7 @@ public class MemberShareRelation {
 	private int from_member_sk;
 	private int to_member_sk;
 	private int category_sk;
-	private String is_shareable;
+	private int is_shareable;
 	private String post_day;
 	private String post_date;
 	
@@ -12,7 +12,7 @@ public class MemberShareRelation {
 		super();
 	}
 
-	public MemberShareRelation(int sk, int from_member_sk, int to_member_sk, int category_sk, String is_shareable,
+	public MemberShareRelation(int sk, int from_member_sk, int to_member_sk, int category_sk, int is_shareable,
 			String post_day, String post_date) {
 		super();
 		this.sk = sk;
@@ -57,11 +57,11 @@ public class MemberShareRelation {
 		this.category_sk = category_sk;
 	}
 
-	public String getIs_shareable() {
+	public int getIs_shareable() {
 		return is_shareable;
 	}
 
-	public void setIs_shareable(String is_shareable) {
+	public void setIs_shareable(int is_shareable) {
 		this.is_shareable = is_shareable;
 	}
 

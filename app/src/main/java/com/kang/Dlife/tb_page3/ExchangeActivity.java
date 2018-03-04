@@ -31,7 +31,7 @@ public class ExchangeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.page3_friend_exchange);
+        setContentView(R.layout.page3_friend_exchange_old);
         initView();
         showView();
 

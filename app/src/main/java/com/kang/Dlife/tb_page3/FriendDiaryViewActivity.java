@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
-import android.media.Image;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -44,90 +43,99 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Created by weisunquan on 2018/2/1.
- */
-
 public class FriendDiaryViewActivity extends AppCompatActivity {
-    private ImageButton btBack;
-    private ImageButton ibChat;
-    private ImageButton ibBlock;
-    private final static String TAG = "IgTestRecycler2Activity";
-    private RecyclerView recyclerView;
 
+
+    //Regan add
+    private final static String TAG = "FriendDiaryViewActivity";
+    public Bundle bundle;
+    private MatchFriendItem matchFriendItem;
+    private String fromPage;
+    private TextView headerTitle;
+
+
+    private ImageButton ibBack;
+    private RecyclerView recyclerView;
     private MyTask newsGetAllTask;
     private SpotGetImageTask spotGetImageTask;
     List<LocationToDiary> igList;
 
-
-    private ImageButton ibMap;
     private double longitude;
     private double latitude;
 
-    public CategorySum categorySum;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.page2_diary_view);
 
-        initView();
-        ibMap = (ImageButton) super.findViewById(R.id.ibMap);
-        btBack.setOnClickListener(new View.OnClickListener() {
+        bundle = getIntent().getExtras();
+        headerTitle = (TextView) findViewById(R.id.textView);
+        matchFriendItem = (MatchFriendItem) bundle.getSerializable("MatchFriendItem");
+        fromPage = bundle.getString("fromPage");
+        if(fromPage.equals("page3")){
+            // open header button
+            headerTitle.setText(matchFriendItem.getMyFriendName());
+
+
+        }else{
+            // hidden header button
+            headerTitle.setText("------");
+        }
+        ibBack = (ImageButton) super.findViewById(R.id.ibBack);
+        ibBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();
             }
         });
-        Bundle bundle = getIntent().getExtras();
 
-        if (bundle==null) {
-            Common.showToast(this, R.string.msg_NoNewsFound);
+
+        if (matchFriendItem==null) {
+            Common.showToast(this, R.string.msg_NoThisFriend);
         }else {
-            categorySum = (CategorySum) bundle.getSerializable("CategorySum");
-
 
             recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
             recyclerView.setLayoutManager(new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL));
-
-
             showAllNews();
         }
 
     }
 
-    private void initView() {
-        btBack = (ImageButton) super.findViewById(R.id.ibBack);
-        ibChat=findViewById(R.id.ibChat);
-        ibBlock=findViewById(R.id.ibBlock);
-    }
-
 
     private void showAllNews() {
 
-        if (networkConnected()) {
+        if (Common.checkNetConnected(this)) {
             String url = "";
             List<LocationToDiary> ltJson = null;
             try {
 
                 JsonObject jsonObject = new JsonObject();
-                jsonObject.addProperty("action", "getDiary");
+                jsonObject.addProperty("action", "getFriendDiary");
                 jsonObject.addProperty("account", Common.getAccount(FriendDiaryViewActivity.this));
                 jsonObject.addProperty("password", Common.getPWD(FriendDiaryViewActivity.this));
-                jsonObject.addProperty("categoryType", categorySum.getCategoryType());
+                jsonObject.addProperty("MyFriendSK", matchFriendItem.getMyFriendSK());
+                jsonObject.addProperty("MyFriendCategorySK", matchFriendItem.getMyFriendCategorySK());
                 String jsonOut = jsonObject.toString();
 
-                url = Common.URL + Common.WEBDIARY;
+                url = Common.URL + Common.FRIEND;
                 MyTask getDiaryTask = new MyTask(url, jsonOut);
-                String getDiaryJsonIn = getDiaryTask.execute().get();
+                String getDiaryJsonIn = getDiaryTask.execute().get().trim();
 
-                Gson gson = new Gson();
-                JsonObject diaryInJsonObject = gson.fromJson(getDiaryJsonIn, JsonObject.class);
-                String ltDiaryDetailString = diaryInJsonObject.get("getDiary").getAsString();
+                if(getDiaryJsonIn.equals("getfriendDiaryError")){
+                    Common.showToast(this, R.string.msg_FriendHasNoDiary);
+                }else{
+                    Gson gson = new Gson();
+                    JsonObject diaryInJsonObject = gson.fromJson(getDiaryJsonIn, JsonObject.class);
+                    String ltDiaryDetailString = diaryInJsonObject.get("getFriendDiary").getAsString();
 
-                Type tySum = new TypeToken<List<LocationToDiary>>() {
-                }.getType();
-                igList = new Gson().fromJson(ltDiaryDetailString, tySum);
+                    Type friendDiary = new TypeToken<List<LocationToDiary>>() { }.getType();
+                    igList = new Gson().fromJson(ltDiaryDetailString, friendDiary);
+
+
+                }
+
+
 
             } catch (Exception e) {
                 Log.e(TAG, e.toString());
@@ -135,7 +143,7 @@ public class FriendDiaryViewActivity extends AppCompatActivity {
 
 
             if (igList == null || igList.isEmpty()) {
-                Common.showToast(this, R.string.msg_NoNewsFound);
+                Common.showToast(this, R.string.msg_FriendHasNoDiary);
             } else {
                 recyclerView.setAdapter(new IgAdapter(this, igList));
             }
@@ -144,22 +152,9 @@ public class FriendDiaryViewActivity extends AppCompatActivity {
         }
     }
 
-    //檢察網路
-    private boolean networkConnected() {
-        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
-        if (connectivityManager != null) {
-            NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-            //這邊會提醒你有沒有加permission
-            return networkInfo.isConnected();
-        } else {
-            return false;
-        }
-    }
-
 
     //  供內部使用 所以可以包來包去 因為已經是private 了所以裡面的不用寫
-    private class IgAdapter extends
-            RecyclerView.Adapter<IgAdapter.MyViewHolder> {
+    private class IgAdapter extends RecyclerView.Adapter<IgAdapter.MyViewHolder> {
 
         private Context context;
         private List<LocationToDiary> igList;
@@ -213,7 +208,7 @@ public class FriendDiaryViewActivity extends AppCompatActivity {
 
             List<PhotoSpot> photoSpotList = null;
 
-            if (networkConnected()) {
+            if (Common.checkNetConnected(context)) {
                 String url = Common.URL + Common.WEBPHOTO;
 
                 try {
@@ -405,7 +400,7 @@ public class FriendDiaryViewActivity extends AppCompatActivity {
             if (bitmap != null) {
                 imageView.setImageBitmap(bitmap);
             } else {
-            imageView.setImageResource(R.drawable.ex_photo);
+//            imageView.setImageResource(R.drawable.default_image);
             }
         }
 
