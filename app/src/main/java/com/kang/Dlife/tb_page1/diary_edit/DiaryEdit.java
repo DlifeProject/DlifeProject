@@ -99,7 +99,7 @@ public class DiaryEdit extends Activity {
     public Hashtable<Integer, LocationToDiary> bundleHash = new Hashtable<Integer, LocationToDiary>();
     private static SpotGetImageTask spotGetImageTask;
     private List<GoogleNearbyItem> nearbyItem;
-
+    private int selectNearBy;
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -144,7 +144,7 @@ public class DiaryEdit extends Activity {
             }
         });
 
-        // 傳latitude, longitude , 取得鄰近地標
+        // 取得latitude, longitude , 取得鄰近地標
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("action", "nearby");
         jsonObject.addProperty("account", Common.getAccount(DiaryEdit.this));
@@ -194,10 +194,12 @@ public class DiaryEdit extends Activity {
         locationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                selectNearBy = position;
                 bundleQ = new ArrayList<Object>();
                 bundleQ.add(nearbyItem.get(position).getLatitude());
                 bundleQ.add(nearbyItem.get(position).getLongitude());
                 bundleQ.add(nearbyItem.get(position).getName());
+                bundleQ.add(nearbyItem.get(position).getPlaceID());
             }
 
             @Override
@@ -283,7 +285,10 @@ public class DiaryEdit extends Activity {
                     return;
                 }
 
+
                 if (bundleP.getStartLocationSK() != 0) {
+
+                    // 上傳SQLite的日記
                     DiaryEditSpot spot = new DiaryEditSpot(diary, category_select, longitude, latitude);
                     JsonObject jsonObject = new JsonObject();
                     jsonObject.addProperty("action", "insertDiary");
@@ -309,8 +314,33 @@ public class DiaryEdit extends Activity {
                             Log.e(TAG, e.toString());
                         }
                     }
+
+                    // 上傳地標訊息
+                    JsonObject nearByJsonObject = new JsonObject();
+                    nearByJsonObject.addProperty("action", "nearBySelect");
+                    nearByJsonObject.addProperty("account", Common.getAccount(DiaryEdit.this));
+                    nearByJsonObject.addProperty("password", Common.getPWD(DiaryEdit.this));
+                    nearByJsonObject.addProperty("nearBy", new Gson().toJson(nearbyItem.get(selectNearBy)));
+
+                    if (networkConnected()) {
+                        String url = Common.URL + Common.MAPAPI;
+                        MyTask myTask = new MyTask(url, nearByJsonObject.toString());
+                        try {
+                            String inStr = myTask.execute().get().trim();
+                            insterCount = Integer.valueOf(inStr);
+                            if (insterCount == 0) {
+
+                            } else {
+
+                            }
+                        } catch (Exception e) {
+                            Log.e(TAG, e.toString());
+                        }
+                    }
+
+
+
                     // 上傳多張圖片
-                    path.size();
                     if (path.size() > 0 && insterCount > 0) {
                         for (int i = 0; i < path.size(); i++) {
                             Bitmap picture = BitmapFactory.decodeFile(path.get(i));
@@ -345,6 +375,8 @@ public class DiaryEdit extends Activity {
                     locationDao.deleteById(bundleP.getStartLocationSK(), bundleP.getEndLocationSK());
                     finish();
                 } else {
+
+                    //更新日記
                     DiaryEditSpot spot = new DiaryEditSpot(diary, category_select, longitude, latitude);
                     JsonObject jsonObject = new JsonObject();
                     jsonObject.addProperty("action", "uploadDiary");
@@ -368,6 +400,61 @@ public class DiaryEdit extends Activity {
                             }
                         } catch (Exception e) {
                             Log.e(TAG, e.toString());
+                        }
+                    }
+
+                    // 上傳新選的地標訊息
+                    JsonObject nearByJsonObject = new JsonObject();
+                    nearByJsonObject.addProperty("action", "uploadNearBySelect");
+                    nearByJsonObject.addProperty("account", Common.getAccount(DiaryEdit.this));
+                    nearByJsonObject.addProperty("password", Common.getPWD(DiaryEdit.this));
+                    nearByJsonObject.addProperty("nearBy", new Gson().toJson(nearbyItem.get(selectNearBy)));
+
+                    if (networkConnected()) {
+                        String url = Common.URL + Common.MAPAPI;
+                        MyTask myTask = new MyTask(url, nearByJsonObject.toString());
+                        try {
+                            String inStr = myTask.execute().get().trim();
+                            insterCount = Integer.valueOf(inStr);
+                            if (insterCount == 0) {
+
+                            } else {
+
+                            }
+                        } catch (Exception e) {
+                            Log.e(TAG, e.toString());
+                        }
+                    }
+
+                    // 上傳新選的圖片
+                    if (path.size() > 0) {
+                        for (int i = 0; i < path.size(); i++) {
+                            Bitmap picture = BitmapFactory.decodeFile(path.get(i));
+                            Bitmap downsizedImage = Common.downSize(picture, 350);
+
+                            byte[] image = Common.bitmapToPNG(downsizedImage);
+                            JsonObject jsonObject1 = new JsonObject();
+                            jsonObject1.addProperty("action", "insertDiaryPhoto");
+                            jsonObject1.addProperty("account", Common.getAccount(DiaryEdit.this));
+                            jsonObject1.addProperty("password", Common.getPWD(DiaryEdit.this));
+                            jsonObject1.addProperty("diaryDetailSK", bundleP.getSk());
+                            jsonObject1.addProperty("imageBase64", Base64.encodeToString(image, Base64.DEFAULT));
+
+                            if (networkConnected()) {
+                                String url = Common.URL + Common.WEBDIARY;
+                                MyTask myTask = new MyTask(url, jsonObject1.toString());
+                                try {
+                                    String inStr = myTask.execute().get().trim();
+                                    int count = Integer.valueOf(inStr);
+                                    if (count == 0) {
+
+                                    } else {
+
+                                    }
+                                } catch (Exception e) {
+                                    Log.e(TAG, e.toString());
+                                }
+                            }
                         }
                     }
                     finish();

@@ -47,7 +47,6 @@ public class Common {
     public final static String FRIEND = "friend";
 
 
-
     public static String getAccount(Context c){
         String account = getPrefferencesData(c, PREFFERENCES_USER_ACCOUNT);
         return account;

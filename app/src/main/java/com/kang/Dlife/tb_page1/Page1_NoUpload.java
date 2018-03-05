@@ -61,6 +61,7 @@ public class Page1_NoUpload extends Fragment {
     private MyTask getAllDiaryTask;
     private List<LocationToDiary> allDiaryList;
     private ImageView ivNoDiary;
+    private int recyclerClick;
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable final Bundle savedInstanceState) {
         //因為有宣告view, 所以之後可以在這頁裡面找下面之後要用到的id
@@ -82,6 +83,11 @@ public class Page1_NoUpload extends Fragment {
             ivNoDiary.setVisibility(View.VISIBLE);
         }
         rvDiary.setAdapter(new DiaryAdapter(getActivity(), SQLiteDiary));
+        if (recyclerClick == 0){
+            rvDiary.scrollToPosition(recyclerClick);
+        } else {
+            rvDiary.scrollToPosition(recyclerClick - 1);
+        }
     }
     private class DiaryAdapter extends
             RecyclerView.Adapter<DiaryAdapter.MyViewHolder> {
@@ -164,6 +170,7 @@ public class Page1_NoUpload extends Fragment {
                     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
                     @Override
                     public void onClick(View view) {
+                        recyclerClick = position;
                         Intent intent = new Intent();
                         intent.setClass(getActivity(), DiaryEdit.class);
                         LocationToDiary bundleP = new LocationToDiary(bundleHash.get((int) view.getTag()));

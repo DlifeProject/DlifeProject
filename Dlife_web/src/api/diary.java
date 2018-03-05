@@ -112,7 +112,7 @@ public class diary extends HttpServlet {
 				}
 
 			} else if (action.equals("uploadDiary")){
-				
+				//
 				String categoryType = jsonObject.get("uploadCategoryType").getAsString();
 				System.out.println("Start upload !! ");
 				String diaryString = jsonObject.get("uploadDiaryDetail").getAsString();

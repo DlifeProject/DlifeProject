@@ -20,12 +20,16 @@ import android.support.v7.widget.PagerSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.google.gson.Gson;
@@ -64,12 +68,14 @@ public class Page1_AlreadyUpload extends Fragment {
     private MyTask newsGetAllTask;
     private ImageView ivNoUploadDiary;
     private ArrayList<Integer> photoSK;
+    private int recyclerClick;
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable final Bundle savedInstanceState) {
         //因為有宣告view, 所以之後可以在這頁裡面找下面之後要用到的id
         View view = inflater.inflate(R.layout.page1_already_upload, container, false);
         rvDiary = (RecyclerView) view.findViewById(R.id.diarylist);
         ivNoUploadDiary = view.findViewById(R.id.ivNoUploadDiary);
+
         return view;
     }
 
@@ -87,6 +93,11 @@ public class Page1_AlreadyUpload extends Fragment {
             rvDiary.setAdapter(new DiaryAdapter(getActivity(), allDiaryList));
         } else {
             ivNoUploadDiary.setVisibility(View.VISIBLE);
+        }
+        if (recyclerClick == 0){
+            rvDiary.scrollToPosition(recyclerClick);
+        } else {
+            rvDiary.scrollToPosition(recyclerClick - 1);
         }
     }
 
@@ -218,6 +229,7 @@ public class Page1_AlreadyUpload extends Fragment {
                     int id = photoSpot.getSk();
                     photoSK.add(id);
                     }
+                    recyclerClick = position;
                     Intent intent = new Intent();
                     intent.setClass(getActivity(), DiaryEdit.class);
                     LocationToDiary bundleP = new LocationToDiary(bundleHash.get((int) view.getTag()));
@@ -226,6 +238,36 @@ public class Page1_AlreadyUpload extends Fragment {
                     bundle.putIntegerArrayList("Page1Photo", photoSK);
                     intent.putExtras(bundle);
                     startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(getActivity(), viewHolder.itemView, "shareNames").toBundle());
+                }
+            });
+            // 長按監聽
+            viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+                @Override
+                public boolean onLongClick(View v) {
+                    PopupMenu popupMenu = new PopupMenu(getActivity(), v, Gravity.END);
+                    // 彈出視窗
+                    popupMenu.inflate(R.menu.popup_menu);
+                    // 彈出視窗的點擊監聽器
+                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+
+                            Toast.makeText(getActivity(), Common.dateStringToDay(diaryDetailWeb.getEnd_date())
+                                            + " " + Common.dateStringToHM(diaryDetailWeb.getStart_date())
+                                            + "-" + Common.dateStringToHM(diaryDetailWeb.getEnd_date())
+                                            + "被删除了",
+                                    Toast.LENGTH_SHORT).show();
+
+
+                            // 重新執行recycleView
+                            notifyDataSetChanged();
+                            return true;
+
+                        }
+                    });
+                    popupMenu.show();
+                    return true;
                 }
             });
             viewHolder.itemView.setTag(position);
