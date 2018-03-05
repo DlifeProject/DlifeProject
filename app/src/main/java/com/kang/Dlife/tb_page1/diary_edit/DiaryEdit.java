@@ -402,29 +402,30 @@ public class DiaryEdit extends Activity {
                         }
                     }
 
-                    // 上傳新選的地標訊息
-                    JsonObject nearByJsonObject = new JsonObject();
-                    nearByJsonObject.addProperty("action", "uploadNearBySelect");
-                    nearByJsonObject.addProperty("account", Common.getAccount(DiaryEdit.this));
-                    nearByJsonObject.addProperty("password", Common.getPWD(DiaryEdit.this));
-                    nearByJsonObject.addProperty("nearBy", new Gson().toJson(nearbyItem.get(selectNearBy)));
+                    if (nearbyItem != null) {
+                        // 上傳新選的地標訊息
+                        JsonObject nearByJsonObject = new JsonObject();
+                        nearByJsonObject.addProperty("action", "uploadNearBySelect");
+                        nearByJsonObject.addProperty("account", Common.getAccount(DiaryEdit.this));
+                        nearByJsonObject.addProperty("password", Common.getPWD(DiaryEdit.this));
+                        nearByJsonObject.addProperty("nearBy", new Gson().toJson(nearbyItem.get(selectNearBy)));
 
-                    if (networkConnected()) {
-                        String url = Common.URL + Common.MAPAPI;
-                        MyTask myTask = new MyTask(url, nearByJsonObject.toString());
-                        try {
-                            String inStr = myTask.execute().get().trim();
-                            insterCount = Integer.valueOf(inStr);
-                            if (insterCount == 0) {
+                        if (networkConnected()) {
+                            String url = Common.URL + Common.MAPAPI;
+                            MyTask myTask = new MyTask(url, nearByJsonObject.toString());
+                            try {
+                                String inStr = myTask.execute().get().trim();
+                                insterCount = Integer.valueOf(inStr);
+                                if (insterCount == 0) {
 
-                            } else {
+                                } else {
 
+                                }
+                            } catch (Exception e) {
+                                Log.e(TAG, e.toString());
                             }
-                        } catch (Exception e) {
-                            Log.e(TAG, e.toString());
                         }
                     }
-
                     // 上傳新選的圖片
                     if (path.size() > 0) {
                         for (int i = 0; i < path.size(); i++) {

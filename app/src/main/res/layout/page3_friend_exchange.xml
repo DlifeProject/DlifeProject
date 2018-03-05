@@ -85,7 +85,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"
-                    android:src="@drawable/study_sample" />
+                    android:src="@drawable/tired" />
                 <TextView
                     android:id="@+id/tvMyShareCategory"
                     android:layout_width="wrap_content"

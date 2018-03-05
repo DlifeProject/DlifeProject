@@ -102,7 +102,7 @@ public class DiaryCategoryDao {
 	public boolean deleteDiaryCategoryDao(int dieayDetailSK) {
 		String sql = "delete from diary_category"
 				+ " where member_sk = ?"
-				+ " and diary_sk";
+				+ " and diary_sk = ?";
 		try {
 			conn = DriverManager.getConnection(Common.DBURL, Common.DBACCOUNT, Common.DBPWD);
 			ps = conn.prepareStatement(sql);

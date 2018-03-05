@@ -9,6 +9,8 @@ import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
 import android.media.Image;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -57,6 +59,7 @@ import java.util.Hashtable;
 import java.util.List;
 
 import static android.content.ContentValues.TAG;
+import static android.content.Context.CONNECTIVITY_SERVICE;
 
 public class Page1_AlreadyUpload extends Fragment {
     public Hashtable<Integer, LocationToDiary> bundleHash = new Hashtable<Integer, LocationToDiary>();
@@ -259,6 +262,30 @@ public class Page1_AlreadyUpload extends Fragment {
                                             + "被删除了",
                                     Toast.LENGTH_SHORT).show();
 
+                            // 刪除sever日記
+                            JsonObject nearByJsonObject = new JsonObject();
+                            nearByJsonObject.addProperty("action", "toDeleteDiary");
+                            nearByJsonObject.addProperty("account", Common.getAccount(getActivity()));
+                            nearByJsonObject.addProperty("password", Common.getPWD(getActivity()));
+                            nearByJsonObject.addProperty("diaryDetailSK", diaryDetailWeb.getSk());
+
+                            if (Common.checkNetConnected(getActivity())) {
+                                String url = Common.URL + Common.WEBDIARY;
+                                MyTask myTask = new MyTask(url, nearByJsonObject.toString());
+
+                                int insterCount = 0;
+                                try {
+                                    String inStr = myTask.execute().get().trim();
+                                    insterCount = Integer.valueOf(inStr);
+                                    if (insterCount == 0) {
+
+                                    } else {
+
+                                    }
+                                } catch (Exception e) {
+                                    Log.e(TAG, e.toString());
+                                }
+                            }
 
                             // 重新執行recycleView
                             notifyDataSetChanged();
@@ -481,4 +508,5 @@ public class Page1_AlreadyUpload extends Fragment {
             return isScrollEnabled && super.canScrollVertically();
         }
     }
+
 }

@@ -123,7 +123,7 @@ public class DiaryPhotoDao {
 	public boolean deleteDiaryPhoto(int memberSK, int dieayDetailSK) {
 		String sql = "delete from diary_photo"
 				+ " where member_sk = ?"
-				+ " and diary_sk";
+				+ " and diary_sk = ?";
 		try {
 			conn = DriverManager.getConnection(Common.DBURL, Common.DBACCOUNT, Common.DBPWD);
 			ps = conn.prepareStatement(sql);
