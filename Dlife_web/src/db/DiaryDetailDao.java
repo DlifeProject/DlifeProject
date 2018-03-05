@@ -152,38 +152,50 @@ public class DiaryDetailDao {
 		}
 
 		close();
-		if (insertCount > 0) {
-			CategoryMatchDao categoryMatchDao = new CategoryMatchDao(memberSK);
-			categoryMatchDao.updateCategoryMatch(getCategoryMatch(Common.CATEGORYMATCHDAY));
-		}
 		return insertCount;
 	}
 	
 	public int upload() {
-		int insertCount = 0;
+		int count = 0;
 		memberSK = diaryDetail.getMember_sk();
-		String sql = "update diary_detail set top_category_sk=?, note=?, post_date=?  where sk=?"; 
+		
+		String sql = "update diary_detail set top_category_sk=?, note=? where sk = ?"; 
 		try {
 			conn = DriverManager.getConnection(Common.DBURL, Common.DBACCOUNT, Common.DBPWD);
 			ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			ps.setInt(1, diaryDetail.getTop_category_sk());
 			ps.setString(2, diaryDetail.getNote());
-			ps.setString(3, Common.getNowDateTimeString());
-			ps.setInt(4, diaryDetail.getSk());
-			ps.executeUpdate();
-			ResultSet tableKeys = ps.getGeneratedKeys();
-			tableKeys.next();
+			ps.setInt(3, diaryDetail.getSk());
+			count = ps.executeUpdate();	
 
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 
 		close();
-		if (insertCount > 0) {
+		if (count > 0) {
+			
+			CategoryDao categoryDao = new CategoryDao();
+						
+			
+			DiaryCategoryDao diaryCategoryDao = new DiaryCategoryDao(memberSK);
+			
+//			System.out.println("diaryDetail.getSk() : " + diaryDetail.getSk());
+//			System.out.println("diaryDetail.getTop_category_sk() : " + diaryDetail.getTop_category_sk());
+//			System.out.println("categoryDao.getCategoryType(diaryDetail.getTop_category_sk() : " + categoryDao.getCategoryType(diaryDetail.getTop_category_sk()));
+
+		
+			diaryCategoryDao.updateDiaryCategory( diaryDetail.getSk()
+												,diaryDetail.getTop_category_sk()
+												,categoryDao.getCategoryType(diaryDetail.getTop_category_sk())
+												);
+			
+//			System.out.println("diaryDetail.getSk() : " + getCategoryMatch(Common.CATEGORYMATCHDAY));
+			
 			CategoryMatchDao categoryMatchDao = new CategoryMatchDao(memberSK);
 			categoryMatchDao.updateCategoryMatch(getCategoryMatch(Common.CATEGORYMATCHDAY));
 		}
-		return insertCount;
+		return count;
 	}
 
 	public CategorySum getfinalDiary(String categoryType) {
@@ -460,6 +472,86 @@ public class DiaryDetailDao {
 		close();
 		return summary;
 	}
+	
+	public boolean isMemberOwn(int dieayDetailSK) {
+		
+		int realMemberOwnSK = 0;
+		String sql = "select sk, member_sk "
+				+ " from diary_detail" 
+				+ " where sk = ? ";
+		try {
+			conn = DriverManager.getConnection(Common.DBURL, Common.DBACCOUNT, Common.DBPWD);
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, dieayDetailSK);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				realMemberOwnSK = rs.getInt("member_sk");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		close();
+		if(realMemberOwnSK == memberSK) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public boolean deleteDiaryDetail(int dieayDetailSK) {
+		
+		//delete photo
+		DiaryPhotoDao diaryPhotoDao = new DiaryPhotoDao();
+		if(diaryPhotoDao.deleteDiaryPhoto(memberSK,dieayDetailSK)) {
+			//delete diary_category
+			DiaryCategoryDao diaryCategoryDao = new DiaryCategoryDao(memberSK);
+			if(diaryCategoryDao.deleteDiaryCategoryDao(dieayDetailSK)) {
+				//delete diary_detail
+				if(doDeleteDiaryDetail(dieayDetailSK)) {
+					//recalculate category_match
+					CategoryMatchDao categoryMatchDao = new CategoryMatchDao(memberSK);
+					categoryMatchDao.updateCategoryMatch(getCategoryMatch(Common.CATEGORYMATCHDAY));
+
+				}else {
+					System.out.println("deleteDiaryDetail doDeleteDiaryDetail err!");
+					return false;
+				}
+				
+			}else {
+				System.out.println("deleteDiaryDetail deleteDiaryCategoryDao err!");
+				return false;
+			}
+			
+		}else {
+			System.out.println("deleteDiaryDetail deleteDiaryPhoto err!");
+			return false;
+		}
+		
+		return false;
+	}
+
+	private boolean doDeleteDiaryDetail(int dieayDetailSK) {
+		int rowCount = 0;
+		String sql = "delete from diary_detail"
+				+ " where sk = ?";
+		try {
+			conn = DriverManager.getConnection(Common.DBURL, Common.DBACCOUNT, Common.DBPWD);
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, dieayDetailSK);
+			rowCount = ps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("doDeleteDiaryDetail fail sk:" + dieayDetailSK);
+		}
+		close();
+		
+		if(rowCount > 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 
 	// 大程
 	public PiechartData getPiechartDate(String categoryType, SelectDate sd) {
@@ -498,5 +590,6 @@ public class DiaryDetailDao {
 		}
 		return new PiechartData(categoryType, categoryTime);
 	}
+
 
 }

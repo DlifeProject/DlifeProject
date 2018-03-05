@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import db.CategoryDao;
+import db.CategoryMatchDao;
 import db.DiaryCategory;
 import db.DiaryCategoryDao;
 import db.DiaryDetail;
@@ -22,6 +23,7 @@ import db.DiaryDetailDao;
 import db.DiaryPhotoDao;
 import db.Member;
 import db.MemberDao;
+import system.Common;
 
 @WebServlet("/diary")
 public class diary extends HttpServlet {
@@ -53,13 +55,13 @@ public class diary extends HttpServlet {
 		Gson gson = new Gson();
 		JsonObject jsonObject = gson.fromJson(sb.toString(), JsonObject.class);
 		String action = jsonObject.get("action").getAsString();
-		System.out.println("Start insert !! " + action);
+		System.out.println("Start action !! " + action);
 		Member member = new Member(jsonObject.get("account").getAsString(), jsonObject.get("password").getAsString());
 		MemberDao memberDao = new MemberDao(member);
 		int memberSK = memberDao.getMemberSK();
 		String msg = "";
 
-		System.out.println("Start insert !! " + memberSK);
+		System.out.println("memberSK !! " + memberSK);
 		if (memberSK > 0) {
 			if (action.equals("insertDiary")) {
 				String categoryType = jsonObject.get("categoryType").getAsString();
@@ -85,6 +87,10 @@ public class diary extends HttpServlet {
 					int dCategory = diaryCategoryDao.insert(diaryCategory);
 
 					if (dCategory > 0) {
+						
+						CategoryMatchDao categoryMatchDao = new CategoryMatchDao(memberSK);
+						categoryMatchDao.updateCategoryMatch(diaryDetailDao.getCategoryMatch(Common.CATEGORYMATCHDAY));
+						
 						exeString = "inserDiarySuccess";
 						System.out.println("Start insert num " + insertCount);
 					} else {
@@ -112,7 +118,7 @@ public class diary extends HttpServlet {
 				}
 
 			} else if (action.equals("uploadDiary")){
-				//
+				
 				String categoryType = jsonObject.get("uploadCategoryType").getAsString();
 				System.out.println("Start upload !! ");
 				String diaryString = jsonObject.get("uploadDiaryDetail").getAsString();
@@ -125,10 +131,12 @@ public class diary extends HttpServlet {
 				diaryDetail.setTop_category_sk(categorySK);
 
 				DiaryDetailDao diaryDetailDao = new DiaryDetailDao(diaryDetail);
-				insertCount = diaryDetailDao.upload();
-				
-				
-				
+				int update_count = diaryDetailDao.upload();
+				if(update_count == 1) {
+					exeString = "uploadDiarySuccess";
+				}else {
+					exeString = "uploadDiaryFail";
+				}
 				
 			}else if (action.equals("getDiary")) {
 
@@ -175,6 +183,23 @@ public class diary extends HttpServlet {
 
 				}
 
+			} else if(action.equals("toDeleteDiary")) {
+				System.out.println("Start toDeleteDiary!! ");
+				int dieayDetailSK = jsonObject.get("diaryDetailSK").getAsInt();
+				DiaryDetailDao diaryDetailDao = new DiaryDetailDao(memberSK);
+				if(diaryDetailDao.isMemberOwn(dieayDetailSK)) {
+					if(diaryDetailDao.deleteDiaryDetail(dieayDetailSK)) {
+						exeString = "diaryDetailDeleteSuccess";
+						System.out.println("outStr: diaryDetailDeleteSuccess");
+					}else { 
+						exeString = "diaryDetailDeleteFail";
+						System.out.println("outStr: deleteDiaryDetail fail");
+					}
+				}else {
+					exeString = "diaryDetailDeleteFail";
+					System.out.println("outStr: isMemberOwn fail");
+				}
+				
 			} else {
 				exeString = "accountError";
 			}
@@ -192,6 +217,10 @@ public class diary extends HttpServlet {
 				response.getWriter().println(msg);
 			} else if (exeString.equals("getDiaryNull")) {
 				response.getWriter().println(msg);
+			} else if (exeString.equals("diaryDetailDeleteFail")) {
+				response.getWriter().println("diaryDetailDeleteFail");
+			} else if (exeString.equals("diaryDetailDeleteSuccess")) {
+				response.getWriter().println("diaryDetailDeleteSuccess");
 			} else {
 				response.getWriter().println("0");
 			}

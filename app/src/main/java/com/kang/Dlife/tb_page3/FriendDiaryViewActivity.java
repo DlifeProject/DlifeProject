@@ -52,7 +52,7 @@ public class FriendDiaryViewActivity extends AppCompatActivity {
     private MatchFriendItem matchFriendItem;
     private String fromPage;
     private TextView headerTitle;
-    private ImageButton ibChat, ibBlock;
+    private ImageButton ibChat;
 
 
     private ImageButton ibBack;
@@ -79,8 +79,6 @@ public class FriendDiaryViewActivity extends AppCompatActivity {
             headerTitle.setText(matchFriendItem.getMyFriendName());
             ibChat = (ImageButton) findViewById(R.id.ibChat);
             ibChat.setVisibility(View.VISIBLE);
-            ibBlock = (ImageButton) findViewById(R.id.ibBlock);
-            ibBlock.setVisibility(View.VISIBLE);
 
         }else{
             // hidden header button

@@ -77,5 +77,47 @@ public class DiaryCategoryDao {
 		return insertCount;
 	}
 
+	public int updateDiaryCategory(int diaryDetailSk, int top_category_sk, String category_type) {
+		int rowCount = 0;
+		String sql = " update diary_category"
+				+ " set category_sk = ?, top_category_sk = ?, category_type = ?"
+				+ " where diary_sk = ?"; 
+				
+		try {
+			conn = DriverManager.getConnection(Common.DBURL, Common.DBACCOUNT, Common.DBPWD);
+			ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+			ps.setInt(1, top_category_sk);
+			ps.setInt(2, top_category_sk);
+			ps.setString(3, category_type);
+			ps.setInt(4, diaryDetailSk);
+			rowCount = ps.executeUpdate();	
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return rowCount;
+		
+	}
+
+	public boolean deleteDiaryCategoryDao(int dieayDetailSK) {
+		String sql = "delete from diary_category"
+				+ " where member_sk = ?"
+				+ " and diary_sk";
+		try {
+			conn = DriverManager.getConnection(Common.DBURL, Common.DBACCOUNT, Common.DBPWD);
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, memberSK);
+			ps.setInt(2, dieayDetailSK);
+			ps.executeUpdate();
+			close();
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("deleteDiaryCategory fail memberSK:" + memberSK + " dieayDetailSK:" + dieayDetailSK);
+			close();
+			return false;
+		}
+	}
+
 
 }

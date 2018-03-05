@@ -119,6 +119,26 @@ public class DiaryPhotoDao {
 
 		return photoSKList;
 	}
+	
+	public boolean deleteDiaryPhoto(int memberSK, int dieayDetailSK) {
+		String sql = "delete from diary_photo"
+				+ " where member_sk = ?"
+				+ " and diary_sk";
+		try {
+			conn = DriverManager.getConnection(Common.DBURL, Common.DBACCOUNT, Common.DBPWD);
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, memberSK);
+			ps.setInt(2, dieayDetailSK);
+			ps.executeUpdate();
+			close();
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("deleteDiaryPhoto fail memberSK:" + memberSK + " dieayDetailSK:" + dieayDetailSK);
+			close();
+			return false;
+		}
+	}
 
 	public byte[] getImage(int id) {
 
@@ -145,4 +165,5 @@ public class DiaryPhotoDao {
 		return image;
 
 	}
+
 }

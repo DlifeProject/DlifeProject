@@ -392,8 +392,7 @@ public class DiaryEdit extends Activity {
                         MyTask myTask = new MyTask(url, jsonObject.toString());
                         try {
                             String inStr = myTask.execute().get().trim();
-                            insterCount = Integer.valueOf(inStr);
-                            if (insterCount == 0) {
+                            if (inStr.equals("uploadDiarySuccess")) {
 
                             } else {
 
