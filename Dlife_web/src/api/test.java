@@ -16,6 +16,8 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
+import db.Member;
+import db.MemberDao;
 import db.MemberLocationDao;
 import system.GoogleMapPlace;
 import system.GoogleNearbyItem;
@@ -27,13 +29,27 @@ public class test extends HttpServlet{
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		request.setCharacterEncoding("utf-8");
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		Member member = new Member();
+		member.setApp_account("irv278@gmail.com");
+		member.setApp_pwd("Regan");
+		MemberDao memberDaoB = new MemberDao(member);
 		
-			
+		request.setCharacterEncoding("utf-8");
+		response.getWriter().append(memberDaoB.getMemberSK() + "<br>");
+		response.getWriter().append("Served at: ").append(request.getContextPath());			
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {		
+		
 		request.setCharacterEncoding("utf-8");
+		Member member = new Member();
+		member.setApp_account("irv278@gmail.com");
+		member.setApp_pwd("Regan");
+		MemberDao memberDaoB = new MemberDao(member);
+		
+		request.setCharacterEncoding("utf-8");
+		response.getWriter().append(memberDaoB.getMemberSK() + "<br>");
+		response.getWriter().append("Served at: ").append(request.getContextPath());
 
 	}
 }

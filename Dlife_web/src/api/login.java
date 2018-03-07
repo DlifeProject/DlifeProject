@@ -23,8 +23,15 @@ public class login extends HttpServlet {
 		request.setCharacterEncoding("utf-8");
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 		
+		Member member = new Member();
+		member.setApp_account("irv278@gmail.com");
+		member.setApp_pwd("Regan");
+		MemberDao memberDaoB = new MemberDao(member);
+		
+		
+		
 		String datetime = String.valueOf(System.currentTimeMillis());
-		response.getWriter().append(datetime + "<br>");
+		response.getWriter().append(memberDaoB.getMemberSK() + "<br>");
 		//do getdiary
 		
 	}

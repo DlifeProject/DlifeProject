@@ -100,9 +100,13 @@ public class friend extends HttpServlet{
 			} else {
 				response.getWriter().println("actionError");
 			}
-		}else {	
+		} else if (action.equals("MyShareableCateList")) {
+			
+		} else if (action.equals("MyShareableCatePhotoelse")) {
+			
+		} else {
 			response.getWriter().println("accountError");
 		}
-		
 	}
+		
 }

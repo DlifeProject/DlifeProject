@@ -35,7 +35,7 @@ public class Common {
     public final static String TAG = "Common";
 
     public static final String URL = "http://10.0.2.2:8080/Dlife/";
-//    public static final String URL = "http://192.168.1.2:8080/Dlife/";
+    //public static final String URL = "http://114.34.110.248:7070/Dlife/";
 
     public final static String WEBLOGIN = "login";
     public final static String WEBDIARY = "diary";
@@ -45,6 +45,9 @@ public class Common {
     public final static String WEBSUMMARY = "summary";
     public final static String MAPAPI = "mapapi";
     public final static String FRIEND = "friend";
+
+    public final static String[] DEFAULTCATE = {"Shopping","Hobby","Learning","Travel","Work"};
+    public final static String[] NONSHARECATE = {"Work"};
 
 
     public static String getAccount(Context c){

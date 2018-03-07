@@ -389,6 +389,16 @@ public class DiaryView extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (newsGetAllTask != null) {
+            newsGetAllTask.cancel(true);
+        }
+
+    }
+
+
     //新開 SpotGetImageTask 寫入/java 下
     class SpotGetImageTask extends AsyncTask<Object, Integer, Bitmap> {
         private final static String TAG = "SpotGetImageTask";
@@ -467,12 +477,5 @@ public class DiaryView extends AppCompatActivity {
         }
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        if (newsGetAllTask != null) {
-            newsGetAllTask.cancel(true);
-        }
 
-    }
 }
