@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin">
+
+    <ImageView
+        android:id="@+id/ivImage"
+        android:layout_width="47dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="10dp"
+        android:baselineAligned="false"
+        android:padding="6dp"
+        android:src="@drawable/ic_face"
+        android:layout_marginLeft="10dp" />
+
+    <TextView
+        android:id="@+id/tvName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:padding="6dp"
+        android:textColor="@color/primary_green_Dark"
+        android:text="Name" />
+    <TextView
+        android:id="@+id/tvId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:padding="6dp"
+        android:textColor="@color/primary_green_Dark"
+        android:text="ID" />
+
+</LinearLayout>

@@ -151,4 +151,6 @@ public class TabActivity extends FragmentActivity implements OnClickListener {
         iv_setting.setImageResource(R.drawable.setting);
     }
 
+
+
 }

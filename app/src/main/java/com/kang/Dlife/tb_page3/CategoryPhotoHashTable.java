@@ -14,7 +14,6 @@ class CategoryPhotoHashTable {
 
     CategoryPhotoHashTable(){
         String[] categoryArray = Common.DEFAULTCATE;
-        int i = 0;
 
         for (int i=0;i<categoryArray.length;i++){
             if(!categoryArray[i].equals(Common.NONSHARECATE[0])) {

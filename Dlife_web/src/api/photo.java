@@ -87,17 +87,25 @@ public class photo extends HttpServlet {
 				writeText(response, gson.toJson(photoSKList));
 				
 			} else if (action.equals("getImage")) {
+				
 				OutputStream os = response.getOutputStream();
 				int id = jsonObject.get("id").getAsInt();
+				System.out.println("startGetImage sk: " + id);
 				int imageSize = jsonObject.get("imageSize").getAsInt();
-				byte[] image = diaryPhotoDao.getImage(id);
-				System.out.println("Start image !! outPut " + "111111");
-				if (image != null) {
-					image = ImageUtil.shrink(image, imageSize);
-					response.setContentType("image/jpeg");
-					response.setContentLength(image.length);
+				if(id != 0) {
+					byte[] image = diaryPhotoDao.getImage(id);
+					System.out.println("Start image !! outPut sk " + "111111");
+					if (image != null) {
+						image = ImageUtil.shrink(image, imageSize);
+						response.setContentType("image/jpeg");
+						response.setContentLength(image.length);
+						//System.out.println("getImage : " + id);
+					}
+					os.write(image);
+				}else {
+					System.out.println("no getImage : " + id);
 				}
-				os.write(image);
+				
 			}
 		}
 

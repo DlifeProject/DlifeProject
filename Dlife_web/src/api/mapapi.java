@@ -13,6 +13,13 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
+import db.DiaryDetail;
+import db.DiaryDetailDao;
+import db.DiaryLocation;
+import db.DiaryLocationDao;
+import db.Member;
+import db.MemberDao;
+import system.Common;
 import system.GoogleMapPlace;
 import system.GoogleNearbyItem;
 
@@ -65,7 +72,51 @@ public class mapapi extends HttpServlet{
 			
 			response.getWriter().println(outJsonObject.toString());
 
-		}
+		}else if(action.equals("nearBySelect")) {
+			
+			Member member = new Member(jsonObject.get("account").getAsString()
+					,jsonObject.get("password").getAsString());
+			MemberDao memberDao = new MemberDao(member);
+			int memberSK = memberDao.getMemberSK();
+			if(memberSK > 0) {
+				
+				DiaryDetailDao diaryDetailDao = new DiaryDetailDao(memberSK);
+				if(diaryDetailDao.isMemberOwn(jsonObject.get("diaryDetailSK").getAsInt())) {
+					
+					DiaryDetail diaryDetail = diaryDetailDao.getDiaryBySK(jsonObject.get("diaryDetailSK").getAsInt());
+					String[] diaryStartDayArray = diaryDetail.getPost_date().split(" ");
+					
+					String nearbyJson = jsonObject.get("nearBy").getAsString();
+					JsonObject nearbyJsonObject = gson.fromJson(nearbyJson,JsonObject.class);
+					
+					String googleName = nearbyJsonObject.get("name").getAsString();
+					String googlePlaceID = nearbyJsonObject.get("placeID").getAsString();
+					double latitude = nearbyJsonObject.get("latitude").getAsDouble();
+					double longitude = nearbyJsonObject.get("longitude").getAsDouble();
+					
+					DiaryLocation diaryLocation = new DiaryLocation(
+							0
+							,memberSK
+							,jsonObject.get("diaryDetailSK").getAsInt()
+							,googlePlaceID
+							,googleName
+							,longitude
+							,latitude
+							,diaryStartDayArray[0]
+							,Common.getNowDateTimeString()
+							);
+					DiaryLocationDao diaryLocationDao = new DiaryLocationDao(diaryLocation);
+					diaryLocationDao.insert();
+										
+				}else {
+					System.out.println("nearBySelect : diary detial is not this Member Own ");
+				}
+				
+			}else {
+				System.out.println("nearBySelect : member account notfound ");
+			}
+	
+		}    
 		
 	}
 	

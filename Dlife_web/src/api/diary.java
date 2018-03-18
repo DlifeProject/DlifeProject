@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+
 import db.CategoryDao;
 import db.CategoryMatchDao;
 import db.DiaryCategory;
@@ -87,10 +88,10 @@ public class diary extends HttpServlet {
 					int dCategory = diaryCategoryDao.insert(diaryCategory);
 
 					if (dCategory > 0) {
-						
+
 						CategoryMatchDao categoryMatchDao = new CategoryMatchDao(memberSK);
 						categoryMatchDao.updateCategoryMatch(diaryDetailDao.getCategoryMatch(Common.CATEGORYMATCHDAY));
-						
+
 						exeString = "inserDiarySuccess";
 						System.out.println("Start insert num " + insertCount);
 					} else {
@@ -112,40 +113,48 @@ public class diary extends HttpServlet {
 				DiaryPhotoDao diaryPhotoDao = new DiaryPhotoDao(memberSK, diaryDetailSK);
 				insertCount = diaryPhotoDao.insert(image);
 				if (insertCount > 0) {
-					exeString = "inserPhotoSuccess";
+					exeString = Integer.toString(insertCount);
 				} else {
 					exeString = "insertPhotoError";
 				}
 
-			} else if (action.equals("uploadDiary")){
-				
+			} else if (action.equals("uploadDiary")) {
+
 				String categoryType = jsonObject.get("uploadCategoryType").getAsString();
 				System.out.println("Start upload !! ");
 				String diaryString = jsonObject.get("uploadDiaryDetail").getAsString();
 				DiaryDetail diaryDetail = new DiaryDetail();
 				diaryDetail = gson.fromJson(diaryString, DiaryDetail.class);
 				diaryDetail.setMember_sk(memberSK);
-				
+
 				CategoryDao categoryDao = new CategoryDao();
 				int categorySK = categoryDao.getCategory_sk(categoryType);
 				diaryDetail.setTop_category_sk(categorySK);
 
 				DiaryDetailDao diaryDetailDao = new DiaryDetailDao(diaryDetail);
 				int update_count = diaryDetailDao.upload();
-				if(update_count == 1) {
+				if (update_count == 1) {
 					exeString = "uploadDiarySuccess";
-				}else {
+				} else {
 					exeString = "uploadDiaryFail";
 				}
-				
-			}else if (action.equals("getDiary")) {
+
+			} else if (action.equals("getDiaryBetweenDays")) {
 
 				System.out.println("Start getDiary!! ");
-				String categoryType = jsonObject.get("categoryType").getAsString();
+				String startDay = jsonObject.get("startDay").getAsString();
+				String endDay = jsonObject.get("endDay").getAsString();
+				int categoryListIndex = jsonObject.get("categoryListIndex").getAsInt();
+				String categoryType = "";
+				if(categoryListIndex == 0) {
+					categoryType = "all";
+				}else {
+					categoryType = Common.DEFAULTCATE[categoryListIndex + 1];
+				}
 
 				DiaryDetailDao diaryDetailDao = new DiaryDetailDao(memberSK);
 				List<DiaryDetail> ltDiaryDetail = new ArrayList<DiaryDetail>();
-				ltDiaryDetail = diaryDetailDao.getDiaryByCategoryType(categoryType);
+				ltDiaryDetail = diaryDetailDao.getDiaryBetweenDays(startDay,endDay,categoryListIndex);
 				JsonObject outJsonObject = new JsonObject();
 
 				if (ltDiaryDetail.size() > 0) {
@@ -183,23 +192,23 @@ public class diary extends HttpServlet {
 
 				}
 
-			} else if(action.equals("toDeleteDiary")) {
+			} else if (action.equals("toDeleteDiary")) {
 				System.out.println("Start toDeleteDiary!! ");
 				int dieayDetailSK = jsonObject.get("diaryDetailSK").getAsInt();
 				DiaryDetailDao diaryDetailDao = new DiaryDetailDao(memberSK);
-				if(diaryDetailDao.isMemberOwn(dieayDetailSK)) {
-					if(diaryDetailDao.deleteDiaryDetail(dieayDetailSK)) {
+				if (diaryDetailDao.isMemberOwn(dieayDetailSK)) {
+					if (diaryDetailDao.deleteDiaryDetail(dieayDetailSK)) {
 						exeString = "diaryDetailDeleteSuccess";
 						System.out.println("outStr: diaryDetailDeleteSuccess");
-					}else { 
+					} else {
 						exeString = "diaryDetailDeleteFail";
 						System.out.println("outStr: deleteDiaryDetail fail");
 					}
-				}else {
+				} else {
 					exeString = "diaryDetailDeleteFail";
 					System.out.println("outStr: isMemberOwn fail");
 				}
-				
+
 			} else {
 				exeString = "accountError";
 			}

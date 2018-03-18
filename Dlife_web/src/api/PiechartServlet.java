@@ -33,12 +33,13 @@ public class PiechartServlet extends HttpServlet {
 	}
 
 	@Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
 		request.setCharacterEncoding("utf-8");
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("text/html;charset=utf-8");
-		
+
 		BufferedReader br = new BufferedReader(request.getReader());
 		StringBuffer inStr = new StringBuffer();
 		String line = "";
@@ -55,19 +56,19 @@ public class PiechartServlet extends HttpServlet {
 		int memberSK = memberDao.getMemberSK();
 		System.out.println("Start PiechartServlet !! " + memberSK);
 		if (action.equals("select")) {
-			String selectDateJson = jsonObject.get("SelectDate").getAsString();
-			SelectDate selectDate = gson.fromJson(selectDateJson.toString(), SelectDate.class);
+			String startDay = jsonObject.get("startDay").getAsString();
+			String endDay = jsonObject.get("endDay").getAsString();
+			System.out.println("SelectDate: from " + endDay + "  to:" + startDay);
 			String[] cateArray = Common.DEFAULTCATE;
 			List<PiechartData> ltPiechartData = new ArrayList<PiechartData>();
 			for (String categoryType : cateArray) {
-				// System.out.println(categoryType);
 				PiechartData piechartData = new PiechartData();
 				DiaryDetailDao dao = new DiaryDetailDao(memberSK);
-				piechartData = dao.getPiechartDate(categoryType, selectDate);
+				piechartData = dao.getPiechartDate(categoryType, startDay, endDay);
 				ltPiechartData.add(piechartData);
 			}
-
-			writeText(response, gson.toJson(ltPiechartData));
+			System.out.println("select output: " + gson.toJson(ltPiechartData));
+			response.getWriter().append(gson.toJson(ltPiechartData));
 		}
 	}
 

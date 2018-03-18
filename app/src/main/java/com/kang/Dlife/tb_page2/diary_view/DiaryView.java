@@ -21,7 +21,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
@@ -29,8 +28,6 @@ import com.kang.Dlife.Common;
 import com.kang.Dlife.R;
 import com.kang.Dlife.sever.LocationToDiary;
 import com.kang.Dlife.sever.MyTask;
-import com.kang.Dlife.tb_page2.CategorySum;
-import com.kang.Dlife.tb_page2.PieChartItem;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedWriter;
@@ -41,7 +38,6 @@ import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -55,12 +51,14 @@ public class DiaryView extends AppCompatActivity {
     private SpotGetImageTask spotGetImageTask;
     List<LocationToDiary> igList;
 
-
     private ImageButton ibMap;
     private double longitude;
     private double latitude;
 
-    public CategorySum categorySum;
+    private String startDay;
+    private String endDay;
+    private int categoryListIndex;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,46 +78,16 @@ public class DiaryView extends AppCompatActivity {
         if (bundle==null) {
             Common.showToast(this, R.string.msg_NoNewsFound);
         }else {
-            categorySum = (CategorySum) bundle.getSerializable("CategorySum");
-            Log.d(TAG,""+categorySum);
-
+            startDay = bundle.getString("startDay");
+            endDay = bundle.getString("endDay");
+            categoryListIndex = bundle.getInt("categoryListIndex");
             recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
             recyclerView.setLayoutManager(new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL));
-
 
             showAllNews();
         }
 
     }
-
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//
-//        initView();
-//        ibMap = (ImageButton) super.findViewById(R.id.ibMap);
-//        btBack.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                finish();
-//            }
-//        });
-//        Bundle bundle = getIntent().getExtras();
-//
-//        if (bundle==null) {
-//            Common.showToast(this, R.string.msg_NoNewsFound);
-//        }else {
-//            categorySum = (CategorySum) bundle.getSerializable("CategorySum");
-//            Log.d(TAG,""+categorySum);
-//
-//            recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-//            recyclerView.setLayoutManager(new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL));
-//
-//
-//            showAllNews();
-//        }
-//
-//    }
 
     private void initView() {
         btBack = (ImageButton) super.findViewById(R.id.ibBack);
@@ -134,10 +102,13 @@ public class DiaryView extends AppCompatActivity {
             try {
 
                 JsonObject jsonObject = new JsonObject();
-                jsonObject.addProperty("action", "getDiary");
+                jsonObject.addProperty("action", "getDiaryBetweenDays");
                 jsonObject.addProperty("account", Common.getAccount(this));
                 jsonObject.addProperty("password", Common.getPWD(this));
-                jsonObject.addProperty("categoryType", categorySum.getCategoryType());
+                jsonObject.addProperty("startDay", startDay);
+                jsonObject.addProperty("endDay", endDay);
+                jsonObject.addProperty("categoryListIndex", categoryListIndex);
+
                 String jsonOut = jsonObject.toString();
 
                 url = Common.URL + Common.WEBDIARY;

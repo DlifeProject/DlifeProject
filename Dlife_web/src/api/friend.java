@@ -11,14 +11,23 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
+import db.CategoryDao;
 import db.DiaryDetail;
 import db.DiaryDetailDao;
+import db.FriendRelation;
+import db.FriendRelationDao;
 import db.Member;
 import db.MemberDao;
+import db.MemberMatchDao;
 import db.MemberShareRelationDao;
+import system.Common;
+
 @WebServlet("/friend")
 public class friend extends HttpServlet{
 
@@ -52,6 +61,7 @@ public class friend extends HttpServlet{
 		int memberSK = memberDao.getMemberSK();
 		String msg = "";
 		if (memberSK > 0) {
+			System.out.println("memberSK : " + memberSK);
 			if (action.equals("getFriendList")) {
 				MemberShareRelationDao memberShareRelationDao = new MemberShareRelationDao(memberSK);
 				ArrayList<MatchFriendItem> shareList = memberShareRelationDao.getMemberShareRelationList();
@@ -62,7 +72,7 @@ public class friend extends HttpServlet{
 				System.out.println("friend friendList outStr: " + outJsonObject.toString());
 				response.getWriter().println(outJsonObject.toString());				
 				
-			} else if ( action.equals("getFriendDiary")) {
+			} else if (action.equals("getFriendDiary")) {
 				
 				int friendSK = jsonObject.get("MyFriendSK").getAsInt();
 				int friendCategorySK = jsonObject.get("MyFriendCategorySK").getAsInt();
@@ -97,12 +107,62 @@ public class friend extends HttpServlet{
 				}
 				
 				
+			} else if (action.equals("MyShareAbleCateList")) {
+				String[] cateArray = Common.DEFAULTCATE;
+				List<CategorySum> ltCategorySum = new ArrayList<CategorySum>();
+				System.out.println("test");
+				for(String categoryType:cateArray) {
+					
+					if(!categoryType.equals(Common.NONSHARECATE[0])) {
+						CategorySum categorySum = new CategorySum();
+						CategoryDao categoryDao = new CategoryDao(memberSK);
+						categorySum = categoryDao.getSummaryByType(categoryType);
+						if(categorySum.getSeven_day() > Common.SHAREABELDIARYCOUNT && categorySum.getDiaryPhotoSK() > 0) {
+							ltCategorySum.add(categorySum);
+						}
+					}
+				}
+
+	            JsonObject outJsonObject = new JsonObject();
+	            outJsonObject.addProperty("CategorySum", new Gson().toJson(ltCategorySum));
+	            response.getWriter().println(outJsonObject.toString());	
+				System.out.println("Start summary !! outPut " + outJsonObject.toString());
+				
+			} else if (action.equals("toRequestShare")) {
+				
+				//inStr: {"action":"toRequestShare","account":"irv278@gmail.com","password":"Regan","shareCategory":"Hobby
+				CategoryDao categoryDao = new CategoryDao();				
+				int shareTopCateorySk = categoryDao.getCategory_sk(jsonObject.get("shareCategory").getAsString());
+				MemberMatchDao memberMatchDao = new MemberMatchDao(memberSK);
+				memberMatchDao.toMatch(shareTopCateorySk);
+				
+				
+			} else if (action.equals("updateFBList")) {
+				
+				MemberDao fbMemberDao = new MemberDao(memberSK);
+				fbMemberDao.updateFBid(jsonObject.get("FBid").getAsString());
+				
+				JSONArray jsonArray = new JSONArray( jsonObject.get("FBList").getAsString());
+				for(int i=0;i<jsonArray.length();i++) {
+					
+					JSONObject jsonObjectItem = jsonArray.getJSONObject(i);
+					
+					FriendRelation friendRelation = new FriendRelation();
+					friendRelation.setMember_sk(memberSK);
+					friendRelation.setFriend_type("facebook");
+					friendRelation.setFriend_account(jsonObjectItem.get("id").toString());
+					friendRelation.setIs_shareable(0);
+					friendRelation.setPost_date(Common.getNowDateTimeString());
+					
+					FriendRelationDao friendRelationDao = new FriendRelationDao(friendRelation);
+					friendRelationDao.insert();
+					
+				}
+									
+				
 			} else {
 				response.getWriter().println("actionError");
 			}
-		} else if (action.equals("MyShareableCateList")) {
-			
-		} else if (action.equals("MyShareableCatePhotoelse")) {
 			
 		} else {
 			response.getWriter().println("accountError");

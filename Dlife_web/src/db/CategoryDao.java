@@ -141,7 +141,8 @@ public class CategoryDao {
 		categorySum.setNote(finalCategorySum.getNote());
 		int top_category_sk = getCategory_sk(categoryType);
 		categorySum.setThree_day(new DiaryDetailDao(memberSK).getDayDiaryCategotyCount(3,top_category_sk));
-		categorySum.setSeven_day(new DiaryDetailDao(memberSK).getDayDiaryCategotyCount(7,top_category_sk));
+		categorySum.setSeven_day(new DiaryDetailDao(memberSK).getDayDiaryCategotyCount(120,top_category_sk));
+		//categorySum.setSeven_day(new DiaryDetailDao(memberSK).getDayDiaryCategotyCount(7,top_category_sk));
 				
 		return categorySum;
 	}

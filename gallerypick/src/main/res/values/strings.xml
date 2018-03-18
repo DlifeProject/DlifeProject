@@ -1,10 +1,9 @@
 <resources>
-    <string name="gallery_all_folder">所有图片</string>
-    <string name="gallery_shoot">拍摄照片</string>
+    <string name="gallery_all_folder">所有圖片</string>
+    <string name="gallery_shoot">拍攝照片</string>
     <string name="gallery_finish">( %1$d ) 完成 </string>
-    <string name="gallery_gallery">相册</string>
-    <string name="gallery_send">发送</string>
-    <string name="gallery_msg_no_camera">没有系统相机</string>
+    <string name="gallery_gallery">相簿</string>
+    <string name="gallery_send">發送</string>
+    <string name="gallery_msg_no_camera">沒有相機</string>
     <string name="gallery_photo_num">%d 張</string>
-
 </resources>

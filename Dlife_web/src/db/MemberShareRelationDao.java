@@ -7,6 +7,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
+
 import system.Common;
 import api.MatchFriendItem;
 
@@ -219,6 +221,26 @@ public class MemberShareRelationDao {
 		}else {
 			return false;
 		}
+	}
+
+	public List<Integer> myfriendSKList() {
+		List<Integer> myfriendList = new ArrayList<Integer>();
+		String sql = "select to_member_sk"
+				+ " from member_share_relation" 
+				+ " where from_member_sk = ? ";
+		try {
+			conn = DriverManager.getConnection(Common.DBURL, Common.DBACCOUNT, Common.DBPWD);
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, memberSK);
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()) {
+				myfriendList.add(rs.getInt(1));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		close();	
+		return myfriendList;
 	}
 
 	

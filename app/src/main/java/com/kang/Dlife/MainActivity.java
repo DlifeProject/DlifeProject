@@ -1,8 +1,13 @@
 package com.kang.Dlife;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -13,6 +18,9 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.kang.Dlife.data_base.Member;
 import com.kang.Dlife.sever.MyTask;
+
+import java.util.HashSet;
+import java.util.Set;
 
 
 public class MainActivity extends Activity {
@@ -29,7 +37,6 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_login);
-
 
         userUUID = Common.getUUID(this);
         findView(this);
@@ -103,6 +110,7 @@ public class MainActivity extends Activity {
                     if( loginMessage.equals("login")){
                         Common.updateLoginPreferences(c, userAccount,  userPassword, userUUID);
                         Common.startTabActivity(c);
+                        askPermissions();
                     }else{
                         Common.showToast(c,loginMessage);
                     }
@@ -138,7 +146,7 @@ public class MainActivity extends Activity {
         btLoginAllen.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
                 etLoginAccount.setText("af19git5@gmail.com");
-                etLoginPassword.setText("btLoginAllen");
+                etLoginPassword.setText("Allen");
             }
         });
 
@@ -164,7 +172,6 @@ public class MainActivity extends Activity {
 
     }
 
-
     public static String webLogin(Context c,String userAccount, String userPassword, String userUUID){
 
         Member member = new Member(userUUID,userAccount,userPassword);
@@ -182,10 +189,49 @@ public class MainActivity extends Activity {
             e.printStackTrace();
         }
 
-
-
-
         return inStr;
+    }
+
+
+    private static final int REQ_PERMISSIONS = 0;
+
+    // New Permission see Appendix A
+    private void askPermissions() {
+        String[] permissions = {
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION
+        };
+
+        Set<String> permissionsRequest = new HashSet<>();
+        for (String permission : permissions) {
+            int result = ContextCompat.checkSelfPermission(MainActivity.this, permission);
+            if (result != PackageManager.PERMISSION_GRANTED) {
+                permissionsRequest.add(permission);
+            }
+        }
+
+        if (!permissionsRequest.isEmpty()) {
+            ActivityCompat.requestPermissions(MainActivity.this,
+                    permissionsRequest.toArray(new String[permissionsRequest.size()]),
+                    REQ_PERMISSIONS);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case REQ_PERMISSIONS:
+                for (int result : grantResults) {
+                    if (result != PackageManager.PERMISSION_GRANTED) {
+                        String text = "onRequestPermissionsResult";
+                        Common.showToast(MainActivity.this, text);
+                        return;
+                    }
+                }
+                break;
+        }
     }
 
 }

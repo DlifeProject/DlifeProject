@@ -228,9 +228,9 @@ public class Page1_AlreadyUpload extends Fragment {
                 @Override
                 public void onClick(View view) {
                     for(int i = 0; i <= finalPhotoSpotList.size() - 1; i++){
-                    final PhotoSpot photoSpot = finalPhotoSpotList.get(i);
-                    int id = photoSpot.getSk();
-                    photoSK.add(id);
+                        final PhotoSpot photoSpot = finalPhotoSpotList.get(i);
+                        int id = photoSpot.getSk();
+                        photoSK.add(id);
                     }
                     recyclerClick = position;
                     Intent intent = new Intent();

@@ -58,7 +58,7 @@ public class login extends HttpServlet {
 			String spotJson = jsonObject.get("member").getAsString();
 			Member memberLogin = gson.fromJson(spotJson, Member.class);
 			MemberDao memberDao = new MemberDao(memberLogin);
-			System.out.println("doMemberLogin Login Login !");
+			System.out.println("doMemberLogin Login !");
 			loginStatus = memberDao.doMemberLogin();
 			if(loginStatus.equals("needAddAcount")) {
 				loginStatus = memberDao.addNewAccount();

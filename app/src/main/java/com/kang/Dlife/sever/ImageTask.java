@@ -23,30 +23,29 @@ public class ImageTask extends AsyncTask<Object, Integer, Bitmap> {
     private final static String TAG = "ImageTask";
     private String url;
     private String json;
-    private String jsonOut;
     private int imageSize;
-    private WeakReference<ImageView> imageViewWeakReference;    // WeakReference物件不會阻止參照到的實體被回收
+    //private WeakReference<Bitmap> bitmapWeakReference;    // WeakReference物件不會阻止參照到的實體被回收
 
-    ImageTask(String url, String json, int imageSize) {
+//    ImageTask(String url, String json, int imageSize) {
+//
+//        this(url, json, imageSize, null);
+//    }
 
-        this(url, json, imageSize, null);
-    }
-
-    ImageTask(String url, String json, int imageSize, ImageView imageView) {
+    public ImageTask(String url, String json, int imageSize) {
         this.url = url;
         this.json = json;
         this.imageSize = imageSize;
-        this.imageViewWeakReference = new WeakReference<>(imageView);
+        //this.bitmapWeakReference = new WeakReference<>(bitmap);
     }
 
 
     // 背景執行
     @Override
     protected Bitmap doInBackground(Object... objects) {
-        return getRemoteImage(url, json);
+        return getRemoteImage();
     }
 
-    private Bitmap getRemoteImage(String url, String json) {
+    private Bitmap getRemoteImage() {
         HttpURLConnection connection = null;
         Bitmap bitmap = null;
         try {
@@ -56,8 +55,8 @@ public class ImageTask extends AsyncTask<Object, Integer, Bitmap> {
             connection.setUseCaches(false); // do not use a cached copy
             connection.setRequestMethod("POST");
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(connection.getOutputStream()));
-            bw.write(jsonOut);
-            Log.d(TAG, "output: " + jsonOut);
+            bw.write(json);
+            Log.d(TAG, "output: " + json);
             bw.close();
 
             int responseCode = connection.getResponseCode();
@@ -77,18 +76,18 @@ public class ImageTask extends AsyncTask<Object, Integer, Bitmap> {
         return bitmap;
     }
 
-    @Override
-    protected void onPostExecute(Bitmap bitmap) {
-        ImageView imageView = imageViewWeakReference.get();
-        if (isCancelled() || imageView == null) {
-            return;
-        }
-        if (bitmap != null) {
-            imageView.setImageBitmap(bitmap);
-        } else {
-//            imageView.setImageResource(R.drawable.ex_photo);
-        }
-    }
+//    @Override
+//    protected void onPostExecute(Bitmap bitmap) {
+//        Bitmap thisbitmap = bitmapWeakReference.get();
+//        if (isCancelled() || thisbitmap == null) {
+//            return;
+//        }
+//        if (bitmap != null) {
+//            thisbitmap = bitmap;
+//        } else {
+////            imageView.setImageResource(R.drawable.ex_photo);
+//        }
+//    }
     
 
 }

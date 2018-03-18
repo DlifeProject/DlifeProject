@@ -57,16 +57,14 @@ public class summary extends HttpServlet{
 			if (action.equals("categorySum")) {
 				String[] cateArray = Common.DEFAULTCATE;
 				List<CategorySum> ltCategorySum = new ArrayList<CategorySum>();
-				
 				for(String categoryType:cateArray) {
 					CategorySum categorySum = new CategorySum();
 					CategoryDao categoryDao = new CategoryDao(memberSK);
 					categorySum = categoryDao.getSummaryByType(categoryType);
 					ltCategorySum.add(categorySum);	
 				}
-
                 JsonObject outJsonObject = new JsonObject();
-                outJsonObject.addProperty("CategorySum", new Gson().toJson(ltCategorySum));
+                outJsonObject.addProperty("categorySum", new Gson().toJson(ltCategorySum));
                 outPut = outJsonObject.toString();
 				System.out.println("Start summary !! outPut " + outPut);	
 			}

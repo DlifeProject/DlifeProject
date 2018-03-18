@@ -71,8 +71,6 @@
                     android:textSize="35sp" />
             </LinearLayout>
 
-
-
             <TextView
                 android:id="@+id/tv_year"
                 android:layout_width="wrap_content"
@@ -202,19 +200,6 @@
             </LinearLayout>
 
         </LinearLayout>
-
-        <Button
-            android:id="@+id/bt_check"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/ry_End"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="2dp"
-            android:background="@drawable/shape_rectangle_dark"
-            android:text="確認"
-            android:textSize="20dp"
-            android:textColor="@color/text_black" />
-
 
 
     </RelativeLayout>

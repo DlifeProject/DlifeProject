@@ -1,14 +1,18 @@
 package com.kang.Dlife.tb_page2;
 
-/**
- * Created by allen on 2018/1/10.
- */
+import java.io.Serializable;
 
-class PiechartData {
-    String category;
-    long categoryTime;
+public class PiechartData implements Serializable {
 
-    public PiechartData(String category, long categoryTime) {
+    private String category;
+    private double categoryTime;
+
+    public PiechartData() {
+        super();
+    }
+
+    public PiechartData(String category, double categoryTime) {
+        super();
         this.category = category;
         this.categoryTime = categoryTime;
     }
@@ -21,11 +25,12 @@ class PiechartData {
         this.category = category;
     }
 
-    public long getCategoryTime() {
+    public double getCategoryTime() {
         return categoryTime;
     }
 
-    public void setCategoryTime(long categoryTime) {
+    public void setCategoryTime(double categoryTime) {
         this.categoryTime = categoryTime;
     }
+
 }

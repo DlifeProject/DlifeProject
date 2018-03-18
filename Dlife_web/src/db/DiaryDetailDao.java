@@ -154,19 +154,19 @@ public class DiaryDetailDao {
 		close();
 		return insertCount;
 	}
-	
+
 	public int upload() {
 		int count = 0;
 		memberSK = diaryDetail.getMember_sk();
-		
-		String sql = "update diary_detail set top_category_sk=?, note=? where sk = ?"; 
+
+		String sql = "update diary_detail set top_category_sk=?, note=? where sk = ?";
 		try {
 			conn = DriverManager.getConnection(Common.DBURL, Common.DBACCOUNT, Common.DBPWD);
 			ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			ps.setInt(1, diaryDetail.getTop_category_sk());
 			ps.setString(2, diaryDetail.getNote());
 			ps.setInt(3, diaryDetail.getSk());
-			count = ps.executeUpdate();	
+			count = ps.executeUpdate();
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -174,24 +174,23 @@ public class DiaryDetailDao {
 
 		close();
 		if (count > 0) {
-			
-			CategoryDao categoryDao = new CategoryDao();
-						
-			
-			DiaryCategoryDao diaryCategoryDao = new DiaryCategoryDao(memberSK);
-			
-//			System.out.println("diaryDetail.getSk() : " + diaryDetail.getSk());
-//			System.out.println("diaryDetail.getTop_category_sk() : " + diaryDetail.getTop_category_sk());
-//			System.out.println("categoryDao.getCategoryType(diaryDetail.getTop_category_sk() : " + categoryDao.getCategoryType(diaryDetail.getTop_category_sk()));
 
-		
-			diaryCategoryDao.updateDiaryCategory( diaryDetail.getSk()
-												,diaryDetail.getTop_category_sk()
-												,categoryDao.getCategoryType(diaryDetail.getTop_category_sk())
-												);
-			
-//			System.out.println("diaryDetail.getSk() : " + getCategoryMatch(Common.CATEGORYMATCHDAY));
-			
+			CategoryDao categoryDao = new CategoryDao();
+
+			DiaryCategoryDao diaryCategoryDao = new DiaryCategoryDao(memberSK);
+
+			// System.out.println("diaryDetail.getSk() : " + diaryDetail.getSk());
+			// System.out.println("diaryDetail.getTop_category_sk() : " +
+			// diaryDetail.getTop_category_sk());
+			// System.out.println("categoryDao.getCategoryType(diaryDetail.getTop_category_sk()
+			// : " + categoryDao.getCategoryType(diaryDetail.getTop_category_sk()));
+
+			diaryCategoryDao.updateDiaryCategory(diaryDetail.getSk(), diaryDetail.getTop_category_sk(),
+					categoryDao.getCategoryType(diaryDetail.getTop_category_sk()));
+
+			// System.out.println("diaryDetail.getSk() : " +
+			// getCategoryMatch(Common.CATEGORYMATCHDAY));
+
 			CategoryMatchDao categoryMatchDao = new CategoryMatchDao(memberSK);
 			categoryMatchDao.updateCategoryMatch(getCategoryMatch(Common.CATEGORYMATCHDAY));
 		}
@@ -318,7 +317,7 @@ public class DiaryDetailDao {
 		close();
 		return ltDiaryDetail;
 	}
-	
+
 	public List<DiaryDetail> getDiaryByCategoryTypeBySK(int categorySK) {
 		CategoryDao categoryDao = new CategoryDao();
 		List<DiaryDetail> ltDiaryDetail = getDiaryByCategoryType(categoryDao.getCategoryType(categorySK));
@@ -328,20 +327,17 @@ public class DiaryDetailDao {
 	public List<DiaryDetail> getDiaryByCategoryType(String categoryType) {
 
 		List<DiaryDetail> ltDiaryDetail = new ArrayList<DiaryDetail>();
-		
+
 		System.out.println(categoryType);
-		
+
 		int top_category_sk = 0;
 		ResultSet rs = null;
 		if (categoryType.equals("nonCategory")) {
-			String sql = "select " 
-					+ " sk, member_sk, top_category_sk, member_location_sk, note"
+			String sql = "select " + " sk, member_sk, top_category_sk, member_location_sk, note"
 					+ ",start_stamp, end_stamp, start_date, end_date, post_day"
-					+ ",post_date, longitude, latitude, altitude" 
-					+ " from diary_detail" 
-					+ " where member_sk = ? "
+					+ ",post_date, longitude, latitude, altitude" + " from diary_detail" + " where member_sk = ? "
 					+ " order by sk desc limit 5";
-			
+
 			try {
 				conn = DriverManager.getConnection(Common.DBURL, Common.DBACCOUNT, Common.DBPWD);
 				ps = conn.prepareStatement(sql);
@@ -472,13 +468,11 @@ public class DiaryDetailDao {
 		close();
 		return summary;
 	}
-	
+
 	public boolean isMemberOwn(int dieayDetailSK) {
-		
+
 		int realMemberOwnSK = 0;
-		String sql = "select sk, member_sk "
-				+ " from diary_detail" 
-				+ " where sk = ? ";
+		String sql = "select sk, member_sk " + " from diary_detail" + " where sk = ? ";
 		try {
 			conn = DriverManager.getConnection(Common.DBURL, Common.DBACCOUNT, Common.DBPWD);
 			ps = conn.prepareStatement(sql);
@@ -492,7 +486,7 @@ public class DiaryDetailDao {
 			e.printStackTrace();
 		}
 		close();
-		if(realMemberOwnSK == memberSK) {
+		if (realMemberOwnSK == memberSK) {
 			return true;
 		} else {
 			return false;
@@ -500,41 +494,40 @@ public class DiaryDetailDao {
 	}
 
 	public boolean deleteDiaryDetail(int dieayDetailSK) {
-		
-		//delete photo
+
+		// delete photo
 		DiaryPhotoDao diaryPhotoDao = new DiaryPhotoDao();
-		if(diaryPhotoDao.deleteDiaryPhoto(memberSK,dieayDetailSK)) {
-			//delete diary_category
+		if (diaryPhotoDao.deleteDiaryPhoto(memberSK, dieayDetailSK)) {
+			// delete diary_category
 			DiaryCategoryDao diaryCategoryDao = new DiaryCategoryDao(memberSK);
-			if(diaryCategoryDao.deleteDiaryCategoryDao(dieayDetailSK)) {
-				//delete diary_detail
-				if(doDeleteDiaryDetail(dieayDetailSK)) {
-					//recalculate category_match
+			if (diaryCategoryDao.deleteDiaryCategoryDao(dieayDetailSK)) {
+				// delete diary_detail
+				if (doDeleteDiaryDetail(dieayDetailSK)) {
+					// recalculate category_match
 					CategoryMatchDao categoryMatchDao = new CategoryMatchDao(memberSK);
 					categoryMatchDao.updateCategoryMatch(getCategoryMatch(Common.CATEGORYMATCHDAY));
 
-				}else {
+				} else {
 					System.out.println("deleteDiaryDetail doDeleteDiaryDetail err!");
 					return false;
 				}
-				
-			}else {
+
+			} else {
 				System.out.println("deleteDiaryDetail deleteDiaryCategoryDao err!");
 				return false;
 			}
-			
-		}else {
+
+		} else {
 			System.out.println("deleteDiaryDetail deleteDiaryPhoto err!");
 			return false;
 		}
-		
+
 		return false;
 	}
 
 	private boolean doDeleteDiaryDetail(int dieayDetailSK) {
 		int rowCount = 0;
-		String sql = "delete from diary_detail"
-				+ " where sk = ?";
+		String sql = "delete from diary_detail" + " where sk = ?";
 		try {
 			conn = DriverManager.getConnection(Common.DBURL, Common.DBACCOUNT, Common.DBPWD);
 			ps = conn.prepareStatement(sql);
@@ -545,8 +538,8 @@ public class DiaryDetailDao {
 			System.out.println("doDeleteDiaryDetail fail sk:" + dieayDetailSK);
 		}
 		close();
-		
-		if(rowCount > 0) {
+
+		if (rowCount > 0) {
 			return true;
 		} else {
 			return false;
@@ -554,42 +547,151 @@ public class DiaryDetailDao {
 	}
 
 	// 大程
-	public PiechartData getPiechartDate(String categoryType, SelectDate sd) {
+	public PiechartData getPiechartDate(String categoryType, String startDay, String endDay) {
 		int category_sk = new CategoryDao().getCategory_sk(categoryType);
-		String sql = "SELECT sum(end_stamp - start_stamp) FROM diary_detail"
-				+ " WHERE start_stamp >= ? and end_stamp <= ? and top_category_sk = ? "
-				+ "and member_sk = ? GROUP BY top_category_sk;";
-		PreparedStatement ps = null;
-		Connection connection = null;
-		long categoryTime = 0;
+		String sql = "select sum(end_stamp - start_stamp) as sumTimestamp"
+				+ " from diary_detail"
+				+ " where"
+				+ " post_day <= ? and post_day >= ? and top_category_sk = ? and member_sk = ?"
+				+ " group by top_category_sk;";
+		double categoryTimeHr = 0;
+		long categoryTimestamp = 0;
 		try {
 			conn = (Connection) DriverManager.getConnection(Common.DBURL, Common.DBACCOUNT, Common.DBPWD);
 			ps = (PreparedStatement) conn.prepareStatement(sql);
-			ps.setTimestamp(1, sd.getStartDate());
-			ps.setTimestamp(2, sd.getEndDate());
+			ps.setString(1, startDay);
+			ps.setString(2, endDay);
 			ps.setInt(3, category_sk);
 			ps.setInt(4, memberSK);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
-				categoryTime = rs.getTimestamp(1).getTime();
+				categoryTimestamp = rs.getLong(1);
 			}
-			return new PiechartData(categoryType, categoryTime);
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} finally {
+		}
+		categoryTimeHr = Common.timestampToHr(categoryTimestamp);
+		return new PiechartData(categoryType, categoryTimeHr);
+	}
+	
+	public DiaryDetail getDiaryBySK(int diaryDetailSK) {
+		DiaryDetail diaryDetail = new DiaryDetail();
+		ResultSet rs = null;
+		String sql = "select " 
+				+ " sk, member_sk, top_category_sk, member_location_sk, note"
+				+ ",start_stamp, end_stamp, start_date, end_date, post_day"
+				+ ",post_date, longitude, latitude, altitude" 
+				+ " from diary_detail" 
+				+ " where sk = ? ";
+
+		try {
+			conn = DriverManager.getConnection(Common.DBURL, Common.DBACCOUNT, Common.DBPWD);
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, diaryDetailSK);
+			rs = ps.executeQuery();
+			if (rs.next()) {
+				diaryDetail.setSk(rs.getInt(1));
+				diaryDetail.setMember_sk(rs.getInt(2));
+				diaryDetail.setTop_category_sk(rs.getInt(3));
+				diaryDetail.setMember_location_sk(rs.getInt(4));
+				diaryDetail.setNote(rs.getString(5));
+				diaryDetail.setStart_stamp(rs.getString(6));
+				diaryDetail.setEnd_stamp(rs.getString(7));
+				diaryDetail.setStart_date(rs.getString(8));
+				diaryDetail.setEnd_date(rs.getString(9));
+				diaryDetail.setPost_day(rs.getString(10));
+				diaryDetail.setPost_date(rs.getString(11));
+				diaryDetail.setLongitude(rs.getDouble(12));
+				diaryDetail.setLatitude(rs.getDouble(13));
+				diaryDetail.setAltitude(rs.getDouble(14));
+			}
+
+		} catch (SQLException e) {
+			System.out.println("getDiaryBySK error sk: " + diaryDetailSK);
+			e.printStackTrace();
+		}
+		return diaryDetail;
+	}
+
+	public List<DiaryDetail> getDiaryBetweenDays(String startDay, String endDay, int categoryListIndex) {
+		List<DiaryDetail> ltDiaryDetail = new ArrayList<DiaryDetail>();
+		ResultSet rs = null;
+		if (categoryListIndex == 0) {
+			String sql = "select " 
+					+ " sk, member_sk, top_category_sk, member_location_sk, note"
+					+ ",start_stamp, end_stamp, start_date, end_date, post_day"
+					+ ",post_date, longitude, latitude, altitude" 
+					+ " from diary_detail" 
+					+ " where member_sk = ? "
+					+ " and post_day >= ?"
+					+ " and post_day <= ?"
+					+ " order by sk desc limit 5";
+
 			try {
-				if (ps != null) {
-					ps.close();
-				}
-				if (connection != null) {
-					connection.close();
-				}
+				conn = DriverManager.getConnection(Common.DBURL, Common.DBACCOUNT, Common.DBPWD);
+				ps = conn.prepareStatement(sql);
+				ps.setInt(1, memberSK);
+				ps.setString(2, startDay);
+				ps.setString(3, endDay);
+				rs = ps.executeQuery();
+
 			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		} else {
+			String sql = "select " 
+					+ " sk, member_sk, top_category_sk, member_location_sk, note"
+					+ ",start_stamp, end_stamp, start_date, end_date, post_day"
+					+ ",post_date, longitude, latitude, altitude" 
+					+ " from diary_detail" 
+					+ " where member_sk = ? "
+					+ " and post_day >= ?"
+					+ " and post_day <= ?"
+					+ " and top_category_sk = ?" 
+					+ " order by sk  desc limit 5";
+			try {
+				conn = DriverManager.getConnection(Common.DBURL, Common.DBACCOUNT, Common.DBPWD);
+				ps = conn.prepareStatement(sql);
+				ps.setInt(1, memberSK);
+				ps.setString(2, startDay);
+				ps.setString(3, endDay);
+				ps.setInt(4, categoryListIndex);
+				rs = ps.executeQuery();
+
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-		return new PiechartData(categoryType, categoryTime);
-	}
 
+		try {
+			while (rs.next()) {
+				DiaryDetail diaryDetail = new DiaryDetail();
+				diaryDetail.setSk(rs.getInt(1));
+				diaryDetail.setMember_sk(rs.getInt(2));
+				diaryDetail.setTop_category_sk(rs.getInt(3));
+				diaryDetail.setMember_location_sk(rs.getInt(4));
+				diaryDetail.setNote(rs.getString(5));
+				diaryDetail.setStart_stamp(rs.getString(6));
+				diaryDetail.setEnd_stamp(rs.getString(7));
+				diaryDetail.setStart_date(rs.getString(8));
+				diaryDetail.setEnd_date(rs.getString(9));
+				diaryDetail.setPost_day(rs.getString(10));
+				diaryDetail.setPost_date(rs.getString(11));
+				diaryDetail.setLongitude(rs.getDouble(12));
+				diaryDetail.setLatitude(rs.getDouble(13));
+				diaryDetail.setAltitude(rs.getDouble(14));
+				ltDiaryDetail.add(diaryDetail);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		close();
+		return ltDiaryDetail;
+	}
 
 }

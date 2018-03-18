@@ -2,16 +2,17 @@ package api;
 
 public class PiechartData {
 
-	String category;
-	long categoryTime;
+	private String category;
+	private double categoryTime;
 
-	public PiechartData(String category, long categoryTime) {
+	public PiechartData() {
+		super();
+	}
+	
+	public PiechartData(String category, double categoryTime) {
 		super();
 		this.category = category;
 		this.categoryTime = categoryTime;
-	}
-
-	public PiechartData() {
 	}
 
 	public String getCategory() {
@@ -22,11 +23,11 @@ public class PiechartData {
 		this.category = category;
 	}
 
-	public long getCategoryTime() {
+	public double getCategoryTime() {
 		return categoryTime;
 	}
 
-	public void setCategoryTime(long categoryTime) {
+	public void setCategoryTime(double categoryTime) {
 		this.categoryTime = categoryTime;
 	}
 

@@ -5,6 +5,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import system.Common;
 
@@ -62,7 +64,6 @@ public class MemberLocationDao {
 			ps = conn.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
 			
 			System.out.println(sql);
-			
 			ps.setInt(1, 1);
 			ps.setString(2, "test google");
 			ps.setString(3, "user title");
@@ -79,5 +80,21 @@ public class MemberLocationDao {
 		close();
 		return count;
 	}
+
+//	public List<Integer> getLocationFriendList(List<Integer> avoidMemberSKList) {
+//		List<Integer> locationFriendList = new ArrayList<Integer>();
+//		String avoidMemberString = "0";
+//		if(locationFriendList.size() > 0) {
+//			for(int tempSK: locationFriendList) {
+//				avoidMemberString = avoidMemberString + "," + String.valueOf(tempSK);
+//			}
+//		}
+//		MemberLocationDao myMemberLocationDao = new MemberLocationDao(memberSK);
+//		List<String> myLocationIDList = myMemberLocationDao.getLocationIDList();
+//		
+//		
+//		
+//		return null;
+//	}
 
 }

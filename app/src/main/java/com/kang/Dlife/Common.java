@@ -14,6 +14,7 @@ import java.io.ByteArrayOutputStream;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 
@@ -45,10 +46,12 @@ public class Common {
     public final static String WEBSUMMARY = "summary";
     public final static String MAPAPI = "mapapi";
     public final static String FRIEND = "friend";
+    public final static String PIECHARTSERVLET = "PiechartServlet";
+
 
     public final static String[] DEFAULTCATE = {"Shopping","Hobby","Learning","Travel","Work"};
     public final static String[] NONSHARECATE = {"Work"};
-
+    public final static int CATEGORYSEARCHMAXDAY = -30;
 
     public static String getAccount(Context c){
         String account = getPrefferencesData(c, PREFFERENCES_USER_ACCOUNT);
@@ -168,7 +171,15 @@ public class Common {
 
         System.out.println(date);
         return date;
+    }
 
+    public static String toDayString (int i) {
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DAY_OF_MONTH, i);
+        Date date  = cal.getTime();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String timestring = sdf.format(date);
+        return timestring;
     }
 
     public static boolean checkLoginAccountEmail(String account){
@@ -224,6 +235,51 @@ public class Common {
     }
 
     public static String setDateFormat(int year, int month, int dayOfMonth) {
-        return String.valueOf(year) + "-" + String.valueOf(month) + "-" + String.valueOf(dayOfMonth);
+        String momthString = "";
+        if(month < 10) {
+            momthString = "0" + String.valueOf(month);
+        }else {
+            momthString = String.valueOf(month);
+        }
+        String dayString = "";
+        if(dayOfMonth < 10) {
+            dayString = "0" + String.valueOf(dayOfMonth);
+        }else {
+            dayString = String.valueOf(dayOfMonth);
+        }
+        return String.valueOf(year) + "-" + momthString + "-" + dayString;
     }
+
+    public static String monthIntToLetter(int i) {
+        switch (i) {
+            case 1:
+                return "JAN";
+            case 2:
+                return "FEB";
+            case 3:
+                return "MAR";
+            case 4:
+                return "APR";
+            case 5:
+                return "MAY";
+            case 6:
+                return "JAN";
+            case 7:
+                return "JUL";
+            case 8:
+                return "AUG";
+            case 9:
+                return "SEP";
+            case 10:
+                return "OCT";
+            case 11:
+                return "NOV";
+            case 12:
+                return "DEC";
+            default:
+                return "";
+
+        }
+    }
+
 }

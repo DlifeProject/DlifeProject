@@ -316,25 +316,28 @@ public class DiaryEdit extends Activity {
                     }
 
                     // 上傳地標訊息
-                    JsonObject nearByJsonObject = new JsonObject();
-                    nearByJsonObject.addProperty("action", "nearBySelect");
-                    nearByJsonObject.addProperty("account", Common.getAccount(DiaryEdit.this));
-                    nearByJsonObject.addProperty("password", Common.getPWD(DiaryEdit.this));
-                    nearByJsonObject.addProperty("nearBy", new Gson().toJson(nearbyItem.get(selectNearBy)));
+                    if(insterCount > 0) {
+                        JsonObject nearByJsonObject = new JsonObject();
+                        nearByJsonObject.addProperty("action", "nearBySelect");
+                        nearByJsonObject.addProperty("account", Common.getAccount(DiaryEdit.this));
+                        nearByJsonObject.addProperty("password", Common.getPWD(DiaryEdit.this));
+                        nearByJsonObject.addProperty("diaryDetailSK", insterCount);
+                        nearByJsonObject.addProperty("nearBy", new Gson().toJson(nearbyItem.get(selectNearBy)));
 
-                    if (networkConnected()) {
-                        String url = Common.URL + Common.MAPAPI;
-                        MyTask myTask = new MyTask(url, nearByJsonObject.toString());
-                        try {
-                            String inStr = myTask.execute().get().trim();
-                            insterCount = Integer.valueOf(inStr);
-                            if (insterCount == 0) {
+                        if (networkConnected()) {
+                            String url = Common.URL + Common.MAPAPI;
+                            MyTask myTask = new MyTask(url, nearByJsonObject.toString());
+                            try {
+                                String inStr = myTask.execute().get().trim();
+                                insterCount = Integer.valueOf(inStr);
+                                if (insterCount == 0) {
 
-                            } else {
+                                } else {
 
+                                }
+                            } catch (Exception e) {
+                                Log.e(TAG, e.toString());
                             }
-                        } catch (Exception e) {
-                            Log.e(TAG, e.toString());
                         }
                     }
 
@@ -402,7 +405,7 @@ public class DiaryEdit extends Activity {
                         }
                     }
 
-                    if (nearbyItem != null) {
+                    if (nearbyItem.size() != 0) {
                         // 上傳新選的地標訊息
                         JsonObject nearByJsonObject = new JsonObject();
                         nearByJsonObject.addProperty("action", "uploadNearBySelect");
@@ -601,7 +604,7 @@ public class DiaryEdit extends Activity {
                 default:
                     // 抓使用者選的圖片
                     selectPhotoSize = result.size();
-                    if (bundlePhoto != null) {
+                    if (bundlePhoto.size() > 0 ) {
                         Glide.with(context)
                                 .load(result.get(position - bundlePhoto.size()))
                                 .centerCrop()
