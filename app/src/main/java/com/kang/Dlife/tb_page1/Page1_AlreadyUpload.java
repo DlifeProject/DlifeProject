@@ -197,7 +197,6 @@ public class Page1_AlreadyUpload extends Fragment {
                     String url = Common.URL + Common.WEBPHOTO;
 
                     try {
-
                         JsonObject jsonObject = new JsonObject();
                         jsonObject.addProperty("action", "getDiaryPhotoSKList");
                         jsonObject.addProperty("account", Common.getAccount(getActivity()));
@@ -206,11 +205,13 @@ public class Page1_AlreadyUpload extends Fragment {
                         String jsonOut = jsonObject.toString();
 
                         MyTask getDiaryPhotoSKTask = new MyTask(url, jsonOut);
-
-                        String getDiaryPhotoSKjsonIn = getDiaryPhotoSKTask.execute().get();
+                        String getDiaryPhotoSKjsonIn = getDiaryPhotoSKTask.execute().get().trim();
+                        Gson gson = new Gson();
+                        JsonObject jsonObject2 = gson.fromJson(getDiaryPhotoSKjsonIn, JsonObject.class);
+                        String getDiaryPhotoSKString = jsonObject2.get("getDiaryPhotoSKList").getAsString();
                         Type ltWeb = new TypeToken<List<PhotoSpot>>() {
                         }.getType();
-                        photoSpotList = new Gson().fromJson(getDiaryPhotoSKjsonIn, ltWeb);
+                        photoSpotList = new Gson().fromJson(getDiaryPhotoSKString, ltWeb);
                     } catch (Exception e) {
                         Log.e(TAG, e.toString());
                     }

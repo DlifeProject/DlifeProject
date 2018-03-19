@@ -69,7 +69,6 @@ public class mapapi extends HttpServlet{
 			outJsonObject.addProperty("nearbyItems", new Gson().toJson(nearbyList));
 			
 			System.out.println("mapapi nearby outStr: " + outJsonObject.toString());
-			
 			response.getWriter().println(outJsonObject.toString());
 
 		}else if(action.equals("nearBySelect")) {

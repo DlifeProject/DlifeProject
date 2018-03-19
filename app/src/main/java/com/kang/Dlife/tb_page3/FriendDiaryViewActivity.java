@@ -220,15 +220,17 @@ public class FriendDiaryViewActivity extends AppCompatActivity {
                     jsonObject.addProperty("account", Common.getAccount(FriendDiaryViewActivity.this));
                     jsonObject.addProperty("password", Common.getPWD(FriendDiaryViewActivity.this));
                     jsonObject.addProperty("diarySK", igList.get(position).getSk());
+
                     String jsonOut = jsonObject.toString();
 
                     MyTask getDiaryPhotoSKTask = new MyTask(url, jsonOut);
-
-                    String getDiaryPhotoSKjsonIn = getDiaryPhotoSKTask.execute().get();
+                    String getDiaryPhotoSKjsonIn = getDiaryPhotoSKTask.execute().get().trim();
+                    Gson gson = new Gson();
+                    JsonObject jsonObject2 = gson.fromJson(getDiaryPhotoSKjsonIn, JsonObject.class);
+                    String getDiaryPhotoSKString = jsonObject2.get("getDiaryPhotoSKList").getAsString();
                     Type ltWeb = new TypeToken<List<PhotoSpot>>() {
                     }.getType();
-                    photoSpotList = new Gson().fromJson(getDiaryPhotoSKjsonIn, ltWeb);
-
+                    photoSpotList = new Gson().fromJson(getDiaryPhotoSKString, ltWeb);
 
                 } catch (Exception e) {
                     Log.e(TAG, e.toString());

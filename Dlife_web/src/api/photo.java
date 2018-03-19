@@ -83,8 +83,11 @@ public class photo extends HttpServlet {
 				System.out.println(" diarySK:" + diarySK);
 				List<DiaryPhoto> photoSKList = diaryPhotoDao.getPhotoSKList(diarySK);
 				
-				System.out.println(" photoSkList" + photoSKList);
-				writeText(response, gson.toJson(photoSKList));
+				JsonObject outJsonObject = new JsonObject();
+				outJsonObject.addProperty("getDiaryPhotoSKList", new Gson().toJson(photoSKList));
+				
+				System.out.println("photoSkList outStr: " + outJsonObject.toString());
+				response.getWriter().println(outJsonObject.toString());
 				
 			} else if (action.equals("getImage")) {
 				
@@ -94,7 +97,7 @@ public class photo extends HttpServlet {
 				int imageSize = jsonObject.get("imageSize").getAsInt();
 				if(id != 0) {
 					byte[] image = diaryPhotoDao.getImage(id);
-					System.out.println("Start image !! outPut sk " + "111111");
+					System.out.println("Start image !! outPut sk " + id);
 					if (image != null) {
 						image = ImageUtil.shrink(image, imageSize);
 						response.setContentType("image/jpeg");

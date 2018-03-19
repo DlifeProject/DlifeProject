@@ -159,7 +159,7 @@ public class diary extends HttpServlet {
 
 				if (ltDiaryDetail.size() > 0) {
 					exeString = "getDiarySuccess";
-					outJsonObject.addProperty("getDiary", new Gson().toJson(ltDiaryDetail));
+					outJsonObject.addProperty("getDiaryBetweenDays", new Gson().toJson(ltDiaryDetail));
 					msg = outJsonObject.toString();
 					System.out.println("outStr: " + msg.toString());
 

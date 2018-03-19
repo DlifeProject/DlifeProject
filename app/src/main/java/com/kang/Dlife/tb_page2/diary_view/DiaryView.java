@@ -117,7 +117,7 @@ public class DiaryView extends AppCompatActivity {
 
                 Gson gson = new Gson();
                 JsonObject diaryInJsonObject = gson.fromJson(getDiaryJsonIn, JsonObject.class);
-                String ltDiaryDetailString = diaryInJsonObject.get("getDiary").getAsString();
+                String ltDiaryDetailString = diaryInJsonObject.get("getDiaryBetweenDays").getAsString();
 
                 Type tySum = new TypeToken<List<LocationToDiary>>() {
                 }.getType();
@@ -221,11 +221,13 @@ public class DiaryView extends AppCompatActivity {
                     String jsonOut = jsonObject.toString();
 
                     MyTask getDiaryPhotoSKTask = new MyTask(url, jsonOut);
-
-                    String getDiaryPhotoSKjsonIn = getDiaryPhotoSKTask.execute().get();
+                    String getDiaryPhotoSKjsonIn = getDiaryPhotoSKTask.execute().get().trim();
+                    Gson gson = new Gson();
+                    JsonObject jsonObject2 = gson.fromJson(getDiaryPhotoSKjsonIn, JsonObject.class);
+                    String getDiaryPhotoSKString = jsonObject2.get("getDiaryPhotoSKList").getAsString();
                     Type ltWeb = new TypeToken<List<PhotoSpot>>() {
                     }.getType();
-                    photoSpotList = new Gson().fromJson(getDiaryPhotoSKjsonIn, ltWeb);
+                    photoSpotList = new Gson().fromJson(getDiaryPhotoSKString, ltWeb);
 
 
                 } catch (Exception e) {

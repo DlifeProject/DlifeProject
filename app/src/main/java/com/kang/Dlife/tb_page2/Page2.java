@@ -340,8 +340,11 @@ public class Page2 extends Fragment implements View.OnClickListener {
             try {
                 String inStr = myTask.execute().get().trim();
                 Gson gson = new Gson();
+                JsonObject jsonObject2 = gson.fromJson(inStr, JsonObject.class);
+                String selectItems = jsonObject2.get("select").getAsString();
+
                 Type listType = new TypeToken<List<PiechartData>>() {}.getType();
-                piechartDataList = gson.fromJson(inStr, listType);
+                piechartDataList = gson.fromJson(selectItems, listType);
                 for (PiechartData piechartData : piechartDataList){
                     totalHour = totalHour + piechartData.getCategoryTime();
                 }

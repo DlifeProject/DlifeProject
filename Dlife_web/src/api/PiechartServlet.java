@@ -67,8 +67,11 @@ public class PiechartServlet extends HttpServlet {
 				piechartData = dao.getPiechartDate(categoryType, startDay, endDay);
 				ltPiechartData.add(piechartData);
 			}
-			System.out.println("select output: " + gson.toJson(ltPiechartData));
-			response.getWriter().append(gson.toJson(ltPiechartData));
+			
+			JsonObject outJsonObject = new JsonObject();
+			outJsonObject.addProperty("select", new Gson().toJson(ltPiechartData));
+			System.out.println("select output: " + outJsonObject.toString());
+			response.getWriter().println(outJsonObject.toString());
 		}
 	}
 
