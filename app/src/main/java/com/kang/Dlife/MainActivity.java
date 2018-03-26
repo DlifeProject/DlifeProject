@@ -71,8 +71,9 @@ public class MainActivity extends AppCompatActivity {
 
         if (Common.checkNetConnected(this)) {
             if (checkInitLogin()) {
-                //startService
+
                 Common.startTabActivity(this);
+                //finish()
             }
         } else {
             Common.showToast(this, "Web is not connected");
@@ -135,10 +136,11 @@ public class MainActivity extends AppCompatActivity {
                 if (checkLoginRule()) {
                     loginMessage = webLogin(c, userAccount, userPassword, userUUID);
 
-                    if (loginMessage.equals("login")) {
+                    if (loginMessage.equals("login") || loginMessage.equals("addSuccess")) {
                         Common.updateLoginPreferences(c, userAccount, userPassword, userUUID);
                         Common.startTabActivity(c);
                         askPermissions();
+                        finish();
                     } else {
                         Common.showToast(c, loginMessage);
                     }
@@ -372,6 +374,7 @@ public class MainActivity extends AppCompatActivity {
                                 }
                                 Common.startTabActivity(MainActivity.this);
                                 askPermissions();
+                                finish();
                                 //Intent intent = new Intent();
                                 //intent.setClass(MainActivity.this, MainActivity.class);
                                 //startActivity(intent);
