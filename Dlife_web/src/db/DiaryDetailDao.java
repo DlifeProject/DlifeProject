@@ -448,7 +448,6 @@ public class DiaryDetailDao {
 			ResultSet rs = ps.executeQuery();
 
 			while (rs.next()) {
-
 				CategoryMatchFormat categoryMatchFormat = new CategoryMatchFormat();
 				categoryMatchFormat.category_type = rs.getString(1);
 				categoryMatchFormat.max_diary_detail_sk = rs.getInt(2);
@@ -457,7 +456,6 @@ public class DiaryDetailDao {
 				categoryMatchFormat.sum_end_stamp = Long.valueOf(rs.getString(5));
 				categoryMatchFormat.top_category_sk = rs.getInt(7);
 				categoryMatchFormat.diary_count = rs.getInt(8);
-
 				summary.add(categoryMatchFormat);
 			}
 
@@ -506,6 +504,9 @@ public class DiaryDetailDao {
 					// recalculate category_match
 					CategoryMatchDao categoryMatchDao = new CategoryMatchDao(memberSK);
 					categoryMatchDao.updateCategoryMatch(getCategoryMatch(Common.CATEGORYMATCHDAY));
+					
+					DiaryLocationDao diaryLocationDao = new DiaryLocationDao(memberSK);
+					diaryLocationDao.deleteByDiaryDetailSK(dieayDetailSK);
 
 				} else {
 					System.out.println("deleteDiaryDetail doDeleteDiaryDetail err!");

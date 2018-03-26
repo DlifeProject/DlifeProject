@@ -55,6 +55,8 @@ public class CategoryMatchDao {
 	public int updateCategoryMatch(ArrayList<CategoryMatchFormat> summary) {
 		int sk = 0;
 		if(summary.size() == 0) {
+			sk = getCategoryMatchSK();
+			updateCategoryMatchToZero(sk);
 			return sk;
 		}else {
 			//transfer to CategoryMatch
@@ -109,6 +111,25 @@ public class CategoryMatchDao {
 		}
 	}
 	
+	private void updateCategoryMatchToZero(int sk) {
+		int exeCount = 0;
+		String sql = "update category_match"
+				+ " set"
+				+ " top_category_1_sk = 0, diary_count_1 = 0, top_category_2_sk = 0, diary_count_2 = 0, top_category_3_sk = 0"
+				+ ",diary_count_3 = 0, start_diary_detail_sk = 0, end_diary_detail_sk = 0, update_day = '" + Common.getNowDayString() + "'"
+				+ ", shareable_diary_count = 0"
+				+ " where sk = ? ";
+		try {
+			conn = DriverManager.getConnection(Common.DBURL, Common.DBACCOUNT,
+					Common.DBPWD);
+			ps = conn.prepareStatement(sql);
+			exeCount = ps.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
 	private int updateBySK(int sk) {
 		
 		int exeCount = 0;

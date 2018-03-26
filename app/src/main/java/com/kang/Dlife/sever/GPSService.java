@@ -26,13 +26,13 @@ import com.kang.Dlife.data_base.LocationTrace;
 
 public class GPSService extends Service {
 
-    public final static int DB_DELAY_TIME = 180000;              //毫秒  180 秒
-    public final static int GPS_INTERVAL = 360000;               //毫秒 360
+    //public final static int DB_DELAY_TIME = 180000;          //毫秒  180 秒
+   // public final static int GPS_INTERVAL = 360000;           //毫秒 360
+    public final static int DB_DELAY_TIME = 5000;              //毫秒  180 秒
+    public final static int GPS_INTERVAL = 10000;
     public final static int GPS_SET_SMALLEST_DISPLACEMENT = 50;  //公尺
-
     private static GPSThread gpsThread;
     private Boolean isRun = true;
-
 
 
     @Override

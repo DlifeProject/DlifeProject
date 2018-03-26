@@ -55,6 +55,7 @@ public class summary extends HttpServlet{
 		String outPut = "";
 		if(memberSK > 0) {
 			if (action.equals("categorySum")) {
+				System.out.println("text1");
 				String[] cateArray = Common.DEFAULTCATE;
 				List<CategorySum> ltCategorySum = new ArrayList<CategorySum>();
 				for(String categoryType:cateArray) {

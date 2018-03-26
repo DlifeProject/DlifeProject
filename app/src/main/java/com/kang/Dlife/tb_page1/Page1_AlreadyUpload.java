@@ -287,6 +287,7 @@ public class Page1_AlreadyUpload extends Fragment {
                                     Log.e(TAG, e.toString());
                                 }
                             }
+                            allDiary.remove(position);
 
                             // 重新執行recycleView
                             notifyDataSetChanged();
@@ -335,11 +336,6 @@ public class Page1_AlreadyUpload extends Fragment {
                 allDiaryList = new Gson().fromJson(ltDiaryDetailString, tySum);
             } catch (Exception e) {
                 Log.e(TAG, e.toString());
-            }
-            if (allDiaryList == null || allDiaryList.isEmpty()) {
-                Common.showToast(getActivity(), R.string.msg_NoNewsFound);
-            } else {
-
             }
         } else {
             Common.showToast(getActivity(), R.string.msg_NoNetwork);

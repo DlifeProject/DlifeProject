@@ -196,6 +196,28 @@ public class DiaryLocationDao {
 		
 		return locationOfFriend;
 	}
+
+	public void deleteByDiaryDetailSK(int dieayDetailSK) {
+		int rowCount = 0;
+		String sql = "delete from diary_location" + " where diary_detail_sk = ?";
+		try {
+			conn = DriverManager.getConnection(Common.DBURL, Common.DBACCOUNT, Common.DBPWD);
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, dieayDetailSK);
+			rowCount = ps.executeUpdate();
+			if(rowCount > 0) {
+				System.out.println("deleteByDiaryDetailSK success sk:" + dieayDetailSK);
+			}else {
+				System.out.println("deleteByDiaryDetailSK fail 1 sk:" + dieayDetailSK);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("deleteByDiaryDetailSK fail 2 sk:" + dieayDetailSK);
+		}
+		close();
+		
+	}
 	
 
 }

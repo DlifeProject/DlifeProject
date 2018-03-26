@@ -287,7 +287,9 @@ public class MainActivity extends AppCompatActivity {
             inStr = login.execute().get().trim();
             etLoginAccount.setText(fbEmail);
             etLoginPassword.setText(inStr);
-            Common.updateLoginPreferences(c, userAccount, inStr, userUUID);
+            //Common.showToast(c, "userAccount->" + userAccount + " pwd->" + inStr + " userUUID->" + userUUID);
+
+            Common.updateLoginPreferences(c, fbEmail, inStr, userUUID);
             isfinish = true;
 
         } catch (Exception e) {
