@@ -290,7 +290,9 @@ public class MainActivity extends AppCompatActivity {
             //Common.showToast(c, "userAccount->" + userAccount + " pwd->" + inStr + " userUUID->" + userUUID);
 
             Common.updateLoginPreferences(c, fbEmail, inStr, userUUID);
-            isfinish = true;
+            if(!inStr.equals("")){
+                isfinish = true;
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -361,7 +363,9 @@ public class MainActivity extends AppCompatActivity {
                                             }
                                         }
 
-
+                                        Common.startTabActivity(MainActivity.this);
+                                        askPermissions();
+                                        finish();
                                     }
                                 } catch (IOException e) {
                                     e.printStackTrace();
@@ -374,13 +378,6 @@ public class MainActivity extends AppCompatActivity {
                                 } catch (InterruptedException e) {
                                     e.printStackTrace();
                                 }
-//                                Common.startTabActivity(MainActivity.this);
-//                                askPermissions();
-//                                finish();
-                                //Intent intent = new Intent();
-                                //intent.setClass(MainActivity.this, MainActivity.class);
-                                //startActivity(intent);
-                                //finish();
                             }
                         }
                 );
