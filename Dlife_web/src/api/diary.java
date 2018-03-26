@@ -61,7 +61,7 @@ public class diary extends HttpServlet {
 		String msg = "";
 
 		if(action != "insertDiaryPhoto") {
-			//System.out.println("inStr: " + sb.toString());
+			System.out.println("inStr: " + sb.toString());
 		}
 		
 		System.out.println("memberSK !! " + memberSK);
@@ -132,13 +132,10 @@ public class diary extends HttpServlet {
 				CategoryDao categoryDao = new CategoryDao();
 				int categorySK = categoryDao.getCategory_sk(categoryType);
 				diaryDetail.setTop_category_sk(categorySK);
-
 				DiaryDetailDao diaryDetailDao = new DiaryDetailDao(diaryDetail);
 				int update_count = diaryDetailDao.upload();
-				if (update_count == 1) {
-					
-					//
-					
+				System.out.println("Start upload diary detail update_count !! " + update_count);
+				if (update_count == 1) {	
 					exeString = "uploadDiarySuccess";
 				} else {
 					exeString = "uploadDiaryFail";

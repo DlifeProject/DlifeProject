@@ -249,6 +249,29 @@ public class DiaryLocationDao {
 		}
 		
 	}
+
+	public String getDiaryPlaceID(int diaryDetailSK) {
+		String placeID = "";
+		String sql = "select google_id from diary_location"
+				+ " where diary_detail_sk = ?";
+		ResultSet rs = null;
+		try {
+			conn = DriverManager.getConnection(Common.DBURL, Common.DBACCOUNT,
+					Common.DBPWD);
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, diaryDetailSK);
+			rs = ps.executeQuery();
+			if (rs.next()) {
+				placeID = rs.getString(1);
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		close();		
+		return placeID;
+	}
 	
 
 }

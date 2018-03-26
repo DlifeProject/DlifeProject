@@ -129,15 +129,13 @@ public class mapapi extends HttpServlet{
 					int diaryDetailSK = jsonObject.get("diaryDetailSK").getAsInt(); 
 					String nearbyJson = jsonObject.get("nearBy").getAsString();
 					JsonObject nearbyJsonObject = gson.fromJson(nearbyJson,JsonObject.class);
-					
 					String googleName = nearbyJsonObject.get("name").getAsString();
 					String googlePlaceID = nearbyJsonObject.get("placeID").getAsString();
 					double latitude = nearbyJsonObject.get("latitude").getAsDouble();
 					double longitude = nearbyJsonObject.get("longitude").getAsDouble();
 					
 					DiaryLocation diaryLocation = new DiaryLocation(
-							0
-							,memberSK
+							memberSK
 							,jsonObject.get("diaryDetailSK").getAsInt()
 							,googlePlaceID
 							,googleName

@@ -16,7 +16,10 @@ public class DiaryDetail {
 	private double longitude;
 	private double latitude;
 	private double altitude;
-
+	
+	//
+	private String placeID;
+	
 	public void describe() {
 		System.out.println("--------------------");
 		System.out.println("member_sk : " + member_sk);
@@ -183,5 +186,12 @@ public class DiaryDetail {
 		this.altitude = altitude;
 	}
 	
+	//
+	public String getPlaceID() {
+		return placeID;
+	}
+	public void setPlaceID(String placeID) {
+		this.placeID = placeID;
+	}
 	
 }

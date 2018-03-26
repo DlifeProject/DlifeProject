@@ -176,20 +176,12 @@ public class DiaryDetailDao {
 		if (count > 0) {
 
 			CategoryDao categoryDao = new CategoryDao();
-
+			
 			DiaryCategoryDao diaryCategoryDao = new DiaryCategoryDao(memberSK);
-
-			// System.out.println("diaryDetail.getSk() : " + diaryDetail.getSk());
-			// System.out.println("diaryDetail.getTop_category_sk() : " +
-			// diaryDetail.getTop_category_sk());
-			// System.out.println("categoryDao.getCategoryType(diaryDetail.getTop_category_sk()
-			// : " + categoryDao.getCategoryType(diaryDetail.getTop_category_sk()));
-
 			diaryCategoryDao.updateDiaryCategory(diaryDetail.getSk(), diaryDetail.getTop_category_sk(),
 					categoryDao.getCategoryType(diaryDetail.getTop_category_sk()));
 
-			// System.out.println("diaryDetail.getSk() : " +
-			// getCategoryMatch(Common.CATEGORYMATCHDAY));
+			System.out.println("diaryDetail.getSk() : " + memberSK);
 
 			CategoryMatchDao categoryMatchDao = new CategoryMatchDao(memberSK);
 			categoryMatchDao.updateCategoryMatch(getCategoryMatch(Common.CATEGORYMATCHDAY));
@@ -307,6 +299,11 @@ public class DiaryDetailDao {
 				diaryDetail.setLongitude(rs.getDouble(12));
 				diaryDetail.setLatitude(rs.getDouble(13));
 				diaryDetail.setAltitude(rs.getDouble(14));
+				
+				DiaryLocationDao diaryLocationDao = new DiaryLocationDao(rs.getInt(2));
+				diaryDetail.setPlaceID(diaryLocationDao.getDiaryPlaceID(rs.getInt(1))); 
+				
+				
 				ltDiaryDetail.add(diaryDetail);
 			}
 		} catch (SQLException e) {
@@ -439,6 +436,8 @@ public class DiaryDetailDao {
 				+ " order by total_stamp desc";
 
 		System.out.println(sql);
+		System.out.println("memberSK " + memberSK);
+		System.out.println("Common.getTimeString(Common.CATEGORYMATCHDAY) " + Common.getTimeString(Common.CATEGORYMATCHDAY));
 
 		try {
 			conn = (Connection) DriverManager.getConnection(Common.DBURL, Common.DBACCOUNT, Common.DBPWD);
@@ -448,6 +447,7 @@ public class DiaryDetailDao {
 			ResultSet rs = ps.executeQuery();
 
 			while (rs.next()) {
+				System.out.println("category_type:"+ rs.getString(1)+ " diary_count:" + rs.getInt(8));
 				CategoryMatchFormat categoryMatchFormat = new CategoryMatchFormat();
 				categoryMatchFormat.category_type = rs.getString(1);
 				categoryMatchFormat.max_diary_detail_sk = rs.getInt(2);

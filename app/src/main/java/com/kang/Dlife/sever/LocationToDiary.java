@@ -38,6 +38,8 @@ public class LocationToDiary implements Serializable {
     private String place = "中央大學";
     private String note;
 
+
+
     public LocationToDiary(){
         super();
     }

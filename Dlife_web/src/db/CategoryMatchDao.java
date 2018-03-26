@@ -79,6 +79,8 @@ public class CategoryMatchDao {
 					minDiaryDetailSK = item.min_diary_detail_sk;
 				}
 				
+				System.out.println("item.top_category_sk : " + item.top_category_sk);
+				
 				if(loopCount == 1) {
 					categoryMatch.setTop_category_1_sk(item.top_category_sk);
 					categoryMatch.setDiary_count_1(item.diary_count);
@@ -157,7 +159,7 @@ public class CategoryMatchDao {
 			ps.setString(10, categoryMatch.getUpdate_day());
 			ps.setString(11, Common.getNowDateTimeString());
 			ps.setInt(12, categoryMatch.getShareable_diary_count());
-			ps.setInt(13, memberSK);
+			ps.setInt(13, sk);
 			exeCount = ps.executeUpdate();
 			
 		} catch (SQLException e) {
