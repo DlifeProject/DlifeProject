@@ -148,12 +148,12 @@ public class diary extends HttpServlet {
 				String endDay = jsonObject.get("endDay").getAsString();
 				int categoryListIndex = jsonObject.get("categoryListIndex").getAsInt();
 				String categoryType = "";
-				if(categoryListIndex == 0) {
-					categoryType = "all";
+				if(categoryListIndex == -1) {
+					//categoryType = "all";
 				}else {
-					categoryType = Common.DEFAULTCATE[categoryListIndex + 1];
+					//categoryType = Common.DEFAULTCATE[categoryListIndex];
 				}
-
+				System.out.println("getDiaryBetweenDays categoryListIndex : " + categoryListIndex);
 				DiaryDetailDao diaryDetailDao = new DiaryDetailDao(memberSK);
 				List<DiaryDetail> ltDiaryDetail = new ArrayList<DiaryDetail>();
 				ltDiaryDetail = diaryDetailDao.getDiaryBetweenDays(startDay,endDay,categoryListIndex);

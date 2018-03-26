@@ -38,7 +38,15 @@ public class LocationToDiary implements Serializable {
     private String place = "中央大學";
     private String note;
 
+    private String placeID;
 
+    public String getPlaceID() {
+        return placeID;
+    }
+
+    public void setPlaceID(String placeID) {
+        this.placeID = placeID;
+    }
 
     public LocationToDiary(){
         super();
@@ -74,6 +82,8 @@ public class LocationToDiary implements Serializable {
         this.icNewId = d.getIcNewId();
         this.place = d.getPlace();
         this.note = d.getNote();
+
+        this.placeID = d.getPlaceID();
     }
 
     public int getMember_sk() {

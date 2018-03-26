@@ -178,8 +178,14 @@ public class DiaryEdit extends Activity {
         Spinner locationSpinner = (Spinner) findViewById(R.id.locationSpinner);
 
         ArrayList<String> location = new ArrayList<>();
-        for (int i = 1; i <= nearbyItem.size(); i++) {
-            location.add(nearbyItem.get(i - 1).getName());
+        int placeId = 0;
+        String tempID = bundleP.getPlaceID();
+        for (int i = 0; i < nearbyItem.size(); i++) {
+            String fuckID = nearbyItem.get(i).getPlaceID();
+            if (fuckID.equals(tempID)) {
+                placeId = i;
+            }
+            location.add(nearbyItem.get(i).getName());
         }
 
 
@@ -190,7 +196,7 @@ public class DiaryEdit extends Activity {
 
         location_list.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         locationSpinner.setAdapter(location_list);
-        locationSpinner.setSelection(0);
+        locationSpinner.setSelection(placeId);
         locationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {

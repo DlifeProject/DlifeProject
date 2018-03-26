@@ -219,7 +219,7 @@ public class Page2 extends Fragment implements View.OnClickListener {
                     Bundle bundle = new Bundle();
                     bundle.putString("startDay", startDay);
                     bundle.putString("endDay", endDay);
-                    bundle.putInt("categoryListIndex", 0);
+                    bundle.putInt("categoryListIndex", -1);
                     startActivity(new Intent(getActivity(), DiaryView.class).putExtras(bundle));
                 }
             });
@@ -424,7 +424,7 @@ public class Page2 extends Fragment implements View.OnClickListener {
                     Bundle bundle = new Bundle();
                     bundle.putString("startDay", startDay);
                     bundle.putString("endDay", endDay);
-                    bundle.putInt("categoryListIndex", index + 1);
+                    bundle.putInt("categoryListIndex", index);
                     intent.putExtras(bundle);
                     startActivity(intent);
                 }

@@ -236,7 +236,7 @@ public class Page1_AlreadyUpload extends Fragment {
                     recyclerClick = position;
                     Intent intent = new Intent();
                     intent.setClass(getActivity(), DiaryEdit.class);
-                    LocationToDiary bundleP = new LocationToDiary(bundleHash.get((int) view.getTag()));
+                    LocationToDiary bundleP = new LocationToDiary(bundleHash.get(position));
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("Page1Adapter", bundleP);
                     bundle.putIntegerArrayList("Page1Photo", photoSK);

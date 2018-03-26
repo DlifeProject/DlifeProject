@@ -163,6 +163,7 @@ public class MainActivity extends AppCompatActivity {
                 etLoginPassword.setText("Regan");
             }
         });
+        btLoginRegan.setVisibility(View.INVISIBLE);
 
         btLoginJessica = (Button) findViewById(R.id.btLoginJessica);
         btLoginJessica.setOnClickListener(new View.OnClickListener() {
@@ -171,6 +172,7 @@ public class MainActivity extends AppCompatActivity {
                 etLoginPassword.setText("Jessica");
             }
         });
+        btLoginJessica.setVisibility(View.INVISIBLE);
 
         btLoginC = (Button) findViewById(R.id.btLoginC);
         btLoginC.setOnClickListener(new View.OnClickListener() {
@@ -179,6 +181,7 @@ public class MainActivity extends AppCompatActivity {
                 etLoginPassword.setText("twodan7566@gmail.com");
             }
         });
+        btLoginC.setVisibility(View.INVISIBLE);
 
         btLoginAllen = (Button) findViewById(R.id.btLoginAllen);
         btLoginAllen.setOnClickListener(new View.OnClickListener() {
@@ -187,6 +190,7 @@ public class MainActivity extends AppCompatActivity {
                 etLoginPassword.setText("Allen");
             }
         });
+        btLoginAllen.setVisibility(View.INVISIBLE);
 
     }
 

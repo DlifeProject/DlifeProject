@@ -617,7 +617,7 @@ public class DiaryDetailDao {
 	public List<DiaryDetail> getDiaryBetweenDays(String startDay, String endDay, int categoryListIndex) {
 		List<DiaryDetail> ltDiaryDetail = new ArrayList<DiaryDetail>();
 		ResultSet rs = null;
-		if (categoryListIndex == 0) {
+		if (categoryListIndex == -1) {
 			String sql = "select " 
 					+ " sk, member_sk, top_category_sk, member_location_sk, note"
 					+ ",start_stamp, end_stamp, start_date, end_date, post_day"
@@ -658,8 +658,13 @@ public class DiaryDetailDao {
 				ps.setInt(1, memberSK);
 				ps.setString(2, startDay);
 				ps.setString(3, endDay);
-				ps.setInt(4, categoryListIndex);
+				ps.setInt(4, categoryListIndex + 1 );
 				rs = ps.executeQuery();
+				System.out.println(sql);
+				System.out.println(memberSK);
+				System.out.println(startDay);
+				System.out.println(endDay);
+				System.out.println("categoryListIndex : " + categoryListIndex );
 
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
