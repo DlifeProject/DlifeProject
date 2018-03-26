@@ -218,6 +218,37 @@ public class DiaryLocationDao {
 		close();
 		
 	}
+
+	public void updateDiaryDetailLocation(int diaryDetailSK) {
+		
+		int count = 0;
+		String sql = "update diary_location set"
+				+ " google_id = ?, google_name = ?, longitude = ?, latitude = ?"
+				+ " where diary_detail_sk = ? ";
+		try {
+			conn = DriverManager.getConnection(Common.DBURL, Common.DBACCOUNT,
+					Common.DBPWD);
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, diaryLocation.getGoogle_id());
+			ps.setString(2, diaryLocation.getGoogle_name());
+			ps.setDouble(3, diaryLocation.getLongitude());
+			ps.setDouble(4, diaryLocation.getLatitude());
+			ps.setInt(5, diaryDetailSK);
+			ps.executeUpdate();
+			count = ps.executeUpdate();
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		close();
+		if(count <= 0) {
+			System.out.println("updateDiaryDetailLocation fail diaryDetailSK: " + diaryDetailSK);
+		}else {
+			System.out.println("updateDiaryDetailLocation success diaryDetailSK: " + diaryDetailSK);
+		}
+		
+	}
 	
 
 }

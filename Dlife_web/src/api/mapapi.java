@@ -116,7 +116,46 @@ public class mapapi extends HttpServlet{
 				System.out.println("nearBySelect : member account notfound ");
 			}
 	
-		}    
+		}else if (action.equals("uploadNearBySelect")) {
+			
+			Member member = new Member(jsonObject.get("account").getAsString()
+					,jsonObject.get("password").getAsString());
+			MemberDao memberDao = new MemberDao(member);
+			int memberSK = memberDao.getMemberSK();
+			if(memberSK > 0) {
+				
+				DiaryDetailDao diaryDetailDao = new DiaryDetailDao(memberSK);
+				if(diaryDetailDao.isMemberOwn(jsonObject.get("diaryDetailSK").getAsInt())) {
+					int diaryDetailSK = jsonObject.get("diaryDetailSK").getAsInt(); 
+					String nearbyJson = jsonObject.get("nearBy").getAsString();
+					JsonObject nearbyJsonObject = gson.fromJson(nearbyJson,JsonObject.class);
+					
+					String googleName = nearbyJsonObject.get("name").getAsString();
+					String googlePlaceID = nearbyJsonObject.get("placeID").getAsString();
+					double latitude = nearbyJsonObject.get("latitude").getAsDouble();
+					double longitude = nearbyJsonObject.get("longitude").getAsDouble();
+					
+					DiaryLocation diaryLocation = new DiaryLocation(
+							0
+							,memberSK
+							,jsonObject.get("diaryDetailSK").getAsInt()
+							,googlePlaceID
+							,googleName
+							,longitude
+							,latitude
+							);
+					DiaryLocationDao diaryLocationDao = new DiaryLocationDao(diaryLocation);
+					diaryLocationDao.updateDiaryDetailLocation(diaryDetailSK);
+					response.getWriter().println("uploadNearBySelect");
+					System.out.println("uploadNearBySelect success ");					
+				}else {
+					System.out.println("uploadNearBySelect : diary detial is not this Member Own ");
+				}
+				
+			}else {
+				System.out.println("uploadNearBySelect : member account notfound ");
+			}			
+		}
 		
 	}
 	

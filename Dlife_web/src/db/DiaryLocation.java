@@ -27,6 +27,17 @@ public class DiaryLocation {
 		this.diary_day = diary_day;
 		this.post_date = post_date;
 	}
+	public DiaryLocation(int i, int memberSK, int asInt, String googlePlaceID, String googleName, double longitude2,
+			double latitude2) {
+		super();
+		this.sk = sk;
+		this.member_sk = member_sk;
+		this.diary_detail_sk = diary_detail_sk;
+		this.google_id = google_id;
+		this.google_name = google_name;
+		this.longitude = longitude;
+		this.latitude = latitude;
+	}
 	public int getSk() {
 		return sk;
 	}

@@ -411,6 +411,7 @@ public class DiaryEdit extends Activity {
                         nearByJsonObject.addProperty("action", "uploadNearBySelect");
                         nearByJsonObject.addProperty("account", Common.getAccount(DiaryEdit.this));
                         nearByJsonObject.addProperty("password", Common.getPWD(DiaryEdit.this));
+                        nearByJsonObject.addProperty("diaryDetailSK", bundleP.getSk());
                         nearByJsonObject.addProperty("nearBy", new Gson().toJson(nearbyItem.get(selectNearBy)));
 
                         if (networkConnected()) {

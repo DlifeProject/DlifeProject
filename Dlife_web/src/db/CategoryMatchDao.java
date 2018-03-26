@@ -119,10 +119,12 @@ public class CategoryMatchDao {
 				+ ",diary_count_3 = 0, start_diary_detail_sk = 0, end_diary_detail_sk = 0, update_day = '" + Common.getNowDayString() + "'"
 				+ ", shareable_diary_count = 0"
 				+ " where sk = ? ";
+		System.out.println("updateCategoryMatchToZero sql:" + sql + " sk:" + sk );
 		try {
 			conn = DriverManager.getConnection(Common.DBURL, Common.DBACCOUNT,
 					Common.DBPWD);
 			ps = conn.prepareStatement(sql);
+			ps.setInt(1, sk);
 			exeCount = ps.executeUpdate();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
