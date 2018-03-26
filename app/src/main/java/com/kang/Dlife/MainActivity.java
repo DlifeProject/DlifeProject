@@ -290,7 +290,7 @@ public class MainActivity extends AppCompatActivity {
             //Common.showToast(c, "userAccount->" + userAccount + " pwd->" + inStr + " userUUID->" + userUUID);
 
             Common.updateLoginPreferences(c, fbEmail, inStr, userUUID);
-            if(!inStr.equals("")){
+            if(!inStr.equals("") || inStr == null){
                 isfinish = true;
             }
 
@@ -361,11 +361,11 @@ public class MainActivity extends AppCompatActivity {
                                             } catch (Exception e) {
                                                 e.printStackTrace();
                                             }
-                                        }
 
-                                        Common.startTabActivity(MainActivity.this);
-                                        askPermissions();
-                                        finish();
+                                            Common.startTabActivity(MainActivity.this);
+                                            askPermissions();
+                                            finish();
+                                        }
                                     }
                                 } catch (IOException e) {
                                     e.printStackTrace();
