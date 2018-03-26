@@ -235,13 +235,9 @@ public class FriendDiaryViewActivity extends AppCompatActivity {
                 } catch (Exception e) {
                     Log.e(TAG, e.toString());
                 }
-
             }
 
-
             viewHolder.mRecyclerView.setAdapter(new IgPictureAdapter(context, photoSpotList));
-
-
             //寫成function 加入 common
             final LocationToDiary diaryDetail = igList.get(position);
             //时间格式,HH是24小时制，hh是AM PM12小时制

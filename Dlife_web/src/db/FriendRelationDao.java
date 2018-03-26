@@ -133,8 +133,28 @@ public class FriendRelationDao {
 		close();
 		return avoidFBIDList;
 	}
-	
-	
-	
 
+	public int getFacebookCount() {
+		int fbCount = 0;
+		String sql = "select count(*) as fbCount from friend_relation"
+				+ " where member_sk = ?"
+				+ " and friend_type = ?";
+
+		try {
+			conn = DriverManager.getConnection(Common.DBURL, Common.DBACCOUNT,
+					Common.DBPWD);
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1,memberSK);
+			ps.setString(2, "facebook");
+			ResultSet rs = ps.executeQuery();
+			if(rs.next()) {
+				fbCount = rs.getInt("fbCount");
+			}
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+		close();
+		return fbCount;
+	}
+	
 }

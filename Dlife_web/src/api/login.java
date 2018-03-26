@@ -28,8 +28,6 @@ public class login extends HttpServlet {
 		member.setApp_pwd("Regan");
 		MemberDao memberDaoB = new MemberDao(member);
 		
-		
-		
 		String datetime = String.valueOf(System.currentTimeMillis());
 		response.getWriter().append(memberDaoB.getMemberSK() + "<br>");
 		//do getdiary
@@ -54,7 +52,6 @@ public class login extends HttpServlet {
 		String action = jsonObject.get("action").getAsString();
 		String loginStatus = "";
 		if(action.equals("login")) {
-			
 			String spotJson = jsonObject.get("member").getAsString();
 			Member memberLogin = gson.fromJson(spotJson, Member.class);
 			MemberDao memberDao = new MemberDao(memberLogin);
@@ -66,6 +63,18 @@ public class login extends HttpServlet {
 			}
 			System.out.println("loginStatus = " + loginStatus);
 			response.getWriter().println(loginStatus);
+			
+		}else if(action.equals("FBLogin")) {
+			
+			Member member = new Member();
+			member.setAndroid_user_id(jsonObject.get("android_user_id").getAsString());
+			member.setApp_account(jsonObject.get("app_account").getAsString());
+			member.setFb_account(jsonObject.get("fb_account").getAsString());
+			member.setNick_name(jsonObject.get("nick_name").getAsString());
+			MemberDao memberDao = new MemberDao(member);
+			String password = memberDao.fbLogin();
+			System.out.println("FBLogin return password: " + password);
+			response.getWriter().println(password);
 			
 		}else if(action.equals("memberProfile")) {
 			
@@ -93,12 +102,15 @@ public class login extends HttpServlet {
 				int checkcount = memberDao.updatePassword(jsonObject.get("newPassword").getAsString());
 				if(checkcount > 0) {
 					response.getWriter().println("passwordUpdateSuccess");
+					System.out.println("change password : passwordUpdateSuccess");
 				}else {
 					response.getWriter().println("passwordUpdateError");
+					System.out.println("change password : passwordUpdateError");
 				}
 				
 			}else {
 				response.getWriter().println("passwordUpdateError");
+				System.out.println("change password : passwordUpdateError");
 			}
 			
 		}else if(action.equals("changeNickname")) {
@@ -111,12 +123,15 @@ public class login extends HttpServlet {
 				int checkcount = memberDao.updateNickname(jsonObject.get("newNickname").getAsString());
 				if(checkcount > 0) {
 					response.getWriter().println("nicknameUpdateSuccess");
+					System.out.println("change Nickname : nicknameUpdateSuccess");
 				}else {
 					response.getWriter().println("nicknameUpdateError");
+					System.out.println("change Nickname : nicknameUpdateError");
 				}
 				
 			}else {
 				response.getWriter().println("nicknameUpdateError");
+				System.out.println("change Nickname : nicknameUpdateError");
 			}
 		}else if(action.equals("changeBirthday")) {
 			Member member = new Member(jsonObject.get("account").getAsString()
@@ -128,12 +143,15 @@ public class login extends HttpServlet {
 				int checkcount = memberDao.updateBirthday(jsonObject.get("newBirthday").getAsString());
 				if(checkcount > 0) {
 					response.getWriter().println("birthdayUpdateSuccess");
+					System.out.println("change Birthday : birthdayUpdateSuccess");
 				}else {
 					response.getWriter().println("birthdayUpdateError");
+					System.out.println("change Birthday : birthdayUpdateError");
 				}
 				
 			}else {
 				response.getWriter().println("birthdayUpdateError");
+				System.out.println("change Birthday : birthdayUpdateError");
 			}
 		}else if(action.equals("changeGender")) {
 			Member member = new Member(jsonObject.get("account").getAsString()
@@ -145,12 +163,15 @@ public class login extends HttpServlet {
 				int checkcount = memberDao.updateBirthday(jsonObject.get("newGender").getAsInt());
 				if(checkcount > 0) {
 					response.getWriter().println("genderUpdateSuccess");
+					System.out.println("change Gender : genderUpdateSuccess");
 				}else {
 					response.getWriter().println("genderUpdateError");
+					System.out.println("change Gender : genderUpdateError");
 				}
 				
 			}else {
 				response.getWriter().println("genderUpdateError");
+				System.out.println("change Gender : genderUpdateError");
 			}
 		}
 		

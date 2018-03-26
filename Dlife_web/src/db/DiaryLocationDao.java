@@ -56,7 +56,7 @@ public class DiaryLocationDao {
 			String sql = "insert into diary_location" 
 					+ "(member_sk, diary_detail_sk, google_id, google_name, longitude,"
 					+ " latitude, diary_day, post_date)"
-					+ " VALUES (" + " ?,?,?,?,?," + " ?,?,?,?" + ")";
+					+ " VALUES (" + " ?,?,?,?,?," + " ?,?,?" + ")";
 			
 			try {
 				conn = DriverManager.getConnection(Common.DBURL, Common.DBACCOUNT, Common.DBPWD);

@@ -604,7 +604,7 @@ public class DiaryEdit extends Activity {
                 default:
                     // 抓使用者選的圖片
                     selectPhotoSize = result.size();
-                    if (bundlePhoto.size() > 0 ) {
+                    if (bundlePhoto != null ) {
                         Glide.with(context)
                                 .load(result.get(position - bundlePhoto.size()))
                                 .centerCrop()

@@ -29,5 +29,7 @@
     <string name="fb_login_protocol_scheme">fb168926520384746</string>
     <string name="msg_NoThisFriend">You don\'t have a friend!</string>
     <string name="msg_FriendHasNoDiary">Your friend has no diary.</string>
+    <string name="facebook">FB friends</string>
+    <string name="facebookLogin">Login with Facebook</string>
 
 </resources>

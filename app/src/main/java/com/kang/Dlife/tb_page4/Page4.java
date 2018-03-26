@@ -8,178 +8,176 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.kang.Dlife.Common;
 import com.kang.Dlife.R;
+import com.kang.Dlife.data_base.Member;
+import com.kang.Dlife.sever.MyTask;
+import com.kang.Dlife.tb_page4.personData.ChangeBirthday;
+import com.kang.Dlife.tb_page4.personData.ChangeGender;
+import com.kang.Dlife.tb_page4.personData.ChangeNickname;
+import com.kang.Dlife.tb_page4.personData.ChangePassword;
+
+import org.w3c.dom.Text;
 
 
 public class Page4 extends Fragment {
-    private LinearLayout person_data;
-    private LinearLayout person_located;
-    private LinearLayout facebook;
-    private LinearLayout google;
-    private LinearLayout gps_list;
-    private LinearLayout gps_upload;
-    private ImageView iv1;      //個人資料
-    private ImageView iv2;      //個人地點
-    private ImageView iv3;      //FB
-    private ImageView iv4;      //GOOGLE
-    private ImageView iv5;      //GPS 列表
-    private ImageView iv6;      //GPS 上傳
-    @Override
+
+
+    private static final String TAG = "page4";
+
+    private TextView tvAccount, tvNickname, tvBirthday, tvGender, tvFacebookList, tvLogout;
+    private ImageButton ibChangePassword, ibNickname, ibBirthday, ibGender, ibFacebook, ibLogout;
+
+    private String account = "";
+    public String nickname = "";
+    private String birthday = "";
+    private int gender = 2;
+    private String logout = "";
+
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable final Bundle savedInstanceState) {
         //因為有宣告view, 所以之後可以在這頁裡面找下面之後要用到的id
         View view = inflater.inflate(R.layout.page4, container, false);
-        findViews(view);
-        person_data.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    //更改按下去時的圖片
-                    iv1.setImageResource(R.drawable.person_data_onclick);
-                } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                    //抬起來時的圖片
-                    iv1.setImageResource(R.drawable.person_data);
-                }
-                return false;
-            }
-        });
-        person_data.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent();
-                intent.setClass(getActivity(), PersonData.class);
-                startActivity(intent);
-            }
-        });
-        person_located.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    //更改按下去時的圖片
-                    iv2.setImageResource(R.drawable.person_located_onclick);
-                } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                    //抬起來時的圖片
-                    iv2.setImageResource(R.drawable.person_located);
-                }
-                return false;
-            }
-        });
-        person_located.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent();
-                intent.setClass(getActivity(), PersonLocated.class);
-                startActivity(intent);
-            }
-        });
-        facebook.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    //更改按下去時的圖片
-                    iv3.setImageResource(R.drawable.facebook_onclick);
-                } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                    //抬起來時的圖片
-                    iv3.setImageResource(R.drawable.facebook);
-                }
-                return false;
-            }
-        });
-        facebook.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent();
-                intent.setClass(getActivity(), FacebookActivity.class);
-                startActivity(intent);
-            }
-        });
-        google.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    //更改按下去時的圖片
-                    iv4.setImageResource(R.drawable.google_onclick);
-                } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                    //抬起來時的圖片
-                    iv4.setImageResource(R.drawable.google);
-                }
-                return false;
-            }
-        });
-        google.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent();
-                intent.setClass(getActivity(), Google.class);
-                startActivity(intent);
-            }
-        });
-        gps_list.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    //更改按下去時的圖片
-                    iv5.setImageResource(R.drawable.gps_list_onclick);
-                } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                    //抬起來時的圖片
-                    iv5.setImageResource(R.drawable.gps_list);
-                }
-                return false;
-            }
-        });
-        gps_list.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent();
-                intent.setClass(getActivity(), GpsList.class);
-                startActivity(intent);
-            }
-        });
-        gps_upload.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    //更改按下去時的圖片
-                    iv6.setImageResource(R.drawable.gps_upload_onclick);
-                } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                    //抬起來時的圖片
-                    iv6.setImageResource(R.drawable.gps_upload);
-                }
-                return false;
-            }
-        });
-        gps_upload.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent();
-                intent.setClass(getActivity(), GpsUpload.class);
-                startActivity(intent);
-            }
-        });
+        findView(view);
         return view;
     }
 
-    @Override
-    public void onResume(){
-        super.onResume();
-        //Common.showToast(getContext(),"test");
+    private void findView(View view) {
 
-    }
+        tvAccount = (TextView)view.findViewById(R.id.tvAccount);
+        tvNickname = (TextView)view.findViewById(R.id.tvNickname);
+        tvBirthday = (TextView)view.findViewById(R.id.tvBirthday);
+        tvGender = (TextView)view.findViewById(R.id.tvGender);
+        tvFacebookList = (TextView)view.findViewById(R.id.tvFacebookList);
+        tvLogout = (TextView)view.findViewById(R.id.tvLogout);
 
-    private void findViews(View view) {
-        person_data = view.findViewById(R.id.person_data);
-        person_located = view.findViewById(R.id.person_located);
-        facebook = view.findViewById(R.id.facebook);
-        google = view.findViewById(R.id.google);
-        gps_list = view.findViewById(R.id.gps_list);
-        gps_upload = view.findViewById(R.id.gps_upload);
-        iv1 = view.findViewById(R.id.iv1);
-        iv2 = view.findViewById(R.id.iv2);
-        iv3 = view.findViewById(R.id.iv3);
-        iv4 = view.findViewById(R.id.iv4);
-        iv5 = view.findViewById(R.id.iv5);
-        iv6 = view.findViewById(R.id.iv6);
+        ibChangePassword = (ImageButton)view.findViewById(R.id.ibChangePassword);
+        ibNickname = (ImageButton)view.findViewById(R.id.ibNickname);
+        ibBirthday = (ImageButton)view.findViewById(R.id.ibBirthday);
+        ibGender = (ImageButton)view.findViewById(R.id.ibGender);
+        ibFacebook = (ImageButton)view.findViewById(R.id.ibFacebook);
+        ibLogout = (ImageButton)view.findViewById(R.id.ibLogout);
+
+        String url = Common.URL + Common.WEBLOGIN;
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("action", "memberProfile");
+        jsonObject.addProperty("account", Common.getAccount(getActivity()));
+        jsonObject.addProperty("password", Common.getPWD(getActivity()));
+        MyTask login = new MyTask(url,jsonObject.toString());
+        try {
+            String inStr;
+            inStr = login.execute().get().trim();
+            Gson gson = new Gson();
+            JsonObject diaryInJsonObject = gson.fromJson(inStr,JsonObject.class);
+            String memberProfileString = diaryInJsonObject.get("memberProfile").getAsString().trim();
+
+            Gson gsonIn = new Gson();
+            Member memberProfile = gsonIn.fromJson(memberProfileString,Member.class);
+
+            account = memberProfile.getApp_account();
+            nickname = memberProfile.getNick_name();
+            if(nickname.isEmpty()){
+                nickname = "";
+            }
+            birthday = memberProfile.getBirthday();
+            gender = memberProfile.getSex();
+            logout = memberProfile.getLogin_date();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        String urlFB = Common.URL + Common.FRIEND;
+        JsonObject jsonObjectFBCount = new JsonObject();
+        jsonObjectFBCount.addProperty("action", "getFacebookFriendCount");
+        jsonObjectFBCount.addProperty("account", Common.getAccount(getActivity()));
+        jsonObjectFBCount.addProperty("password", Common.getPWD(getActivity()));
+        MyTask taskFBCount = new MyTask(urlFB,jsonObjectFBCount.toString());
+        try {
+            String inStr;
+            inStr = taskFBCount.execute().get().trim();
+            if(inStr.equals("")){
+                tvFacebookList.setText("Unknow");
+            }else{
+                tvFacebookList.setText(inStr);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        tvAccount.setText(account);
+        tvNickname.setText(nickname);
+        tvBirthday.setText(birthday);
+        if(gender == 0){
+            tvGender.setText(R.string.lady);
+        }else if(gender == 1){
+            tvGender.setText(R.string.man);
+        }else{
+            tvGender.setText("--");
+        }
+        tvLogout.setText(logout);
+
+        ibChangePassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setClass( getActivity(), ChangePassword.class);
+                startActivity(intent);
+            }
+        });
+
+        ibNickname.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setClass( getActivity(), ChangeNickname.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("nickname",nickname);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        });
+
+        ibBirthday.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setClass( getActivity(), ChangeBirthday.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("birthday",birthday);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        });
+        ibGender.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setClass( getActivity(), ChangeGender.class);
+                Bundle bundle = new Bundle();
+                bundle.putInt("gender",gender);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        });
+        ibFacebook.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setClass( getActivity(), FacebookActivity.class);
+                startActivity(intent);
+
+            }
+        });
+
     }
 }

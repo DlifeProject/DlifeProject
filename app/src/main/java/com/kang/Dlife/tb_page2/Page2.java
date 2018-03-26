@@ -133,6 +133,7 @@ public class Page2 extends Fragment implements View.OnClickListener {
         }
         setStartDayArray();
         setEndDayArray();
+        setCategoryCategorySum();
 
         // 一頁一頁卡住
         //分類資料 不含pie chart
@@ -174,11 +175,19 @@ public class Page2 extends Fragment implements View.OnClickListener {
         }
 
         @Override
+        public int getItemViewType(int position) {
+            if(position == 0){
+                return 0;
+            }else{
+                return 1;
+            }
+        }
+
+        @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
 
-            setCategoryCategorySum();
             LayoutInflater layoutInflater = LayoutInflater.from(context);
-            if (itemIndex == 0) {       //pie chart
+            if (itemIndex == 0 && viewType == 0) {       //pie chart
                 View itemView0 = layoutInflater.inflate(R.layout.page2_pie_chart, viewGroup, false);
                 return new PieChartViewHolder(itemView0);
             } else {                    //category
@@ -201,7 +210,7 @@ public class Page2 extends Fragment implements View.OnClickListener {
 
         @RequiresApi(api = Build.VERSION_CODES.N)
         private void setPieChartView(Context context, RecyclerView.ViewHolder holder) {
-
+            //setCategoryCategorySum();
             pieChartViewHolder = (PieChartViewHolder) holder;
             pieChartViewHolder.tv_click.setText("Daily");
             pieChartViewHolder.ry_click.setOnClickListener(new View.OnClickListener() {
@@ -395,13 +404,13 @@ public class Page2 extends Fragment implements View.OnClickListener {
             return pieEntries;
         }
 
-
         public void setCategoryView(RecyclerView.ViewHolder holder, int position){
             index = position - 1;
             final CategoryViewHolder categoryViewHolder = (CategoryViewHolder) holder;
             CategorySum item = categorySum.get(index);
             String url = Common.URL + Common.WEBPHOTO;
-            int imageSize = getResources().getDisplayMetrics().widthPixels;
+            //
+            int imageSize = 350;
             if(item.getDiaryPhotoSK() > 0 ) {
                 SpotGetImageTask spotGetImageTask = new SpotGetImageTask(url, item.getDiaryPhotoSK(), imageSize, categoryViewHolder.iv_pic);
                 spotGetImageTask.execute();
@@ -430,7 +439,8 @@ public class Page2 extends Fragment implements View.OnClickListener {
 
         @Override
         public int getItemCount() {
-            return allItemIndex.length;
+            int indexLength = allItemIndex.length;
+            return indexLength;
         }
 
         class PieChartViewHolder extends RecyclerView.ViewHolder {
@@ -456,29 +466,6 @@ public class Page2 extends Fragment implements View.OnClickListener {
             }
         }
 
-
-        private void setCategoryCategorySum() {
-            JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("action", "categorySum");
-            jsonObject.addProperty("account", Common.getAccount(getContext()));
-            jsonObject.addProperty("password", Common.getPWD(getContext()));
-            String url = Common.URL + Common.WEBSUMMARY;
-            String msg = "";
-            MyTask myTask = new MyTask(url, jsonObject.toString());
-            try {
-                msg = myTask.execute().get().trim();
-            } catch (Exception e) {
-                Log.e(TAG, e.toString());
-            }
-            Gson gson = new Gson();
-            JsonObject outJsonObject = gson.fromJson(msg, JsonObject.class);
-            String ltString = outJsonObject.get("categorySum").getAsString();
-
-            Type tySum = new TypeToken<List<CategorySum>>() {
-            }.getType();
-            categorySum = new Gson().fromJson(ltString, tySum);
-        }
-
         class CategoryViewHolder extends RecyclerView.ViewHolder {
 
             RelativeLayout ry_click;
@@ -500,6 +487,28 @@ public class Page2 extends Fragment implements View.OnClickListener {
             }
         }
 
+    }
+
+    public void setCategoryCategorySum() {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("action", "categorySum");
+        jsonObject.addProperty("account", Common.getAccount(getContext()));
+        jsonObject.addProperty("password", Common.getPWD(getContext()));
+        String url = Common.URL + Common.WEBSUMMARY;
+        String msg = "";
+        MyTask myTask = new MyTask(url, jsonObject.toString());
+        try {
+            msg = myTask.execute().get().trim();
+        } catch (Exception e) {
+            Log.e(TAG, e.toString());
+        }
+        Gson gson = new Gson();
+        JsonObject outJsonObject = gson.fromJson(msg, JsonObject.class);
+        String ltString = outJsonObject.get("categorySum").getAsString();
+
+        Type tySum = new TypeToken<List<CategorySum>>() {
+        }.getType();
+        categorySum = new Gson().fromJson(ltString, tySum);
     }
 
 

@@ -48,8 +48,6 @@ public class diary extends HttpServlet {
 		while ((text = br.readLine()) != null) {
 			sb.append(text);
 		}
-		System.out.println("inStr: " + sb.toString());
-
 		String exeString = "";
 		int insertCount = 0;
 
@@ -62,6 +60,10 @@ public class diary extends HttpServlet {
 		int memberSK = memberDao.getMemberSK();
 		String msg = "";
 
+		if(action != "insertDiaryPhoto") {
+			//System.out.println("inStr: " + sb.toString());
+		}
+		
 		System.out.println("memberSK !! " + memberSK);
 		if (memberSK > 0) {
 			if (action.equals("insertDiary")) {
@@ -165,7 +167,7 @@ public class diary extends HttpServlet {
 
 				} else {
 					exeString = "getDiaryNull";
-					outJsonObject.addProperty("getDiary", "");
+					outJsonObject.addProperty("getDiaryBetweenDays", "");
 					msg = outJsonObject.toString();
 					System.out.println("outStr: " + msg.toString());
 

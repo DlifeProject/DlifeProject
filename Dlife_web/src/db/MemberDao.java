@@ -166,7 +166,6 @@ public class MemberDao {
 		}
 		close();
 	}
-	
 
 	private void updateIOSUUID(String app_account, String ios_user_id) {
 		String sql = "update member set android_user_id = '', ios_user_id = ? where app_account = ? ";
@@ -189,22 +188,24 @@ public class MemberDao {
 	
 	public String addNewAccount() {
 		String sql = "insert into member"
-				+ "(app_account, app_pwd, login_date, post_date) VALUES (?,?,?,?,?)";		
+				+ "(app_account, app_pwd, login_date, post_date) VALUES (?,?,?,?)";		
 		try {
 			conn = DriverManager.getConnection(Common.DBURL, Common.DBACCOUNT,
 					Common.DBPWD);
 			ps = conn.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
 			System.out.println("App_account insert : " + member.getApp_account());
-			
 			ps.setString(1, member.getApp_account());
 			ps.setString(2, member.getApp_pwd());
 			ps.setString(3, Common.getNowDateTimeString());
 			ps.setString(4, Common.getNowDateTimeString());
-			int count = ps.executeUpdate();
+			ps.executeUpdate();
+			ResultSet tableKeys = ps.getGeneratedKeys();
+			tableKeys.next();
+			int count = tableKeys.getInt(1);
+			this.memberSK = count;
 			
 			if(count > 0) {
 				close();
-				
 				if(member.getAndroid_user_id() == null) {
 					if(member.getIos_user_id() != null) {
 						updateIOSUUID(member.getApp_account(), member.getIos_user_id());
@@ -212,6 +213,10 @@ public class MemberDao {
 				}else {
 					updateMobileUUID(member.getApp_account(), member.getAndroid_user_id());
 				}
+				if(member.getFb_account() != null) {
+					updateFBid(member.getFb_account());
+				}
+				
 				return "addSuccess";
 			}else {
 				close();
@@ -416,5 +421,45 @@ public class MemberDao {
 		return fbMemberSKList;
 	}
 
-
+	public String fbLogin() {
+		String thisPassword = "";
+		String sql = "select sk, android_user_id, ios_user_id, app_account, app_pwd"
+				+ " ,fb_account, google_account, nick_name, sex, birthday"
+				+ " from member where app_account = ? ";
+		try {
+			conn = DriverManager.getConnection(Common.DBURL, Common.DBACCOUNT,
+					Common.DBPWD);
+			ps = conn.prepareStatement(sql);	
+			ps.setString(1, member.getApp_account());
+			ResultSet rs = ps.executeQuery();
+			if(rs.next()) {
+				System.out.println("check point 1");
+				this.memberSK = rs.getInt("sk");
+				if(member.getAndroid_user_id() != "" && member.getAndroid_user_id() != null && member.getAndroid_user_id() != rs.getString("android_user_id") ) {
+					updateMobileUUID(member.getApp_account(), member.getAndroid_user_id());
+				}
+				if(member.getIos_user_id() != "" && member.getIos_user_id() != null && member.getIos_user_id() != rs.getString("ios_user_id")) {
+					updateIOSUUID(member.getApp_account(),member.getIos_user_id());
+				}
+				if(member.getFb_account() != "" && member.getFb_account() != rs.getString("fb_account")) {
+					updateFBid(member.getFb_account());
+				}
+				if(member.getNick_name() != "" && member.getNick_name() != rs.getString("nick_name")) {
+					updateNickname(member.getNick_name());
+				}
+				thisPassword = rs.getString("app_pwd");
+				
+			}else {
+				System.out.println("check point 2");
+				member.setApp_pwd(member.getFb_account());
+				thisPassword = member.getApp_pwd();
+				addNewAccount();
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return thisPassword;
+	}
+	
 }

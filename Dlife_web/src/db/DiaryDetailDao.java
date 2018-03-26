@@ -552,7 +552,7 @@ public class DiaryDetailDao {
 		String sql = "select sum(end_stamp - start_stamp) as sumTimestamp"
 				+ " from diary_detail"
 				+ " where"
-				+ " post_day <= ? and post_day >= ? and top_category_sk = ? and member_sk = ?"
+				+ " post_day >= ? and post_day <= ? and top_category_sk = ? and member_sk = ?"
 				+ " group by top_category_sk;";
 		double categoryTimeHr = 0;
 		long categoryTimestamp = 0;

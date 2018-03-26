@@ -106,6 +106,7 @@ public class mapapi extends HttpServlet{
 							);
 					DiaryLocationDao diaryLocationDao = new DiaryLocationDao(diaryLocation);
 					diaryLocationDao.insert();
+					response.getWriter().println("nearBySelectSuccess");
 										
 				}else {
 					System.out.println("nearBySelect : diary detial is not this Member Own ");

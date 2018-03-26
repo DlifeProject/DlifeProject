@@ -304,7 +304,8 @@ public class Page1_AlreadyUpload extends Fragment {
 
         @Override
         public int getItemCount() {
-            return allDiary.size();
+            int diarySize = allDiary.size();
+            return diarySize;
         }
     }
 

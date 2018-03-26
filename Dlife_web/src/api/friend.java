@@ -67,7 +67,7 @@ public class friend extends HttpServlet{
 				ArrayList<MatchFriendItem> shareList = memberShareRelationDao.getMemberShareRelationList();
 				
 				JsonObject outJsonObject = new JsonObject();
-				outJsonObject.addProperty("friendList", new Gson().toJson(shareList));
+				outJsonObject.addProperty("getFriendList", new Gson().toJson(shareList));
 				
 				System.out.println("friend friendList outStr: " + outJsonObject.toString());
 				response.getWriter().println(outJsonObject.toString());				
@@ -124,7 +124,7 @@ public class friend extends HttpServlet{
 				}
 
 	            JsonObject outJsonObject = new JsonObject();
-	            outJsonObject.addProperty("CategorySum", new Gson().toJson(ltCategorySum));
+	            outJsonObject.addProperty("MyShareAbleCateList", new Gson().toJson(ltCategorySum));
 	            response.getWriter().println(outJsonObject.toString());	
 				System.out.println("Start summary !! outPut " + outJsonObject.toString());
 				
@@ -144,23 +144,25 @@ public class friend extends HttpServlet{
 				
 				JSONArray jsonArray = new JSONArray( jsonObject.get("FBList").getAsString());
 				for(int i=0;i<jsonArray.length();i++) {
-					
 					JSONObject jsonObjectItem = jsonArray.getJSONObject(i);
-					
 					FriendRelation friendRelation = new FriendRelation();
 					friendRelation.setMember_sk(memberSK);
 					friendRelation.setFriend_type("facebook");
 					friendRelation.setFriend_account(jsonObjectItem.get("id").toString());
 					friendRelation.setIs_shareable(0);
 					friendRelation.setPost_date(Common.getNowDateTimeString());
-					
+
 					FriendRelationDao friendRelationDao = new FriendRelationDao(friendRelation);
 					friendRelationDao.insert();
 					
-				}
-									
-				
-			} else {
+				}									
+		
+			} else if (action.equals("getFacebookFriendCount")) {
+				FriendRelationDao friendRelationDao = new FriendRelationDao(memberSK);
+				int facebookFriendCount = friendRelationDao.getFacebookCount();
+				System.out.println("getFacebookFriendCount : " + facebookFriendCount);
+				response.getWriter().println(facebookFriendCount);
+			}else {
 				response.getWriter().println("actionError");
 			}
 			

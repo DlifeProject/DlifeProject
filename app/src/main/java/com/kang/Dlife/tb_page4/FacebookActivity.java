@@ -66,9 +66,6 @@ public class FacebookActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.page4_facebook);
 
-        // init facebook
-//        accessToken = AccessToken.getCurrentAccessToken();
-
         // init LoginManager & CallbackManager
         loginManager = LoginManager.getInstance();
         callbackManager = CallbackManager.Factory.create();
@@ -82,10 +79,6 @@ public class FacebookActivity extends AppCompatActivity {
             String id = profile.getId();
             String name = profile.getName();
 
-//            Log.d(TAG, "Facebook userPhoto: " + userPhoto);
-//            Log.d(TAG, "Facebook id: " + id);
-//            Log.d(TAG, "Facebook name: " + name);
-//            Log.d(TAG, "Facebook email:" + email);
             Glide.with(FacebookActivity.this)
                     .load(userPhoto.toString())
                     .crossFade()
@@ -102,7 +95,6 @@ public class FacebookActivity extends AppCompatActivity {
                             try {
                                 if (response.getConnection().getResponseCode() == 200) {
 
-
                                     userId = object.getString("id");
                                     userName = object.getString("name");
                                     email = object.getString("email");
@@ -118,10 +110,6 @@ public class FacebookActivity extends AppCompatActivity {
                                         friendIdList.add(new FacebookMember(user_friends_name, user_friends_id));
 
                                     }
-//                                    Log.d(TAG, "Facebook id:" + userId);
-//                                    Log.d(TAG, "Facebook name:" + userName);
-//                                    Log.d(TAG, "Facebook email:" + email);
-
                                 }
                             } catch (IOException e) {
                                 e.printStackTrace();
@@ -159,9 +147,7 @@ public class FacebookActivity extends AppCompatActivity {
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
-
                         }
-
                     }
             );
             // 如果要取得email，需透過添加參數的方式來獲取(如下)

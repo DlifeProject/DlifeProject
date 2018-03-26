@@ -107,7 +107,7 @@ public class Page3 extends Fragment {
 
             Gson gson = new Gson();
             JsonObject friendListJsonObject = gson.fromJson(inStr, JsonObject.class);
-            String friendListString =  friendListJsonObject.get("friendList").getAsString();
+            String friendListString =  friendListJsonObject.get("getFriendList").getAsString();
             JsonArray friendListArray = gson.fromJson(friendListString, JsonArray.class);
 
             Type tempFriendList = new TypeToken<List<MatchFriendItem>>() {}.getType();

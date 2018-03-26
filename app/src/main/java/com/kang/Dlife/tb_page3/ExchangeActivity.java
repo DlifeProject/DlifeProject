@@ -85,7 +85,7 @@ public class ExchangeActivity extends AppCompatActivity {
 
                 Gson gson = new Gson();
                 JsonObject friendListJsonObject = gson.fromJson(inStr, JsonObject.class);
-                String friendListString =  friendListJsonObject.get("CategorySum").getAsString();
+                String friendListString =  friendListJsonObject.get("MyShareAbleCateList").getAsString();
                 JsonArray myShareAbleArray = gson.fromJson(friendListString, JsonArray.class);
 
                 Type tempFriendList = new TypeToken<List<CategorySum>>() {}.getType();
@@ -222,9 +222,11 @@ public class ExchangeActivity extends AppCompatActivity {
 
         if(photoSKHashTableIndex >= 0){
             tvMyShareCategory.setText(photoSKList.get(photoSKHashTableIndex).category);
+
             ivMyPhoto.setImageBitmap(categoryPhotoHashTable.get(
                     photoSKList.get(photoSKHashTableIndex).category
             ));
+            //ivMyPhoto.setScaleType(ImageView.ScaleType.FIT_END);
 
         }
 
