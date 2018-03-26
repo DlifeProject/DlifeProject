@@ -374,9 +374,9 @@ public class MainActivity extends AppCompatActivity {
                                 } catch (InterruptedException e) {
                                     e.printStackTrace();
                                 }
-                                Common.startTabActivity(MainActivity.this);
-                                askPermissions();
-                                finish();
+//                                Common.startTabActivity(MainActivity.this);
+//                                askPermissions();
+//                                finish();
                                 //Intent intent = new Intent();
                                 //intent.setClass(MainActivity.this, MainActivity.class);
                                 //startActivity(intent);

@@ -136,6 +136,9 @@ public class diary extends HttpServlet {
 				DiaryDetailDao diaryDetailDao = new DiaryDetailDao(diaryDetail);
 				int update_count = diaryDetailDao.upload();
 				if (update_count == 1) {
+					
+					//
+					
 					exeString = "uploadDiarySuccess";
 				} else {
 					exeString = "uploadDiaryFail";
