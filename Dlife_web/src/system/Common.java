@@ -28,7 +28,7 @@ public class Common {
 	public final static String[] DEFAULTCATE = { "Shopping", "Hobby", "Learning", "Travel", "Work" };
 	public final static String[] NONSHARECATE = { "Work" };
 	public final static int CATEGORYMATCHDAY = -100;
-	public final static int SHAREABELDIARYCOUNT = 3;
+	public final static int SHAREABELDIARYCOUNT = 1;
 
 	public static void initDB() {
 		try {

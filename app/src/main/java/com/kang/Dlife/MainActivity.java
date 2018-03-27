@@ -71,9 +71,9 @@ public class MainActivity extends AppCompatActivity {
 
         if (Common.checkNetConnected(this)) {
             if (checkInitLogin()) {
-                Common.startTabActivity(MainActivity.this);
-                askPermissions();
-                finish();
+                //Common.startTabActivity(MainActivity.this);
+                //askPermissions();
+                //finish();
             }
         } else {
             Common.showToast(this, "Web is not connected");

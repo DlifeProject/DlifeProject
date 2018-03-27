@@ -136,11 +136,9 @@ public class MemberMatchDao {
 				testMemberSK = testMemberSK + "," +  String.valueOf(testSK);
 			}
 		}
-		
 		String sql = "select group_concat( request_member_sk ) as request_member_sk_list from member_match"
 				+ " where request_member_sk in ( " + testMemberSK +") "
 				+ " and post_day = ?";
-		
 		try {
 			conn = DriverManager.getConnection(Common.DBURL, Common.DBACCOUNT,
 					Common.DBPWD);
@@ -154,7 +152,7 @@ public class MemberMatchDao {
 			ResultSet rs = ps.executeQuery();
 			if(rs.next()) {
 				String skList = rs.getString(1);
-				if(!skList.equals("") || !skList.isEmpty()) {
+				if(skList != null) {
 					String[] skArray = skList.split(",");
 					for(String tempSK:skArray) {
 						matchLocationFreindList = Common.removieListIntegerElement(matchLocationFreindList,Integer.parseInt(tempSK) );
@@ -188,7 +186,7 @@ public class MemberMatchDao {
 			ResultSet rs = ps.executeQuery();
 			if(rs.next()) {
 				String skList = rs.getString(1);
-				if(!skList.equals("") || !skList.isEmpty()) {
+				if(skList != null) {
 					String[] skArray = skList.split(",");
 					for(String tempSK:skArray) {
 						matchLocationFreindList = Common.removieListIntegerElement(matchLocationFreindList,Integer.parseInt(tempSK) );

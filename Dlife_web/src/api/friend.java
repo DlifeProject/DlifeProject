@@ -110,13 +110,14 @@ public class friend extends HttpServlet{
 			} else if (action.equals("MyShareAbleCateList")) {
 				String[] cateArray = Common.DEFAULTCATE;
 				List<CategorySum> ltCategorySum = new ArrayList<CategorySum>();
-				System.out.println("test");
+				System.out.println("MyShareAbleCateList start!!");
 				for(String categoryType:cateArray) {
 					
 					if(!categoryType.equals(Common.NONSHARECATE[0])) {
 						CategorySum categorySum = new CategorySum();
 						CategoryDao categoryDao = new CategoryDao(memberSK);
 						categorySum = categoryDao.getSummaryByType(categoryType);
+						System.out.println(categoryType + " -> 7days" + categorySum.getSeven_day() + " photoSK->" + categorySum.getDiaryPhotoSK());
 						if(categorySum.getSeven_day() > Common.SHAREABELDIARYCOUNT && categorySum.getDiaryPhotoSK() > 0) {
 							ltCategorySum.add(categorySum);
 						}

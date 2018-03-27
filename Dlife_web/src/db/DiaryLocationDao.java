@@ -173,16 +173,21 @@ public class DiaryLocationDao {
 				+ " and member_sk not in ( " + avoidMemberSK + ")";
 		
 		ResultSet rs = null;
+		System.out.println("aLocationFreindMatch sql: " +  sql);
+		System.out.println("aLocationFreindMatch googleID: " +  googleID + " checkDay:" + checkDay);
 		try {
 			conn = DriverManager.getConnection(Common.DBURL, Common.DBACCOUNT, Common.DBPWD);
 			ps = conn.prepareStatement(sql);
-			ps.setInt(1, memberSK);
+			ps.setString(1, googleID);
 			ps.setString(2, checkDay);
 			rs = ps.executeQuery();
 			if(rs.next()) {
 				skListString = rs.getString(1);
+				System.out.println("aLocationFreindMatch : " +  rs.getString(1));
 			}
-			if(!skListString.equals("")) {
+			//System.out.println("aLocationFreindMatch check1 ");
+			if(skListString != null) {
+				//System.out.println("aLocationFreindMatch check2 ");
 				String[] skArray = skListString.split(",");
 				for(String skString:skArray) {
 					locationOfFriend.add(Integer.valueOf(skString));
@@ -190,7 +195,6 @@ public class DiaryLocationDao {
 			}
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
