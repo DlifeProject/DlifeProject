@@ -71,9 +71,9 @@ public class MainActivity extends AppCompatActivity {
 
         if (Common.checkNetConnected(this)) {
             if (checkInitLogin()) {
-
-                Common.startTabActivity(this);
-                //finish()
+                Common.startTabActivity(MainActivity.this);
+                askPermissions();
+                finish();
             }
         } else {
             Common.showToast(this, "Web is not connected");
@@ -95,8 +95,9 @@ public class MainActivity extends AppCompatActivity {
         if (userAccount.length() > 0 && userPassword.length() > 0 && userUUID.length() > 0) {
 
             String loginStatus = webLogin(this, userAccount, userPassword, userUUID);
-            if (loginStatus == "login") {
+            if (loginStatus.equals("login")) {
                 Common.updateLoginPreferences(this, userAccount, userPassword, userUUID);
+
                 return true;
             } else {
                 return false;

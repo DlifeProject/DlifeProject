@@ -291,14 +291,14 @@ public class Page2 extends Fragment implements View.OnClickListener {
             endDateSetListener = new DatePickerDialog.OnDateSetListener() {
                 @Override
                 public void onDateSet(DatePicker datePicker, int endyear, int endmonth, int endday) {
-
                     endDay = Common.setDateFormat(endyear,endmonth + 1, endday);
                     setEndDayString();
                     setCategoryPieChartData();
                 }
             };
-            createPieChart();
             setCategoryPieChartData();
+            createPieChart();
+
 
         }
 
@@ -383,22 +383,13 @@ public class Page2 extends Fragment implements View.OnClickListener {
         private List<PieEntry> getPieEntries() {
             List<PieEntry> pieEntries = new ArrayList<>();
             if(totalHour == 0){
-                pieEntries.add(new PieEntry(100 ,"no diary"));
+                pieEntries.add(new PieEntry(100 ,"not enough diary"));
             }else {
-                if (work != 0) {
-                    pieEntries.add(new PieEntry((float) (work / totalHour), "Work"));
-                }
-                if (shopping != 0) {
-                    pieEntries.add(new PieEntry((float) (shopping / totalHour), "Shopping"));
-                }
-                if (hobby != 0) {
-                    pieEntries.add(new PieEntry((float) (hobby / totalHour), "Hobby"));
-                }
-                if (travel != 0) {
-                    pieEntries.add(new PieEntry((float) (travel / totalHour), "Learning"));
-                }
-                if (learning != 0) {
-                    pieEntries.add(new PieEntry((float) (learning / totalHour), "Travel"));
+                for (PiechartData piechartData : piechartDataList){
+                    if (piechartData.getCategoryTime() > 0){
+                        float tempFloat =  (float)piechartData.getCategoryTime() / (float)totalHour * 100;
+                        pieEntries.add(new PieEntry(tempFloat, piechartData.getCategory()));
+                    }
                 }
             }
             return pieEntries;
