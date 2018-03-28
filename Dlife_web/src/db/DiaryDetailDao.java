@@ -550,13 +550,14 @@ public class DiaryDetailDao {
 	// 大程
 	public PiechartData getPiechartDate(String categoryType, String startDay, String endDay) {
 		int category_sk = new CategoryDao().getCategory_sk(categoryType);
-		String sql = "select sum(end_stamp - start_stamp) as sumTimestamp"
+		String sql = "select sum(end_stamp - start_stamp) as sumTimestamp, count(*) as diaryCount"
 				+ " from diary_detail"
 				+ " where"
 				+ " post_day >= ? and post_day <= ? and top_category_sk = ? and member_sk = ?"
 				+ " group by top_category_sk;";
 		double categoryTimeHr = 0;
 		long categoryTimestamp = 0;
+		int diaryCount = 0;
 		try {
 			conn = (Connection) DriverManager.getConnection(Common.DBURL, Common.DBACCOUNT, Common.DBPWD);
 			ps = (PreparedStatement) conn.prepareStatement(sql);
@@ -565,14 +566,15 @@ public class DiaryDetailDao {
 			ps.setInt(3, category_sk);
 			ps.setInt(4, memberSK);
 			ResultSet rs = ps.executeQuery();
-			while (rs.next()) {
+			if (rs.next()) {
 				categoryTimestamp = rs.getLong(1);
+				diaryCount = rs.getInt(2);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		categoryTimeHr = Common.timestampToHr(categoryTimestamp);
-		return new PiechartData(categoryType, categoryTimeHr);
+		return new PiechartData(categoryType, categoryTimeHr,diaryCount);
 	}
 	
 	public DiaryDetail getDiaryBySK(int diaryDetailSK) {

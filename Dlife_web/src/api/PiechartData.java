@@ -4,16 +4,18 @@ public class PiechartData {
 
 	private String category;
 	private double categoryTime;
+	private int diaryCount;
 
 	public PiechartData() {
 		super();
 	}
 	
-	public PiechartData(String category, double categoryTime) {
-		super();
-		this.category = category;
-		this.categoryTime = categoryTime;
-	}
+	public PiechartData(String category, double categoryTime, int diaryCount) {
+        super();
+        this.category = category;
+        this.categoryTime = categoryTime;
+        this.diaryCount = diaryCount;
+    }
 
 	public String getCategory() {
 		return category;
@@ -30,5 +32,12 @@ public class PiechartData {
 	public void setCategoryTime(double categoryTime) {
 		this.categoryTime = categoryTime;
 	}
+	
+	public int getDiaryCount() {
+        return diaryCount;
+    }
+    public void setDiaryCount(int diaryCount) {
+        this.diaryCount = diaryCount;
+    }
 
 }

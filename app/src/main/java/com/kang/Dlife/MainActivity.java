@@ -93,11 +93,11 @@ public class MainActivity extends AppCompatActivity {
         userPassword = Common.getPrefferencesData(this, Common.PREFFERENCES_USER_PASSWORD);
 
         if (userAccount.length() > 0 && userPassword.length() > 0 && userUUID.length() > 0) {
-
             String loginStatus = webLogin(this, userAccount, userPassword, userUUID);
             if (loginStatus.equals("login")) {
                 Common.updateLoginPreferences(this, userAccount, userPassword, userUUID);
-
+                etLoginAccount.setText(userAccount);
+                etLoginPassword.setText(userPassword);
                 return true;
             } else {
                 return false;

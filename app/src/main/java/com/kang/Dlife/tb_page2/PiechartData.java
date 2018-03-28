@@ -6,15 +6,17 @@ public class PiechartData implements Serializable {
 
     private String category;
     private double categoryTime;
+    private int diaryCount;
 
     public PiechartData() {
         super();
     }
 
-    public PiechartData(String category, double categoryTime) {
+    public PiechartData(String category, double categoryTime, int diaryCount) {
         super();
         this.category = category;
         this.categoryTime = categoryTime;
+        this.diaryCount = diaryCount;
     }
 
     public String getCategory() {
@@ -33,4 +35,10 @@ public class PiechartData implements Serializable {
         this.categoryTime = categoryTime;
     }
 
+    public int getDiaryCount() {
+        return diaryCount;
+    }
+    public void setDiaryCount(int diaryCount) {
+        this.diaryCount = diaryCount;
+    }
 }

@@ -8,8 +8,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,7 +18,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -58,10 +55,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Hashtable;
 import java.util.List;
 
-import static android.content.Context.CONNECTIVITY_SERVICE;
 
 
 public class Page2 extends Fragment implements View.OnClickListener {
@@ -73,7 +68,8 @@ public class Page2 extends Fragment implements View.OnClickListener {
     private List<CategorySum> categorySum = new ArrayList<>();
 
     // 統計時間 修改為 hr
-    private double shopping = 0, work = 0, hobby = 0, travel = 0, learning = 0, totalHour = 0;
+    private double totalHour = 0;
+    private int totalDiaryCount = 0;
     public DatePickerDialog.OnDateSetListener sinceDateSetListener, endDateSetListener;
 
     private final int initSubDay = -90;
@@ -83,6 +79,7 @@ public class Page2 extends Fragment implements View.OnClickListener {
     private String endDay = Common.getNowDayString();
     private String[] endDayArray = endDay.split("-");
 
+    public RelativeLayout ry_Previous, ry_Next;
     public RecyclerView rvItem;
     public Page2Adapter.PieChartViewHolder pieChartViewHolder;
 
@@ -144,8 +141,8 @@ public class Page2 extends Fragment implements View.OnClickListener {
         pagerSnapHelper.attachToRecyclerView(rvItem);
         rvItem.setAdapter(new Page2Adapter(getContext()));
 
-        RelativeLayout ry_Previous = view.findViewById(R.id.ry_Previous);
-        RelativeLayout ry_Next = view.findViewById(R.id.ry_Next);
+        ry_Previous = view.findViewById(R.id.ry_Previous);
+        ry_Next = view.findViewById(R.id.ry_Next);
         ry_Next.setOnClickListener(this);
         ry_Previous.setOnClickListener(this);
 
@@ -199,13 +196,12 @@ public class Page2 extends Fragment implements View.OnClickListener {
         @RequiresApi(api = Build.VERSION_CODES.N)
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-
-            position = itemIndex;
             if(position == 0){
                 setPieChartView(context,holder);
             }else{
                 setCategoryView(holder,position);
             }
+
         }
 
         @RequiresApi(api = Build.VERSION_CODES.N)
@@ -243,9 +239,6 @@ public class Page2 extends Fragment implements View.OnClickListener {
                     DatePicker datePicker = dialog.getDatePicker();
                     Calendar scalendar = Calendar.getInstance();
                     datePicker.setMaxDate(scalendar.getTimeInMillis());
-
-                    scalendar.add(Calendar.DAY_OF_MONTH, Common.CATEGORYSEARCHMAXDAY);
-                    datePicker.setMinDate(scalendar.getTimeInMillis());
                     dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                     dialog.show();
                 }
@@ -306,10 +299,7 @@ public class Page2 extends Fragment implements View.OnClickListener {
         public void createPieChart() {
 
             pieChartViewHolder.pieChart.setRotationEnabled(true);   //設定可否旋轉
-            Calendar calendar = Calendar.getInstance();
-            int piechart_month = calendar.get(Calendar.MONTH) + 1;
-
-            pieChartViewHolder.pieChart.setCenterText(String.valueOf(Common.monthIntToLetter(piechart_month)));  // 設定圓心文字
+            pieChartViewHolder.pieChart.setCenterText(String.valueOf(totalDiaryCount));  // 設定圓心文字
             pieChartViewHolder.pieChart.setCenterTextSize(35);      // 設定圓心文字大小
             pieChartViewHolder.pieChart.animateXY(700, 700);
 
@@ -354,8 +344,11 @@ public class Page2 extends Fragment implements View.OnClickListener {
 
                 Type listType = new TypeToken<List<PiechartData>>() {}.getType();
                 piechartDataList = gson.fromJson(selectItems, listType);
+                totalDiaryCount = 0;
+                totalHour = 0;
                 for (PiechartData piechartData : piechartDataList){
                     totalHour = totalHour + piechartData.getCategoryTime();
+                    totalDiaryCount = totalDiaryCount + piechartData.getDiaryCount();
                 }
                 pieChartViewHolder.pieChart.setData(getPieData());
                 pieChartViewHolder.pieChart.invalidate();
