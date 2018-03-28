@@ -58,7 +58,7 @@ public class PiechartServlet extends HttpServlet {
 		if (action.equals("select")) {
 			String startDay = jsonObject.get("startDay").getAsString();
 			String endDay = jsonObject.get("endDay").getAsString();
-			System.out.println("SelectDate: from " + endDay + "  to:" + startDay);
+			System.out.println("SelectDate: from " + startDay + "  to:" + endDay);
 			String[] cateArray = Common.DEFAULTCATE;
 			List<PiechartData> ltPiechartData = new ArrayList<PiechartData>();
 			for (String categoryType : cateArray) {

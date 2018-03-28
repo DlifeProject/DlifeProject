@@ -57,8 +57,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-
-
 public class Page2 extends Fragment implements View.OnClickListener {
     private final String TAG = "page2";
 
@@ -70,7 +68,6 @@ public class Page2 extends Fragment implements View.OnClickListener {
     // 統計時間 修改為 hr
     private double totalHour = 0;
     private int totalDiaryCount = 0;
-    public DatePickerDialog.OnDateSetListener sinceDateSetListener, endDateSetListener;
 
     private final int initSubDay = -90;
     //修改為 0000-00-00 在使用 array 存放 年 月 日
@@ -115,7 +112,6 @@ public class Page2 extends Fragment implements View.OnClickListener {
         }
     }
 
-
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -133,7 +129,6 @@ public class Page2 extends Fragment implements View.OnClickListener {
         setCategoryCategorySum();
 
         // 一頁一頁卡住
-        //分類資料 不含pie chart
         rvItem = view.findViewById(R.id.rvItem);
         rvItem.setLayoutManager(new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.HORIZONTAL));
         rvItem.setOnFlingListener(null);
@@ -145,16 +140,24 @@ public class Page2 extends Fragment implements View.OnClickListener {
         ry_Next = view.findViewById(R.id.ry_Next);
         ry_Next.setOnClickListener(this);
         ry_Previous.setOnClickListener(this);
-
         return view;
     }
 
     private class Page2Adapter extends RecyclerView.Adapter {
         public int index;
         private Context context;
-
+        public DatePickerDialog sinceDialog, endDialog;
+        public DatePickerDialog.OnDateSetListener sinceDateSetListener, endDateSetListener;
         public Page2Adapter(Context context) {
             this.context = context;
+            initDatePickerDialog();
+        }
+
+        private void setFromDayString() {
+            setStartDayArray();
+            pieChartViewHolder.tv_startyear.setText(startDayArray[0]);
+            pieChartViewHolder.tv_startmonth.setText(startDayArray[1]);
+            pieChartViewHolder.tv_startday.setText(startDayArray[2]);
         }
 
         private void setEndDayString() {
@@ -163,12 +166,53 @@ public class Page2 extends Fragment implements View.OnClickListener {
             pieChartViewHolder.tv_endmonth.setText(endDayArray[1]);
             pieChartViewHolder.tv_endday.setText(endDayArray[2]);
         }
+        private void initDatePickerDialog() {
 
-        private void setFromDayString() {
-            setStartDayArray();
-            pieChartViewHolder.tv_startyear.setText(startDayArray[0]);
-            pieChartViewHolder.tv_startmonth.setText(startDayArray[1]);
-            pieChartViewHolder.tv_startday.setText(startDayArray[2]);
+            sinceDateSetListener = new DatePickerDialog.OnDateSetListener() {
+                @RequiresApi(api = Build.VERSION_CODES.N)
+                @Override
+                public void onDateSet(DatePicker sinceDatePicker,  int year, int month, int dayOfMonth) {
+                    startDay =  Common.setDateFormat(year,month + 1, dayOfMonth);
+                    setFromDayString();
+                    sinceDialog.getDatePicker().setMaxDate(Common.getCalenderFromString(endDay).getTimeInMillis());
+                    endDialog.getDatePicker().setMinDate(Common.getCalenderFromString(startDay).getTimeInMillis());
+                    setCategoryPieChartData();
+                }
+            };
+            sinceDialog = new DatePickerDialog(
+                    getActivity()
+                    , android.R.style.Theme_Holo_Dialog_MinWidth
+                    , sinceDateSetListener
+                    , Integer.valueOf(startDayArray[0]) - 1
+                    , Integer.valueOf(startDayArray[1])
+                    , Integer.valueOf(startDayArray[2])
+            );
+            sinceDialog.getDatePicker().setMaxDate(Common.getCalenderFromString(endDay).getTimeInMillis());
+            sinceDialog.getDatePicker().setMinDate(Common.getCalenderFromString(startDay).getTimeInMillis());
+            sinceDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+            endDateSetListener = new DatePickerDialog.OnDateSetListener() {
+                @Override
+                public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                    endDay = Common.setDateFormat(year,month + 1, dayOfMonth);
+                    setEndDayString();
+                    endDialog.getDatePicker().setMaxDate(Common.getCalenderFromString(Common.getNowDayString()).getTimeInMillis());
+                    endDialog.getDatePicker().setMinDate(Common.getCalenderFromString(startDay).getTimeInMillis());
+                    sinceDialog.getDatePicker().setMaxDate(Common.getCalenderFromString(endDay).getTimeInMillis());
+                    setCategoryPieChartData();
+                }
+            };
+            endDialog = new DatePickerDialog(
+                    getActivity()
+                    ,android.R.style.Theme_Holo_Dialog_MinWidth
+                    , endDateSetListener
+                    , Integer.valueOf(endDayArray[0])
+                    , Integer.valueOf(endDayArray[1])
+                    , Integer.valueOf(endDayArray[2])
+            );
+            endDialog.getDatePicker().setMaxDate(Common.getCalenderFromString(endDay).getTimeInMillis());
+            endDialog.getDatePicker().setMinDate(Common.getCalenderFromString(startDay).getTimeInMillis());
+            endDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         }
 
         @Override
@@ -201,7 +245,6 @@ public class Page2 extends Fragment implements View.OnClickListener {
             }else{
                 setCategoryView(holder,position);
             }
-
         }
 
         @RequiresApi(api = Build.VERSION_CODES.N)
@@ -226,73 +269,20 @@ public class Page2 extends Fragment implements View.OnClickListener {
             pieChartViewHolder.ry_Since.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
-                    DatePickerDialog dialog = new DatePickerDialog(
-                            getActivity()
-                            , android.R.style.Theme_Holo_Dialog_MinWidth
-                            , sinceDateSetListener
-                            , Integer.valueOf(startDayArray[0])
-                            , Integer.valueOf(startDayArray[1])
-                            , Integer.valueOf(startDayArray[2])
-                    );
-
-                    DatePicker datePicker = dialog.getDatePicker();
-                    Calendar scalendar = Calendar.getInstance();
-                    datePicker.setMaxDate(scalendar.getTimeInMillis());
-                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                    dialog.show();
+                    sinceDialog.show();
                 }
             });
-
-            sinceDateSetListener = new DatePickerDialog.OnDateSetListener() {
-                @Override
-                public void onDateSet(DatePicker sinceDatePicker, int startyear, int startmonth, int startday) {
-                    startDay = Common.setDateFormat(startyear,startmonth + 1,startday);
-                    setFromDayString();
-                    setCategoryPieChartData();
-                }
-            };
 
             pieChartViewHolder.ry_End.setOnClickListener(new View.OnClickListener() {
                 @RequiresApi(api = Build.VERSION_CODES.O)
                 @Override
                 public void onClick(View view) {
-
-                    Calendar endCalendar = Calendar.getInstance();
-                    endCalendar.set(
-                             Integer.valueOf(startDayArray[0])
-                            ,Integer.valueOf(startDayArray[1]) - 1
-                            ,Integer.valueOf(startDayArray[2])
-                            );
-
-                    DatePickerDialog dialog = new DatePickerDialog(
-                            getActivity()
-                            ,android.R.style.Theme_Holo_Dialog_MinWidth
-                            , endDateSetListener
-                            , Integer.valueOf(endDayArray[0])
-                            , Integer.valueOf(endDayArray[1])
-                            , Integer.valueOf(endDayArray[2])
-                    );
-
-                    DatePicker datePicker = dialog.getDatePicker();
-                    datePicker.setMaxDate(endCalendar.getTimeInMillis());
-                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                    dialog.show();
+                    endDialog.show();
                 }
             });
 
-            endDateSetListener = new DatePickerDialog.OnDateSetListener() {
-                @Override
-                public void onDateSet(DatePicker datePicker, int endyear, int endmonth, int endday) {
-                    endDay = Common.setDateFormat(endyear,endmonth + 1, endday);
-                    setEndDayString();
-                    setCategoryPieChartData();
-                }
-            };
             setCategoryPieChartData();
             createPieChart();
-
-
         }
 
         @RequiresApi(api = Build.VERSION_CODES.N)
@@ -302,11 +292,6 @@ public class Page2 extends Fragment implements View.OnClickListener {
             pieChartViewHolder.pieChart.setCenterText(String.valueOf(totalDiaryCount));  // 設定圓心文字
             pieChartViewHolder.pieChart.setCenterTextSize(35);      // 設定圓心文字大小
             pieChartViewHolder.pieChart.animateXY(700, 700);
-
-            Description description = new Description();
-            description.setText("Total : " + totalHour + "hrs");
-            description.setTextSize(25);
-            pieChartViewHolder.pieChart.setDescription(description);
             pieChartViewHolder.pieChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
                 @Override
                 public void onValueSelected(Entry entry, Highlight highlight) {
@@ -352,6 +337,11 @@ public class Page2 extends Fragment implements View.OnClickListener {
                 }
                 pieChartViewHolder.pieChart.setData(getPieData());
                 pieChartViewHolder.pieChart.invalidate();
+                pieChartViewHolder.pieChart.setCenterText(String.valueOf(totalDiaryCount));
+                Description description = new Description();
+                description.setText("Total : " + totalHour + "hrs");
+                description.setTextSize(25);
+                pieChartViewHolder.pieChart.setDescription(description);
 
             } catch (Exception e) {
                 Log.e(TAG, e.toString());

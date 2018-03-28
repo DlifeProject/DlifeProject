@@ -23,8 +23,8 @@
 
             <TextView
                 android:id="@+id/tvMyCategory"
-                android:paddingLeft="12dp"
-                android:paddingRight="12dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
                 android:layout_marginRight="20dp"
                 android:textSize="32sp"
                 android:text="H"
@@ -54,8 +54,8 @@
 
             <TextView
                 android:id="@+id/tvMyFriendCategory"
-                android:paddingLeft="12dp"
-                android:paddingRight="12dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
                 android:textSize="32sp"
                 android:text="H"
                 android:layout_centerInParent="true"

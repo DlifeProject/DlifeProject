@@ -91,7 +91,7 @@ public class Common {
 		String day = "00";
 		try {
 			Date today = dateFormat.parse(diaryDay);
-			DateFormat chtDateFormat = new SimpleDateFormat("MM");
+			DateFormat chtDateFormat = new SimpleDateFormat("dd");
 			day = chtDateFormat.format(today);
 		} catch (ParseException e) {
 			e.printStackTrace();

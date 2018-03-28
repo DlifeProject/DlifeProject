@@ -94,16 +94,16 @@
 
                 <TextView
                     android:id="@+id/tvFriendShareCategory"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:layout_marginRight="20dp"
                     android:background="@drawable/image_button_background_dark"
                     android:gravity="center"
-                    android:paddingLeft="12dp"
-                    android:paddingRight="12dp"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
                     android:text="H"
                     android:textColor="@color/background_white"
-                    android:textSize="32sp" />
+                    android:textSize="30sp" />
 
             </LinearLayout>
 
@@ -119,8 +119,8 @@
                     android:layout_marginRight="20dp"
                     android:background="@drawable/image_button_background"
                     android:gravity="center"
-                    android:paddingLeft="12dp"
-                    android:paddingRight="12dp"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
                     android:text="H"
                     android:textColor="@color/background_white"
                     android:textSize="32sp" />

@@ -207,7 +207,8 @@ public class DiaryDetailDao {
 				int diarySK = rs.getInt(1);
 				String diaryDay = rs.getString(2);
 				String note = rs.getString(3);
-
+				
+				System.out.println("diaryDay : " + diaryDay);
 				int a = new DiaryPhotoDao(diarySK).getMainPhotoSK();
 				categorySum.setDiaryPhotoSK(new DiaryPhotoDao(diarySK).getMainPhotoSK());
 				categorySum.setYear(Common.stringToYear(diaryDay));

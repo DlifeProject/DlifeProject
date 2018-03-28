@@ -59,14 +59,12 @@ public class MemberShareRelationDao {
 	public ArrayList<MatchFriendItem> getMemberShareRelationList(){
 		
 		ArrayList<MatchFriendItem> shareList = new ArrayList<MatchFriendItem>();
-		
 		CategoryDao categoryDao = new CategoryDao();
 		topCategoryHash = categoryDao.getTopCategoryHash();
 		setFromMeToFriendHash();
 		setFromFriendToMeHash();
 		
 		for(int i: fromMeToFriendHash.keySet()) {
-			
 			if(fromFriendToMeHash.get(i) != null) {
 				MatchFriendItem matchFriendItem = new MatchFriendItem();
 				matchFriendItem.setMyCategory(fromMeToFriendHash.get(i).topCategory );
@@ -81,7 +79,6 @@ public class MemberShareRelationDao {
 					matchFriendItem.setIsShareable(1);
 				}
 				matchFriendItem.setPostDay(fromMeToFriendHash.get(i).postDay);
-				
 				shareList.add(matchFriendItem);
 			}
 		}
@@ -98,6 +95,10 @@ public class MemberShareRelationDao {
 		+ " and member_share_relation.from_member_sk = ? "
 		+ " order by member_share_relation.sk desc";	
 		
+//		System.out.println("setFromMeToFriendHash");
+//		System.out.println(sql);
+//		System.out.println(memberSK);
+				
 		try {
 			conn = DriverManager.getConnection(Common.DBURL, Common.DBACCOUNT, Common.DBPWD);
 			ps = conn.prepareStatement(sql);
@@ -130,6 +131,11 @@ public class MemberShareRelationDao {
 		+ " where member_share_relation.from_member_sk = member.sk "
 		+ " and member_share_relation.to_member_sk = ? "
 		+ " order by member_share_relation.sk desc";
+		
+//		System.out.println("setFromMeToFriendHash");
+//		System.out.println(sql);
+//		System.out.println(memberSK);
+		
 		try {
 			conn = DriverManager.getConnection(Common.DBURL, Common.DBACCOUNT, Common.DBPWD);
 			ps = conn.prepareStatement(sql);

@@ -35,8 +35,8 @@ public class Common {
 
     public final static String TAG = "Common";
 
-    public static final String URL = "http://10.0.2.2:8080/Dlife/";
-    //public static final String URL = "http://192.168.196.233:8080/Dlife/";
+    //public static final String URL = "http://10.0.2.2:8080/Dlife/";
+    public static final String URL = "http://192.168.196.184:8080/Dlife/";
 
     public final static String WEBLOGIN = "login";
     public final static String WEBDIARY = "diary";
@@ -232,6 +232,17 @@ public class Common {
         String msg = "ok";
         return "ok";
 
+    }
+
+    public static Calendar getCalenderFromString(String day){
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            cal.setTime(sdf.parse(day));// all done
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return cal;
     }
 
     public static String setDateFormat(int year, int month, int dayOfMonth) {

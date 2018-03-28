@@ -98,6 +98,9 @@ public class MainActivity extends AppCompatActivity {
                 Common.updateLoginPreferences(this, userAccount, userPassword, userUUID);
                 etLoginAccount.setText(userAccount);
                 etLoginPassword.setText(userPassword);
+                //Common.startTabActivity(MainActivity.this);
+                //askPermissions();
+                //finish();
                 return true;
             } else {
                 return false;
@@ -226,7 +229,7 @@ public class MainActivity extends AppCompatActivity {
         MyTask login = new MyTask(url, jsonObject.toString());
         String inStr = null;
         try {
-            inStr = login.execute().get();
+            inStr = login.execute().get().trim();
         } catch (Exception e) {
             e.printStackTrace();
         }
