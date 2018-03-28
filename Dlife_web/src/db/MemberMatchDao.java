@@ -46,14 +46,20 @@ public class MemberMatchDao {
 		return this;
 	}
 
-	public void toMatch(int shareTopCateorySk) {
+	public MemberShareRelation toMatch(int shareTopCateorySk) {
+		MemberShareRelation memberShareRelation = new MemberShareRelation(0);
+		MemberShareRelationDao memberShareRelationDao = new MemberShareRelationDao(memberSK);
 		if(!isAccept(shareTopCateorySk)) {
 			if(todaymatch()) {
-				
+				memberShareRelation = memberShareRelationDao.getTodayMatch();
 			}else {
-				getAcceoptMatch(memberSK);
+				CategoryMatch categoryMatch = getAcceoptMatch(memberSK);
+				if(categoryMatch.getTop_category_1_sk() > 0) {
+					memberShareRelation = memberShareRelationDao.insertAMatch(categoryMatch,shareTopCateorySk);
+				}	
 			}
 		}
+		return memberShareRelation;
 	}
 
 	public boolean isAccept(int shareTopCateorySk) {
@@ -109,7 +115,7 @@ public class MemberMatchDao {
 		}
 	}
 	
-	public int getAcceoptMatch(int memberSK) {
+	public CategoryMatch getAcceoptMatch(int memberSK) {
 		
 		FriendRelationDao friendRelationDao = new FriendRelationDao(memberSK);
 		List<String> avoidFBIDList = friendRelationDao.getAvoidFBIDList();
@@ -123,10 +129,9 @@ public class MemberMatchDao {
 		matchLocationFreindList = avoidTodayMatch(matchLocationFreindList);
 		
 		CategoryMatchDao categoryMatchDao = new CategoryMatchDao(memberSK);
-		List<Integer> matchLocationFreindWithCategoryMatchList = categoryMatchDao.matchWithLocationFreind(matchLocationFreindList);
-		
-		
-		return 0;
+		CategoryMatch myFriendCategoryMatch = categoryMatchDao.matchWithLocationFreind(matchLocationFreindList);
+
+		return myFriendCategoryMatch;
 	}
 
 	public List<Integer> avoidTodayMatch(List<Integer> matchLocationFreindList) {

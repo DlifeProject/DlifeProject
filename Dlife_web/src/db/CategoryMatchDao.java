@@ -234,47 +234,6 @@ public class CategoryMatchDao {
 		return sk;	
 	}
 
-	public List<Integer> matchWithLocationFreind(List<Integer> matchLocationFreindList) {
-		
-		List<Integer> matchList = new ArrayList<Integer>();
-		
-		String avoidMemberSK = String.valueOf(memberSK);
-		for(Integer avoidSK:matchLocationFreindList) {
-			if(avoidSK > 0) {
-				avoidMemberSK = avoidMemberSK + "," +  String.valueOf(avoidSK);
-			}
-		}
-		getMyCategoryMatch();
-		if(categoryMatch.getDiary_count_1() > 0) {
-			//do matchList
-			if(matchList.size() == 0 ) {
-				if(categoryMatch.getDiary_count_2() == 0) {
-					return null;
-				}else {
-					//do matchList
-					if(matchList.size() == 0 ) {
-						if(categoryMatch.getDiary_count_3() == 0) {
-							return null;
-						}else {
-							//do matchList	
-							if(matchList.size() == 0 ) {
-								return null;
-							}else {
-								return matchList;
-							}
-						}
-					}else {
-						return matchList;
-					}
-				}
-			}else {
-				return matchList;
-			}
-		}else {
-			return null;
-		}
-	}
-
 	public void getMyCategoryMatch() {
 		String sql = "select"
 				+ " sk, member_sk, top_category_1_sk, diary_count_1, top_category_2_sk"
@@ -302,5 +261,70 @@ public class CategoryMatchDao {
 			e.printStackTrace();
 		}
 		close();
+	}
+	
+	public CategoryMatch matchWithLocationFreind(List<Integer> matchLocationFreindList) {
+		int myMatchFriend = 0;
+		List<Integer> matchList = new ArrayList<Integer>();
+		String matchMemberSKList = "0";
+		for(Integer matchSK:matchLocationFreindList) {
+			if(matchSK > 0) {
+				matchMemberSKList = matchMemberSKList + "," +  String.valueOf(matchSK);
+			}
+		}
+		CategoryMatch myCategoryMatch = new CategoryMatch(0);
+		getMyCategoryMatch();
+		CategoryMatchDao thisCategoryMarchDao = new CategoryMatchDao(memberSK);
+		if(categoryMatch.getDiary_count_1() > 0) {
+			myCategoryMatch = thisCategoryMarchDao.getMatchFromCategorySK(categoryMatch.getTop_category_1_sk(),matchMemberSKList);	
+		}
+		if(myCategoryMatch.getSk() == 0 && categoryMatch.getDiary_count_2() > 0) {
+			myCategoryMatch = thisCategoryMarchDao.getMatchFromCategorySK(categoryMatch.getTop_category_2_sk(),matchMemberSKList);
+		}
+		if(myCategoryMatch.getSk() == 0  && categoryMatch.getDiary_count_3() > 0) {
+			myCategoryMatch = thisCategoryMarchDao.getMatchFromCategorySK(categoryMatch.getTop_category_3_sk(),matchMemberSKList);
+		}
+		return myCategoryMatch;
+	}
+
+	private CategoryMatch getMatchFromCategorySK(int top_category_1_sk, String matchMemberSKList) {
+		String sql = "select"
+				+ " sk, member_sk, top_category_1_sk, diary_count_1, top_category_2_sk"
+				+ " ,diary_count_2, top_category_3_sk, diary_count_3, start_diary_detail_sk, end_diary_detail_sk"
+				+ " from category_match"
+				+ " where member_sk in (" + matchMemberSKList + ") "
+				+ " and top_category_1_sk = ?";
+		try {
+			conn = DriverManager.getConnection(Common.DBURL, Common.DBACCOUNT,
+					Common.DBPWD);
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, top_category_1_sk);
+			ResultSet rs = ps.executeQuery();
+			if(rs.next()) {
+				categoryMatch.setSk(rs.getInt(1));
+				categoryMatch.setMember_sk(rs.getInt(2));
+				categoryMatch.setTop_category_1_sk(rs.getInt(3));
+				categoryMatch.setDiary_count_1(rs.getInt(4));
+				categoryMatch.setTop_category_2_sk(rs.getInt(5));
+				categoryMatch.setDiary_count_2(rs.getInt(6));
+				categoryMatch.setTop_category_3_sk(rs.getInt(7));
+				categoryMatch.setStart_diary_detail_sk(rs.getInt(8));
+				categoryMatch.setEnd_diary_detail_sk(rs.getInt(9));
+			}else {
+				categoryMatch.setSk(0);
+				categoryMatch.setMember_sk(0);
+				categoryMatch.setTop_category_1_sk(0);
+				categoryMatch.setDiary_count_1(0);
+				categoryMatch.setTop_category_2_sk(0);
+				categoryMatch.setDiary_count_2(0);
+				categoryMatch.setTop_category_3_sk(0);
+				categoryMatch.setStart_diary_detail_sk(0);
+				categoryMatch.setEnd_diary_detail_sk(0);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		close();		
+		return categoryMatch;
 	}
 }

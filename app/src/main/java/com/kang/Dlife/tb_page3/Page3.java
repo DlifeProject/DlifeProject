@@ -32,6 +32,7 @@ public class Page3 extends Fragment {
     private TextView tvNewFriendName;
     private TextView tvFriendShareCategory;
     private TextView tvMyShareCategory;
+    public RecyclerView rvFriendlist;
 
     private final static String TAG = "Page3";
     public List<MatchFriendItem> matchFriendItemList;
@@ -61,7 +62,6 @@ public class Page3 extends Fragment {
         tvMyShareCategory = (TextView) view.findViewById(R.id.tvMyShareCategory);
         tvFriendShareCategory = (TextView) view.findViewById(R.id.tvFriendShareCategory);
 
-
         if(matchFriendItemList.size() == 0 || matchFriendItemList.isEmpty()){
             tvNewFriendName.setText("Get a friend");
             tvMyShareCategory.setText("?");
@@ -74,9 +74,8 @@ public class Page3 extends Fragment {
             tvFriendShareCategory.setText(matchFriendItemList.get(0).getMyFriendCategory().substring(0,1));
         }
 
-
         //init friend list
-        RecyclerView rvFriendlist = (RecyclerView) view.findViewById(R.id.rvFriendlist);
+        rvFriendlist = (RecyclerView) view.findViewById(R.id.rvFriendlist);
         rvFriendlist.setLayoutManager(
                 new StaggeredGridLayoutManager(
                         // spanCount(列數 or 行數), HORIZONTAL -> 水平, VERTICAL -> 垂直
@@ -86,6 +85,30 @@ public class Page3 extends Fragment {
 
         return view;
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        setMemberShareRelationList(getActivity());
+        if(matchFriendItemList.size() == 0 || matchFriendItemList.isEmpty()){
+            tvNewFriendName.setText("Get a friend");
+            tvMyShareCategory.setText("?");
+            tvFriendShareCategory.setText("?");
+        }else{
+
+            tvNewFriendName.setText(matchFriendItemList.get(0).getMyFriendName());
+            tvNewFriendName.setOnClickListener(new FriendDiaryListener(getActivity(),matchFriendItemList.get(0)));
+            tvMyShareCategory.setText(matchFriendItemList.get(0).getMyCategory().substring(0,1));
+            tvFriendShareCategory.setText(matchFriendItemList.get(0).getMyFriendCategory().substring(0,1));
+        }
+
+        rvFriendlist.setLayoutManager(
+                new StaggeredGridLayoutManager(
+                        // spanCount(列數 or 行數), HORIZONTAL -> 水平, VERTICAL -> 垂直
+                        1, StaggeredGridLayoutManager.VERTICAL));
+        final List<MatchFriendItem> friendSpots = getMatchSpots();
+        rvFriendlist.setAdapter(new MatchAdapter(getActivity(), friendSpots));
     }
 
     private void setMemberShareRelationList(FragmentActivity activity) {

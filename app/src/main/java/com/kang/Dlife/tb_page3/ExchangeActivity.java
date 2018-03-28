@@ -1,8 +1,11 @@
 package com.kang.Dlife.tb_page3;
 
 import android.content.Context;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -21,8 +24,15 @@ import com.kang.Dlife.sever.MyTask;
 import com.kang.Dlife.tb_page2.CategorySum;
 import com.kang.Dlife.tb_page2.diary_view.PhotoSpot;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.Serializable;
+import java.lang.ref.WeakReference;
 import java.lang.reflect.Type;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
@@ -53,7 +63,6 @@ public class ExchangeActivity extends AppCompatActivity {
         rlMyshare = (RelativeLayout) findViewById(R.id.rlMyshare);
         ivMyPhoto = (ImageView) findViewById(R.id.ivMyPhoto);
         findView(this);
-
 
     }
 
@@ -133,8 +142,6 @@ public class ExchangeActivity extends AppCompatActivity {
         
     }
 
-
-
     private void findView(ExchangeActivity exchangeActivity) {
 
         ibBack = (ImageButton) findViewById(R.id.ibBack);
@@ -155,12 +162,10 @@ public class ExchangeActivity extends AppCompatActivity {
                 }else{
                     Common.showToast(ExchangeActivity.this ,"choose a category");
                 }
-
                 //sendShareCategory()
             }
         });
         ivFriendPhoto = (ImageView) findViewById(R.id.ivFriendPhoto);
-
         iv_previous = (ImageView) findViewById(R.id.iv_previous);
         iv_previous.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -187,10 +192,26 @@ public class ExchangeActivity extends AppCompatActivity {
 
         String url = Common.URL + Common.FRIEND;
         MyTask getListJson = new MyTask(url,jsonObject.toString());
-        String inStr = null;
-
+        String inStr = "";
         try {
             inStr = getListJson.execute().get().trim();
+            Gson gson = new Gson();
+            JsonObject outJsonObject = gson.fromJson(inStr, JsonObject.class);
+            String ltString = outJsonObject.get("toRequestShare").getAsString();
+
+            Type tySum = new TypeToken<CategorySum>() {
+            }.getType();
+            CategorySum categorySum = new Gson().fromJson(ltString, tySum);
+            if(categorySum.getDiaryPhotoSK() > 0 ){
+                String urlPhoto = Common.URL + Common.WEBPHOTO;
+                SpotGetImageTask spotGetImageTask = new SpotGetImageTask(urlPhoto, categorySum.getDiaryPhotoSK(), imageSize, ivFriendPhoto);
+                spotGetImageTask.execute();
+                tvFriendShareCategory.setText((CharSequence) categorySum.getCategoryType());
+
+            }else{
+                //沒有朋友
+            }
+
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -241,5 +262,81 @@ public class ExchangeActivity extends AppCompatActivity {
         public int photoSK = 0;
     }
 
+    public class SpotGetImageTask extends AsyncTask<Object, Integer, Bitmap> {
+        private final static String TAG = "SpotGetImageTask";
+        private String url;
+        private int id, imageSize;
+
+        // WeakReference物件不會阻止參照到的實體被回收
+        private WeakReference<ImageView> imageViewWeakReference;
+
+        SpotGetImageTask(String url, int id, int imageSize) {
+            this(url, id, imageSize, null);
+        }
+
+        public SpotGetImageTask(String url, int id, int imageSize, ImageView imageView) {
+            this.url = url;
+            this.id = id;
+            this.imageSize = imageSize;
+            this.imageViewWeakReference = new WeakReference<>(imageView);
+        }
+
+        @Override
+        protected Bitmap doInBackground(Object... params) {
+
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("action", "getImage");
+            jsonObject.addProperty("account", Common.getAccount(ExchangeActivity.this));
+            jsonObject.addProperty("password", Common.getPWD(ExchangeActivity.this));
+            jsonObject.addProperty("id", id);
+            jsonObject.addProperty("imageSize", imageSize);
+            return getRemoteImage(url, jsonObject.toString());
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            ImageView imageView = imageViewWeakReference.get();
+            if (isCancelled() || imageView == null) {
+                return;
+            }
+            if (bitmap != null) {
+                imageView.setImageBitmap(bitmap);
+            } else {
+                // imageView.setImageResource(R.drawable.ex_photo);
+            }
+        }
+
+        private Bitmap getRemoteImage(String url, String jsonOut) {
+            HttpURLConnection connection = null;
+            Bitmap bitmap = null;
+            try {
+                connection = (HttpURLConnection) new URL(url).openConnection();
+                connection.setDoInput(true); // allow inputs
+                connection.setDoOutput(true); // allow outputs
+                connection.setUseCaches(false); // do not use a cached copy
+                connection.setRequestMethod("POST");
+                BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(connection.getOutputStream()));
+                bw.write(jsonOut);
+                Log.d(TAG, "output: " + jsonOut);
+                bw.close();
+
+                int responseCode = connection.getResponseCode();
+
+                if (responseCode == 200) {
+                    bitmap = BitmapFactory.decodeStream(
+                            new BufferedInputStream(connection.getInputStream()));
+                } else {
+                    Log.d(TAG, "response code: " + responseCode);
+                }
+            } catch (IOException e) {
+                Log.e(TAG, e.toString());
+            } finally {
+                if (connection != null) {
+                    connection.disconnect();
+                }
+            }
+            return bitmap;
+        }
+    }
 }
 

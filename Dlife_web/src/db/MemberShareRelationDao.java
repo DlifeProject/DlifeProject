@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
@@ -18,6 +19,7 @@ public class MemberShareRelationDao {
 	public Hashtable<Integer,ShareItem> fromMeToFriendHash = new Hashtable<Integer,ShareItem>();
 	public Hashtable<Integer,ShareItem> fromFriendToMeHash = new Hashtable<Integer,ShareItem>();
 	public Hashtable<Integer,String> topCategoryHash = new Hashtable<Integer,String>();
+	private MemberShareRelation memberShareRelation;
 	
 	class ShareItem {
 		public String topCategory = "";
@@ -36,6 +38,12 @@ public class MemberShareRelationDao {
 		Common.initDB();
 	}
 	
+	public MemberShareRelationDao(MemberShareRelation memberShareRelation) {
+		super();
+		this.memberShareRelation = memberShareRelation;
+		Common.initDB();
+	}
+
 	public MemberShareRelationDao close() {
 		if(ps != null) {
 			try {
@@ -94,10 +102,6 @@ public class MemberShareRelationDao {
 		+ " where member_share_relation.to_member_sk = member.sk "
 		+ " and member_share_relation.from_member_sk = ? "
 		+ " order by member_share_relation.sk desc";	
-		
-//		System.out.println("setFromMeToFriendHash");
-//		System.out.println(sql);
-//		System.out.println(memberSK);
 				
 		try {
 			conn = DriverManager.getConnection(Common.DBURL, Common.DBACCOUNT, Common.DBPWD);
@@ -131,11 +135,7 @@ public class MemberShareRelationDao {
 		+ " where member_share_relation.from_member_sk = member.sk "
 		+ " and member_share_relation.to_member_sk = ? "
 		+ " order by member_share_relation.sk desc";
-		
-//		System.out.println("setFromMeToFriendHash");
-//		System.out.println(sql);
-//		System.out.println(memberSK);
-		
+	
 		try {
 			conn = DriverManager.getConnection(Common.DBURL, Common.DBACCOUNT, Common.DBPWD);
 			ps = conn.prepareStatement(sql);
@@ -247,6 +247,86 @@ public class MemberShareRelationDao {
 		}
 		close();	
 		return myfriendList;
+	}
+
+	public MemberShareRelation getTodayMatch() {
+		MemberShareRelation memberShareRelation = new MemberShareRelation(0);
+		String sql = "select"
+				+ " sk, from_member_sk, to_member_sk, category_sk, is_shareable"
+				+ " , post_day, post_date"
+				+ " from member_share_relation" 
+				+ " where to_member_sk = ? ";
+		try {
+			conn = DriverManager.getConnection(Common.DBURL, Common.DBACCOUNT, Common.DBPWD);
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, memberSK);
+			ResultSet rs = ps.executeQuery();
+			if(rs.next()) {
+				memberShareRelation.setSk(rs.getInt(1));
+				memberShareRelation.setFrom_member_sk(rs.getInt(2));
+				memberShareRelation.setTo_member_sk(rs.getInt(3));
+				memberShareRelation.setCategory_sk(rs.getInt(4));
+				memberShareRelation.setIs_shareable(rs.getInt(5));
+				memberShareRelation.setPost_date(rs.getString(6));
+				memberShareRelation.setPost_date(rs.getString(7));	
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		close();	
+		return memberShareRelation;
+	}
+
+	public MemberShareRelation insertAMatch(CategoryMatch categoryMatch, int shareCateorySk) {
+		MemberShareRelation fromMemberShareRelation = new MemberShareRelation(
+				memberSK
+				,categoryMatch.getMember_sk()
+				,shareCateorySk
+				,1
+				,Common.getNowDayString()
+				,Common.getNowDateTimeString());
+		MemberShareRelationDao fromMemberShareRelationDao = new MemberShareRelationDao(fromMemberShareRelation);
+		fromMemberShareRelation.setSk(fromMemberShareRelationDao.insertMemberShareRelation());
+		
+		MemberShareRelation toMemberShareRelation = new MemberShareRelation(
+				categoryMatch.getMember_sk()
+				,memberSK
+				,categoryMatch.getTop_category_1_sk()
+				,1
+				,Common.getNowDayString()
+				,Common.getNowDateTimeString());
+		MemberShareRelationDao toMemberShareRelationDao = new MemberShareRelationDao(toMemberShareRelation);
+		toMemberShareRelation.setSk(toMemberShareRelationDao.insertMemberShareRelation());
+		
+		return toMemberShareRelation;
+	}
+
+	private int insertMemberShareRelation() {
+		int insertCount = 0;
+		String sql = "insert into member_share_relation"
+				+ "(from_member_sk, to_member_sk , category_sk, is_shareable, post_day, post_date)"
+				+ " VALUES ("
+				+ " ?,?,?,?,?,?)";
+		try {
+			conn = DriverManager.getConnection(Common.DBURL, Common.DBACCOUNT,
+					Common.DBPWD);
+			ps = conn.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
+			ps.setInt(1, memberShareRelation.getFrom_member_sk());
+			ps.setInt(2, memberShareRelation.getTo_member_sk());
+			ps.setInt(3, memberShareRelation.getCategory_sk());
+			ps.setInt(4, memberShareRelation.getIs_shareable());
+			ps.setString(5, memberShareRelation.getPost_day());
+			ps.setString(6, memberShareRelation.getPost_date());
+			ps.executeUpdate();
+			ResultSet tableKeys = ps.getGeneratedKeys();
+			tableKeys.next();
+			insertCount = tableKeys.getInt(1);
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		close();
+		return insertCount;
 	}
 
 	

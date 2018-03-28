@@ -170,7 +170,6 @@ public class diary extends HttpServlet {
 					outJsonObject.addProperty("getDiaryBetweenDays", "");
 					msg = outJsonObject.toString();
 					System.out.println("outStr: " + msg.toString());
-
 				}
 
 			} else if (action.equals("getRecyclerViewDiary")) {

@@ -54,11 +54,11 @@
                 <ImageView
                     android:id="@+id/ivFriendPhoto"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"
-                    android:src="@drawable/tired" />
+                    android:src="@drawable/no_photo" />
                 <TextView
                     android:id="@+id/tvFriendShareCategory"
                     android:layout_width="wrap_content"

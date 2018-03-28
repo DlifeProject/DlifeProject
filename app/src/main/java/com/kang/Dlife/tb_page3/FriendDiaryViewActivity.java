@@ -78,7 +78,7 @@ public class FriendDiaryViewActivity extends AppCompatActivity {
             // open header button
             headerTitle.setText(matchFriendItem.getMyFriendName());
             ibChat = (ImageButton) findViewById(R.id.ibChat);
-            ibChat.setVisibility(View.VISIBLE);
+            ibChat.setVisibility(View.INVISIBLE);
 
         }else{
             // hidden header button

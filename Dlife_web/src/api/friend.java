@@ -25,6 +25,7 @@ import db.FriendRelationDao;
 import db.Member;
 import db.MemberDao;
 import db.MemberMatchDao;
+import db.MemberShareRelation;
 import db.MemberShareRelationDao;
 import system.Common;
 
@@ -135,7 +136,22 @@ public class friend extends HttpServlet{
 				CategoryDao categoryDao = new CategoryDao();				
 				int shareTopCateorySk = categoryDao.getCategory_sk(jsonObject.get("shareCategory").getAsString());
 				MemberMatchDao memberMatchDao = new MemberMatchDao(memberSK);
-				memberMatchDao.toMatch(shareTopCateorySk);
+				MemberShareRelation memberShareRelation = memberMatchDao.toMatch(shareTopCateorySk);
+				
+				CategorySum categorySum = new CategorySum();
+				if(memberShareRelation.getFrom_member_sk() != 0 ) {
+					CategoryDao friendCategoryDao = new CategoryDao(memberShareRelation.getFrom_member_sk());	
+					categorySum = friendCategoryDao.getSummaryByType(
+							friendCategoryDao.getCategoryType(
+									memberShareRelation.getCategory_sk()
+									)
+							);
+				}
+				JsonObject outJsonObject = new JsonObject();
+				outJsonObject.addProperty("toRequestShare", new Gson().toJson(categorySum));
+				msg = outJsonObject.toString();
+				System.out.println("outStr: " + msg.toString());
+				response.getWriter().println(msg);	
 				
 				
 			} else if (action.equals("updateFBList")) {

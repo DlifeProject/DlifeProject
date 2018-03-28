@@ -11,7 +11,22 @@ public class MemberShareRelation {
 	public MemberShareRelation() {
 		super();
 	}
+	public MemberShareRelation(int from_member_sk) {
+		super();
+		this.from_member_sk = from_member_sk;
+	}
 
+	public MemberShareRelation( int from_member_sk, int to_member_sk, int category_sk, int is_shareable,
+			String post_day, String post_date) {
+		super();
+		this.from_member_sk = from_member_sk;
+		this.to_member_sk = to_member_sk;
+		this.category_sk = category_sk;
+		this.is_shareable = is_shareable;
+		this.post_day = post_day;
+		this.post_date = post_date;
+	}	
+	
 	public MemberShareRelation(int sk, int from_member_sk, int to_member_sk, int category_sk, int is_shareable,
 			String post_day, String post_date) {
 		super();
