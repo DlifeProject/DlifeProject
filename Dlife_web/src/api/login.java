@@ -68,6 +68,7 @@ public class login extends HttpServlet {
 			
 			Member member = new Member();
 			member.setAndroid_user_id(jsonObject.get("android_user_id").getAsString());
+			member.setIos_user_id(jsonObject.get("ios_user_id").getAsString());
 			member.setApp_account(jsonObject.get("app_account").getAsString());
 			member.setFb_account(jsonObject.get("fb_account").getAsString());
 			member.setNick_name(jsonObject.get("nick_name").getAsString());
