@@ -279,7 +279,7 @@ public class DiaryView extends AppCompatActivity {
                 e.printStackTrace();
             }
 
-            viewHolder.tvTime.setText(Common.dateStringToHour(diaryDetail.getStart_date()));
+            viewHolder.tvTime.setText(Common.dateStringToHour(diaryDetail.getStart_date())+"-"+Common.dateStringToHour(diaryDetail.getEnd_date()));
             viewHolder.tvNote.setText(diaryDetail.getNote());
             viewHolder.tvContinue.setVisibility(View.GONE);
 
