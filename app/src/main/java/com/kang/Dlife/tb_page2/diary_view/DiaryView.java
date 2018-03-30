@@ -122,6 +122,7 @@ public class DiaryView extends AppCompatActivity {
                 Type tySum = new TypeToken<List<LocationToDiary>>() {
                 }.getType();
                 igList = new Gson().fromJson(ltDiaryDetailString, tySum);
+                int tempsaaa = 1;
 
             } catch (Exception e) {
                 Log.e(TAG, e.toString());
@@ -278,21 +279,16 @@ public class DiaryView extends AppCompatActivity {
                 e.printStackTrace();
             }
 
-
-            viewHolder.tvTime.setText(time);
+            viewHolder.tvTime.setText(Common.dateStringToHour(diaryDetail.getStart_date()));
             viewHolder.tvNote.setText(diaryDetail.getNote());
             viewHolder.tvContinue.setVisibility(View.GONE);
 
             if (viewHolder.tvNote.length() >= 11) {
                 viewHolder.tvNote.setText(diaryDetail.getNote().substring(0, 11));
-
                 viewHolder.tvContinue.setVisibility(View.VISIBLE);
-
-
                 viewHolder.tvContinue.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-
                         viewHolder.tvContinue.setVisibility(View.GONE);
                         viewHolder.tvNote.setText(diaryDetail.getNote().substring(0));
                     }
@@ -328,7 +324,6 @@ public class DiaryView extends AppCompatActivity {
             MyViewHolder(View itemView) {
                 super(itemView);
                 ivRecyclerImage = (ImageView) itemView.findViewById(R.id.ivRecyclerImage);
-
 
             }
         }
