@@ -45,25 +45,17 @@ public class Page4 extends Fragment {
         //因為有宣告view, 所以之後可以在這頁裡面找下面之後要用到的id
         View view = inflater.inflate(R.layout.page4, container, false);
         findView(view);
+        setViewData();
         return view;
     }
 
-    private void findView(View view) {
+    @Override
+    public void onResume() {
+        super.onResume();
+        setViewData();
+    }
 
-        tvAccount = (TextView)view.findViewById(R.id.tvAccount);
-        tvNickname = (TextView)view.findViewById(R.id.tvNickname);
-        tvBirthday = (TextView)view.findViewById(R.id.tvBirthday);
-        tvGender = (TextView)view.findViewById(R.id.tvGender);
-        tvFacebookList = (TextView)view.findViewById(R.id.tvFacebookList);
-        tvLogout = (TextView)view.findViewById(R.id.tvLogout);
-
-        ibChangePassword = (ImageButton)view.findViewById(R.id.ibChangePassword);
-        ibNickname = (ImageButton)view.findViewById(R.id.ibNickname);
-        ibBirthday = (ImageButton)view.findViewById(R.id.ibBirthday);
-        ibGender = (ImageButton)view.findViewById(R.id.ibGender);
-        ibFacebook = (ImageButton)view.findViewById(R.id.ibFacebook);
-        ibLogout = (ImageButton)view.findViewById(R.id.ibLogout);
-
+    private void setViewData() {
         String url = Common.URL + Common.WEBLOGIN;
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("action", "memberProfile");
@@ -89,6 +81,18 @@ public class Page4 extends Fragment {
             gender = memberProfile.getSex();
             logout = memberProfile.getLogin_date();
 
+            tvAccount.setText(account);
+            tvNickname.setText(nickname);
+            tvBirthday.setText(birthday);
+            if(gender == 0){
+                tvGender.setText(R.string.lady);
+            }else if(gender == 1){
+                tvGender.setText(R.string.man);
+            }else{
+                tvGender.setText("--");
+            }
+            tvLogout.setText(logout);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -110,7 +114,23 @@ public class Page4 extends Fragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
 
+    private void findView(View view) {
+
+        tvAccount = (TextView)view.findViewById(R.id.tvAccount);
+        tvNickname = (TextView)view.findViewById(R.id.tvNickname);
+        tvBirthday = (TextView)view.findViewById(R.id.tvBirthday);
+        tvGender = (TextView)view.findViewById(R.id.tvGender);
+        tvFacebookList = (TextView)view.findViewById(R.id.tvFacebookList);
+        tvLogout = (TextView)view.findViewById(R.id.tvLogout);
+
+        ibChangePassword = (ImageButton)view.findViewById(R.id.ibChangePassword);
+        ibNickname = (ImageButton)view.findViewById(R.id.ibNickname);
+        ibBirthday = (ImageButton)view.findViewById(R.id.ibBirthday);
+        ibGender = (ImageButton)view.findViewById(R.id.ibGender);
+        ibFacebook = (ImageButton)view.findViewById(R.id.ibFacebook);
+        ibLogout = (ImageButton)view.findViewById(R.id.ibLogout);
 
         tvAccount.setText(account);
         tvNickname.setText(nickname);

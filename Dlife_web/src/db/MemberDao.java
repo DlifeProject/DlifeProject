@@ -343,6 +343,9 @@ public class MemberDao {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			System.out.println("updateLoginDate err = " + sql);
+			System.out.println("birthday err = " + asString);
+			System.out.println("birth_year err = " + birthdayYear);
+			System.out.println("memberSK err = " + memberSK);
 		}
 		close();	
 		return count;

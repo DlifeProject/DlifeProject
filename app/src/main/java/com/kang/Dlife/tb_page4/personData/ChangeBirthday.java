@@ -62,7 +62,7 @@ public class ChangeBirthday extends AppCompatActivity {
                 }else{
                     String[] birthdayArray = bundleBirthday.split("-");
                     year = Integer.parseInt(birthdayArray[0]);
-                    month = Integer.parseInt(birthdayArray[1]) - 1;
+                    month = Integer.parseInt(birthdayArray[1]);
                     day = Integer.parseInt(birthdayArray[2]);
                 }
 

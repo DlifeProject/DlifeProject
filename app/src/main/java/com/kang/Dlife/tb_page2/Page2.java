@@ -192,6 +192,7 @@ public class Page2 extends Fragment implements View.OnClickListener {
             sinceDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
             endDateSetListener = new DatePickerDialog.OnDateSetListener() {
+                @RequiresApi(api = Build.VERSION_CODES.N)
                 @Override
                 public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                     endDay = Common.setDateFormat(year,month + 1, dayOfMonth);
@@ -346,7 +347,6 @@ public class Page2 extends Fragment implements View.OnClickListener {
             } catch (Exception e) {
                 Log.e(TAG, e.toString());
             }
-
         }
 
         @RequiresApi(api = Build.VERSION_CODES.N)
@@ -355,10 +355,17 @@ public class Page2 extends Fragment implements View.OnClickListener {
             List<PieEntry> pieEntries = getPieEntries();
             PieDataSet pieDataSet = new PieDataSet(pieEntries, "Diaries");
             pieDataSet.setValueFormatter(new PieChartValue());
-            pieDataSet.setValueTextColor(Color.BLUE);
+            pieDataSet.setValueTextColor(Color.parseColor("#E1E2E1"));
             pieDataSet.setValueTextSize(20);
             pieDataSet.setSliceSpace(2);
-            pieDataSet.setColors(ColorTemplate.COLORFUL_COLORS); //使用官訂顏色範本，顏色不能超過5種，否則官定範本要加顏色
+            int[] DIARY_CATE_COLORS = {
+                    Color.parseColor("#90D1BD"),
+                    Color.parseColor("#44525B"),
+                    Color.parseColor("#2F3D40"),
+                    Color.parseColor("#889FA0"),
+                    Color.parseColor("#3F816F")
+            };
+            pieDataSet.setColors(DIARY_CATE_COLORS); //使用官訂顏色範本，顏色不能超過5種，否則官定範本要加顏色
             PieData pieData = new PieData(pieDataSet);
             return pieData;
         }

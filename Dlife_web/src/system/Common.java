@@ -12,7 +12,7 @@ import java.util.List;
 public class Common {
 
 	public final static String DBNAME = "dlife";
-	public final static String DBURLGETDATA = "useUnicode=true&characterEncoding=UTF8&zeroDateTimeBehavior=round";
+	public final static String DBURLGETDATA = "useUnicode=true&characterEncoding=UTF8&zeroDateTimeBehavior=convertToNull";
 	public final static String DBURL = "jdbc:mysql://localhost:8889/" + DBNAME + "?" + DBURLGETDATA;
 	public final static String DBACCOUNT = "root";
 	public final static String DBPWD = "root";
