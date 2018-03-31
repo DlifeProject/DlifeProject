@@ -54,7 +54,6 @@ import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 public class Page2 extends Fragment implements View.OnClickListener {
@@ -88,6 +87,7 @@ public class Page2 extends Fragment implements View.OnClickListener {
     }
     @Override
     public void onClick(View view) {
+
         switch (view.getId()) {
             case R.id.ry_Next:
                 itemIndex = itemIndex + 1;
@@ -143,7 +143,7 @@ public class Page2 extends Fragment implements View.OnClickListener {
         return view;
     }
 
-    private class Page2Adapter extends RecyclerView.Adapter {
+    public class Page2Adapter extends RecyclerView.Adapter {
         public int index;
         private Context context;
         public DatePickerDialog sinceDialog, endDialog;
@@ -386,9 +386,9 @@ public class Page2 extends Fragment implements View.OnClickListener {
         }
 
         public void setCategoryView(RecyclerView.ViewHolder holder, int position){
-            index = position - 1;
+            int thisindex = position - 1;
             final CategoryViewHolder categoryViewHolder = (CategoryViewHolder) holder;
-            CategorySum item = categorySum.get(index);
+            CategorySum item = categorySum.get(thisindex);
             String url = Common.URL + Common.WEBPHOTO;
             //
             int imageSize = 350;
@@ -397,25 +397,40 @@ public class Page2 extends Fragment implements View.OnClickListener {
                 spotGetImageTask.execute();
             }
             categoryViewHolder.tv_click.setText(item.getCategoryType());
-            categoryViewHolder.ry_click.setOnClickListener(new View.OnClickListener() {
+            categoryViewHolder.ry_click.setOnClickListener(new MyRyClickListener(thisindex ,startDay,endDay) {
                 @Override
-                public void onClick(View view) {
+                public void onClick(View v) {
+                    super.onClick(v);
                     Intent intent = new Intent();
                     intent.setClass(getActivity(), DiaryView.class);
                     Bundle bundle = new Bundle();
                     bundle.putString("startDay", startDay);
                     bundle.putString("endDay", endDay);
-                    bundle.putInt("categoryListIndex", index);
+                    bundle.putInt("categoryListIndex", thisIndex );
                     intent.putExtras(bundle);
                     startActivity(intent);
                 }
             });
+
             categoryViewHolder.tv_theme.setText(item.getNote());
             categoryViewHolder.tv_year.setText(String.valueOf(item.getYear()));
             categoryViewHolder.tv_month.setText(String.valueOf(item.getMonth()));
             categoryViewHolder.tv_day.setText(String.valueOf(item.getDay()));
             categoryViewHolder.tv_threedays.setText(String.valueOf(item.getThree_day()));
             categoryViewHolder.tv_sevendays.setText(String.valueOf(item.getSeven_day()));
+        }
+
+        public class MyRyClickListener implements View.OnClickListener {
+            int thisIndex;
+            String startDay;
+            String endDay;
+            public MyRyClickListener(int thisIndex, String startDay, String endDay) {
+                this.thisIndex = thisIndex + 1;
+                this.startDay = startDay;
+                this.endDay = endDay;
+            }
+            @Override
+            public void onClick(View v) { }
         }
 
         @Override

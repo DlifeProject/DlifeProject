@@ -263,7 +263,7 @@ public class FriendDiaryViewActivity extends AppCompatActivity {
                 if (addressList.size() > 0) {
                     Address address = addressList.get(0);
                     for (int i = 0; i <= address.getMaxAddressLineIndex(); i++) {
-                        addrStr = address.getAddressLine(i);
+                        addrStr = address.getLocality();
 
                     }
                     viewHolder.tvLocation.setText(addrStr);

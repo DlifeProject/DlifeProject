@@ -661,7 +661,7 @@ public class DiaryDetailDao {
 				ps.setInt(1, memberSK);
 				ps.setString(2, startDay);
 				ps.setString(3, endDay);
-				ps.setInt(4, categoryListIndex + 1 );
+				ps.setInt(4, categoryListIndex );
 				rs = ps.executeQuery();
 				System.out.println(sql);
 				System.out.println(memberSK);

@@ -107,7 +107,7 @@ public class DiaryView extends AppCompatActivity {
                 jsonObject.addProperty("password", Common.getPWD(this));
                 jsonObject.addProperty("startDay", startDay);
                 jsonObject.addProperty("endDay", endDay);
-                jsonObject.addProperty("categoryListIndex", categoryListIndex);
+                jsonObject.addProperty("categoryListIndex", categoryListIndex );
 
                 String jsonOut = jsonObject.toString();
 
@@ -266,7 +266,7 @@ public class DiaryView extends AppCompatActivity {
                 if (addressList.size() > 0) {
                     Address address = addressList.get(0);
                     for (int i = 0; i <= address.getMaxAddressLineIndex(); i++) {
-                        addrStr = address.getAddressLine(i);
+                        addrStr = address.getLocality();
 
                     }
                     viewHolder.tvLocation.setText(addrStr);
