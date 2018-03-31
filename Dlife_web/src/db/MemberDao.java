@@ -274,6 +274,8 @@ public class MemberDao {
 				member.setBirthday(rs.getString(8));
 				member.setBirth_year(rs.getString(9));
 				member.setLogin_date(rs.getString(10));
+				
+				System.out.println("**********" + rs.getString(8) );
 			}
 			
 		} catch (SQLException e) {

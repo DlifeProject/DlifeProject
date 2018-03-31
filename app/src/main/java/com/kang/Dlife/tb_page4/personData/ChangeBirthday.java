@@ -47,16 +47,12 @@ public class ChangeBirthday extends AppCompatActivity {
         tvChangeBirthday.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                Calendar calendar;
                 int year;
                 int month;
                 int day;
 
-                calendar = Calendar.getInstance();
-
-                if(bundleBirthday.equals("0000-00-00")){
-                    year = calendar.get(Calendar.YEAR) - 18;
+                if(bundleBirthday == null){
+                    year = 1990;
                     month = 1;
                     day = 1;
                 }else{

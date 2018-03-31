@@ -340,7 +340,7 @@ public class Page2 extends Fragment implements View.OnClickListener {
                 pieChartViewHolder.pieChart.invalidate();
                 pieChartViewHolder.pieChart.setCenterText(String.valueOf(totalDiaryCount));
                 Description description = new Description();
-                description.setText("Total : " + totalHour + "hrs");
+                description.setText("Total : " + Common.getDuoblePoint2(totalHour) + "hrs");
                 description.setTextSize(25);
                 pieChartViewHolder.pieChart.setDescription(description);
 

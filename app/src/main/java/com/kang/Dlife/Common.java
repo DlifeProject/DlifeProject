@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -266,6 +267,10 @@ public class Common {
         return hour;
     }
 
+    public static double getDuoblePoint2(double thisDouble) {
+        DecimalFormat df = new DecimalFormat("##.0");
+        return Double.parseDouble(df.format(thisDouble));
+    }
 
 
     public static String monthIntToLetter(int i) {
