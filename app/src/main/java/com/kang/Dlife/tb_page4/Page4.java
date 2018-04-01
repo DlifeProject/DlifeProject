@@ -74,10 +74,13 @@ public class Page4 extends Fragment {
 
             account = memberProfile.getApp_account();
             nickname = memberProfile.getNick_name();
-            if(nickname.isEmpty()){
+            if(nickname == null){
                 nickname = "";
             }
             birthday = memberProfile.getBirthday();
+            if(birthday == null){
+                birthday = "";
+            }
             gender = memberProfile.getSex();
             logout = memberProfile.getLogin_date();
 
