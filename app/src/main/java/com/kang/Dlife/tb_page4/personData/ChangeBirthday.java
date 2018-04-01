@@ -66,7 +66,7 @@ public class ChangeBirthday extends AppCompatActivity {
                 new DatePickerDialog(ChangeBirthday.this, android.R.style.Theme_Holo_Dialog_MinWidth, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        tvChangeBirthday.setText(Common.setDateFormat(year,month,dayOfMonth));
+                        tvChangeBirthday.setText(Common.setDateFormat(year,month + 1,dayOfMonth));
                         btChangeNickName.setVisibility(View.VISIBLE);
                     }
 

@@ -42,7 +42,7 @@ public class ChangeNickname extends AppCompatActivity {
         etChangeNickname = (EditText)findViewById(R.id.etChangeNickname);
         btChangeNickName = (Button)findViewById(R.id.btChangeNickName);
 
-        if(bundleNickname.equals("")){
+        if(bundleNickname == null){
             tvUpdate.setText("---");
         }else{
             tvUpdate.setText(bundleNickname);

@@ -36,8 +36,8 @@ public class Common {
 
     public final static String TAG = "Common";
 
-    //public static final String URL = "http://10.0.2.2:8080/Dlife/";
-    public static final String URL = "http://192.168.196.161:8080/Dlife/";
+    public static final String URL = "http://10.0.2.2:8080/Dlife/";
+    //public static final String URL = "http://192.168.196.161:8080/Dlife/";
 
     public final static String WEBLOGIN = "login";
     public final static String WEBDIARY = "diary";

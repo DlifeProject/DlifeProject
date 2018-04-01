@@ -22,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import android.widget.DatePicker;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -56,7 +57,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Page2 extends Fragment implements View.OnClickListener {
+public class Page2 extends Fragment  {
     private final String TAG = "page2";
 
     private String[] allItemIndex = new String[6];
@@ -85,30 +86,27 @@ public class Page2 extends Fragment implements View.OnClickListener {
     private void setEndDayArray() {
         endDayArray = endDay.split("-");
     }
-    @Override
-    public void onClick(View view) {
 
-        switch (view.getId()) {
-            case R.id.ry_Next:
-                itemIndex = itemIndex + 1;
-                if (itemIndex >= allItemIndex.length) {
-                    itemIndex = 0;
-                    rvItem.scrollToPosition(itemIndex);
-                } else {
-                    rvItem.scrollToPosition(itemIndex);
-                }
-                break;
-            case R.id.ry_Previous:
-                itemIndex = itemIndex - 1;
-                if (itemIndex < 0) {
-                    itemIndex = allItemIndex.length - 1;
-                    rvItem.scrollToPosition(itemIndex);
-                } else {
-                    rvItem.scrollToPosition(itemIndex);
-                }
-                break;
-            default:
-                break;
+    public void myOnClick(int type) {
+
+        if(type == -1){
+            rvItem.scrollToPosition(itemIndex);
+        }else if(type == 0){
+            itemIndex = itemIndex + 1;
+            if (itemIndex >= allItemIndex.length) {
+                itemIndex = 0;
+                rvItem.scrollToPosition(itemIndex);
+            } else {
+                rvItem.scrollToPosition(itemIndex);
+            }
+        }else{
+            itemIndex = itemIndex - 1;
+            if (itemIndex < 0) {
+                itemIndex = allItemIndex.length - 1;
+                rvItem.scrollToPosition(itemIndex);
+            } else {
+                rvItem.scrollToPosition(itemIndex);
+            }
         }
     }
 
@@ -138,8 +136,8 @@ public class Page2 extends Fragment implements View.OnClickListener {
 
         ry_Previous = view.findViewById(R.id.ry_Previous);
         ry_Next = view.findViewById(R.id.ry_Next);
-        ry_Next.setOnClickListener(this);
-        ry_Previous.setOnClickListener(this);
+        //ry_Next.setOnClickListener(this);
+        //ry_Previous.setOnClickListener(this);
         return view;
     }
 
@@ -216,6 +214,8 @@ public class Page2 extends Fragment implements View.OnClickListener {
             endDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         }
 
+
+
         @Override
         public int getItemViewType(int position) {
             if(position == 0){
@@ -242,14 +242,14 @@ public class Page2 extends Fragment implements View.OnClickListener {
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             if(position == 0){
-                setPieChartView(context,holder);
+                setPieChartView(context,holder,position);
             }else{
                 setCategoryView(holder,position);
             }
         }
 
         @RequiresApi(api = Build.VERSION_CODES.N)
-        private void setPieChartView(Context context, RecyclerView.ViewHolder holder) {
+        private void setPieChartView(Context context, RecyclerView.ViewHolder holder,int position) {
             //setCategoryCategorySum();
             pieChartViewHolder = (PieChartViewHolder) holder;
             pieChartViewHolder.tv_click.setText("Daily");
@@ -281,9 +281,25 @@ public class Page2 extends Fragment implements View.OnClickListener {
                     endDialog.show();
                 }
             });
-
             setCategoryPieChartData();
             createPieChart();
+            pieChartViewHolder.iv_Category_previous.setOnClickListener(new MyRyClickListener(position ,"","") {
+                @Override
+                public void onClick(View v) {
+                    super.onClick(v);
+                    itemIndex = thisIndex;
+                    myOnClick(1);
+                }
+            });
+            pieChartViewHolder.iv_Category_next.setOnClickListener(new MyRyClickListener(position ,"","") {
+                @Override
+                public void onClick(View v) {
+                    super.onClick(v);
+                    itemIndex = thisIndex;
+                    myOnClick(-1);
+                }
+            });
+
         }
 
         @RequiresApi(api = Build.VERSION_CODES.N)
@@ -386,7 +402,7 @@ public class Page2 extends Fragment implements View.OnClickListener {
         }
 
         public void setCategoryView(RecyclerView.ViewHolder holder, int position){
-            int thisindex = position - 1;
+            final int thisindex = position - 1;
             final CategoryViewHolder categoryViewHolder = (CategoryViewHolder) holder;
             CategorySum item = categorySum.get(thisindex);
             String url = Common.URL + Common.WEBPHOTO;
@@ -409,6 +425,23 @@ public class Page2 extends Fragment implements View.OnClickListener {
                     bundle.putInt("categoryListIndex", thisIndex );
                     intent.putExtras(bundle);
                     startActivity(intent);
+                }
+            });
+
+            categoryViewHolder.iv_Category_previous.setOnClickListener(new MyRyClickListener(thisindex ,"","") {
+                @Override
+                public void onClick(View v) {
+                    super.onClick(v);
+                    itemIndex = thisindex + 1;
+                    myOnClick(1);
+                }
+            });
+            categoryViewHolder.iv_Category_next.setOnClickListener(new MyRyClickListener(thisindex ,"","") {
+                @Override
+                public void onClick(View v) {
+                    super.onClick(v);
+                    itemIndex = thisindex + 1;
+                    myOnClick(0);
                 }
             });
 
@@ -443,6 +476,7 @@ public class Page2 extends Fragment implements View.OnClickListener {
 
             RelativeLayout ry_click;
             LinearLayout ry_End, ry_Since;
+            LinearLayout iv_Category_previous, iv_Category_next;
             TextView tv_click, tv_startyear, tv_startmonth, tv_startday, tv_endyear, tv_endmonth, tv_endday;
             PieChart pieChart;
 
@@ -452,13 +486,16 @@ public class Page2 extends Fragment implements View.OnClickListener {
                 ry_Since = itemView.findViewById(R.id.ry_Since);
                 ry_End = itemView.findViewById(R.id.ry_End);
                 tv_click = itemView.findViewById(R.id.tv_click);
-                ry_click = itemView.findViewById(R.id.ry_circleclick);
+                ry_click = itemView.findViewById(R.id.ry_click);
                 tv_startyear = itemView.findViewById(R.id.tv_year);
                 tv_startmonth = itemView.findViewById(R.id.tv_month);
                 tv_startday = itemView.findViewById(R.id.tv_day);
                 tv_endyear = itemView.findViewById(R.id.tv_year_end);
                 tv_endmonth = itemView.findViewById(R.id.tv_month_end);
                 tv_endday = itemView.findViewById(R.id.tv_day_end);
+                iv_Category_previous = itemView.findViewById(R.id.iv_Category_previous);
+                iv_Category_next = itemView.findViewById(R.id.iv_Category_next);
+
             }
         }
 
@@ -467,6 +504,7 @@ public class Page2 extends Fragment implements View.OnClickListener {
             RelativeLayout ry_click;
             ImageView iv_pic;
             TextView tv_click, tv_theme, tv_year, tv_month, tv_day, tv_threedays, tv_sevendays;
+            LinearLayout iv_Category_previous, iv_Category_next;
 
             @SuppressLint("WrongViewCast")
             public CategoryViewHolder(View itemView) {
@@ -480,6 +518,8 @@ public class Page2 extends Fragment implements View.OnClickListener {
                 tv_day = itemView.findViewById(R.id.tv_day);
                 tv_threedays = itemView.findViewById(R.id.tv_threedays);
                 tv_sevendays = itemView.findViewById(R.id.tv_sevendays);
+                iv_Category_previous = itemView.findViewById(R.id.iv_Category_previous);
+                iv_Category_next = itemView.findViewById(R.id.iv_Category_next);
             }
         }
 

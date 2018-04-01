@@ -4,16 +4,29 @@
     android:layout_height="match_parent"
     android:background="@color/background_white"
     android:orientation="vertical"
-    android:id="@+id/rl"
-    >
+    android:id="@+id/rl">
 
     <ImageView
         android:id="@+id/ivRecyclerImage"
         android:layout_width="match_parent"
         android:layout_height="330dp"
-        android:src="@drawable/no_photo"
-        />
+        android:src="@drawable/no_photo" />
 
-
+    <ImageButton
+        android:id="@+id/iv_Category_previous"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ivRecyclerImage"
+        android:layout_alignParentLeft="true"
+        android:background="@drawable/vector_left"
+        android:visibility="invisible" />
+    <ImageButton
+        android:id="@+id/iv_Category_next"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ivRecyclerImage"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/vector_right"
+        android:visibility="invisible"/>
 
 </RelativeLayout>
