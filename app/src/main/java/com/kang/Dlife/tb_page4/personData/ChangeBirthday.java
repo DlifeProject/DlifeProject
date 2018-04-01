@@ -51,9 +51,9 @@ public class ChangeBirthday extends AppCompatActivity {
                 int month;
                 int day;
 
-                if(bundleBirthday == null){
+                if(bundleBirthday == null || bundleBirthday.equals("")){
                     year = 1990;
-                    month = 1;
+                    month = 0;
                     day = 1;
                 }else{
                     String[] birthdayArray = bundleBirthday.split("-");
