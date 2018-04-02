@@ -283,6 +283,7 @@ public class MainActivity extends AppCompatActivity {
         boolean isfinish = false;
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("action", "FBLogin");
+        jsonObject.addProperty("ios_user_id", "");
         jsonObject.addProperty("android_user_id", userUUID);
         jsonObject.addProperty("ios_user_id", "");
         jsonObject.addProperty("app_account", fbEmail);

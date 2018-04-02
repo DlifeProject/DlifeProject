@@ -20,8 +20,8 @@ public class Common {
 	 public final static String DBNAME = "dlife";
 	 public final static String DBURLGETDATA = "useUnicode=true&characterEncoding=UTF8&zeroDateTimeBehavior=convertToNull";
 	 //public final static String DBURL = "jdbc:mysql://192.168.0.205:3306/" + DBNAME + "?" + DBURLGETDATA;
-	 public final static String DBURL = "jdbc:mysql://localhost:3306/" + DBNAME + "?" + DBURLGETDATA;
-	 //public final static String DBURL = "jdbc:mysql://114.34.110.248:7060/" + DBNAME + "?" + DBURLGETDATA;
+	 //public final static String DBURL = "jdbc:mysql://localhost:3306/" + DBNAME + "?" + DBURLGETDATA;
+	 public final static String DBURL = "jdbc:mysql://114.34.110.248:7060/" + DBNAME + "?" + DBURLGETDATA;
 	 public final static String DBACCOUNT = "dlife";
 	 public final static String DBPWD = "dlife";
 
