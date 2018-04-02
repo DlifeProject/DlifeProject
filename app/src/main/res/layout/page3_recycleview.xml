@@ -22,7 +22,7 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/tvMyCategory"
+                android:id="@+id/tvMyFriendCategory"
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
                 android:layout_marginRight="20dp"
@@ -38,7 +38,7 @@
                 android:id="@+id/tvMyFriendName"
                 android:text="Regan"
                 android:textSize="28sp"
-                android:layout_toRightOf="@id/tvMyCategory"
+                android:layout_toRightOf="@id/tvMyFriendCategory"
                 android:layout_marginRight="20dp"
                 android:layout_centerInParent="true"
                 android:layout_width="wrap_content"
@@ -53,7 +53,7 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/tvMyFriendCategory"
+                android:id="@+id/tvMyCategory"
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
                 android:textSize="32sp"
